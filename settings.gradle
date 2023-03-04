@@ -1,0 +1,1 @@
+rootProject.name = "com.gmail.bogumilmecel2.fitnessapp"
