@@ -63,11 +63,13 @@ fun RecipeDto.toObject(): Recipe = Recipe(
     ingredients = ingredients,
     timestamp = timestamp,
     imageUrl = imageUrl,
+    nutritionValues = nutritionValues,
     timeRequired = timeNeeded,
     difficulty = difficulty,
     servings = servings,
     username = username,
-    userId = userId
+    userId = userId,
+    isPublic = isPublic,
 )
 
 fun RecipeDiaryEntry.toDto(userId: ObjectId): RecipeDiaryEntryDto = RecipeDiaryEntryDto(

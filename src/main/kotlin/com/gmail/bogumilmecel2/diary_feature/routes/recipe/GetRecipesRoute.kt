@@ -10,7 +10,7 @@ fun Route.configureSearchForRecipesRoute(
     searchForRecipes: SearchForRecipes
 ) {
     authenticate {
-        get("/{searchText}/") {
+        get("/{searchText}") {
             call.run {
                 call.parameters["searchText"]?.let { searchText ->
                     handleResource(
