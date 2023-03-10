@@ -1,9 +1,7 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 
-import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toDiaryEntry
-import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.toObject
+import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 
 class GetDiaryEntries(
@@ -13,30 +11,20 @@ class GetDiaryEntries(
     suspend operator fun invoke(
         date: String,
         userId: String
-    ): Resource<List<DiaryItem>> {
-        val allIDiaryItems = mutableListOf<DiaryItem>()
+    ): Resource<DiaryEntriesResponse> {
         val productDiaryEntries = diaryRepository.getProductDiaryEntries(
             date = date,
             userId = userId
-        )
+        ).data
         val recipeDiaryEntries = diaryRepository.getRecipeDiaryEntries(
             date = date,
-            userId
+            userId = userId
+        ).data
+        return Resource.Success(
+            data = DiaryEntriesResponse(
+                recipeDiaryEntries = recipeDiaryEntries ?: emptyList(),
+                productDiaryEntries = productDiaryEntries ?: emptyList()
+            )
         )
-        if (productDiaryEntries is Resource.Success) {
-            productDiaryEntries.data.map { productDiaryEntryDto ->
-                productDiaryEntryDto.toDiaryEntry()
-            }.also {
-                allIDiaryItems.addAll(it)
-            }
-        }
-        if (recipeDiaryEntries is Resource.Success) {
-            recipeDiaryEntries.data.map { recipeDiaryEntryDto ->
-                recipeDiaryEntryDto.toObject()
-            }.also {
-                allIDiaryItems.addAll(it)
-            }
-        }
-        return Resource.Success(data = allIDiaryItems)
     }
 }

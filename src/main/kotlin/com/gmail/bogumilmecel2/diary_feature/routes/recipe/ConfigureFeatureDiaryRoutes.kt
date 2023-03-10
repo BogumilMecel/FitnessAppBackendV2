@@ -25,7 +25,7 @@ fun Route.configureDiaryRoutes(
     }
 
     route("/diaryEntries"){
-        configurePostDiaryEntryRoute(diaryUseCases.insertDiaryEntry)
+        configurePostDiaryEntryRoute(diaryUseCases.insertProductDiaryEntryUseCase)
         configureGetDiaryEntriesRoute(diaryUseCases.getDiaryEntries)
         configureDeleteDiaryEntryRoute(diaryUseCases.deleteDiaryEntry)
         configureGetUserCaloriesSumRoute(diaryUseCases.getUserCaloriesSum)

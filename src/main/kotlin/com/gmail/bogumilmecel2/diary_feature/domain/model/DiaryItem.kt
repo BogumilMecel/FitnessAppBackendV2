@@ -8,5 +8,5 @@ interface DiaryItem {
     val timestamp: Long
     val userId: String
     val date: String
-    val mealName: String
+    val mealName: MealName
 }
