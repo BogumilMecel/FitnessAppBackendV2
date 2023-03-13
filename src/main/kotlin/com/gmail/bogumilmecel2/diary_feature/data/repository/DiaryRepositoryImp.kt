@@ -58,7 +58,7 @@ class DiaryRepositoryImp(
         return try {
             val productDiaryEntries =
                 productDiaryCol.find(
-                    ProductDiaryEntryDto::userId eq userId.toObjectId(),
+                    ProductDiaryEntryDto::userId eq userId,
                     ProductDiaryEntryDto::date eq date
                 ).toList().map {
                     it.toDiaryEntry()
@@ -109,15 +109,18 @@ class DiaryRepositoryImp(
     override suspend fun getProductHistory(userId: String): Resource<List<Product>> {
         return try {
             val history = mutableListOf<Product>()
-            productDiaryCol.find(ProductDiaryEntryDto::userId eq userId.toObjectId()).limit(20).toList().map {
-                it.product.id.let { id ->
-                    val searchResource = getProduct(productId = id)
+            productDiaryCol
+                .find(ProductDiaryEntryDto::userId eq userId,)
+                .descendingSort(ProductDiaryEntryDto::timestamp)
+                .limit(20)
+                .toList()
+                .map {
+                    val searchResource = getProduct(productId = it.product.id)
                     searchResource.data?.let { product ->
                         history.add(product)
                     }
                 }
-            }
-            Resource.Success(history)
+            Resource.Success(history.distinctBy { it.name })
         } catch (e: Exception) {
             handleExceptionWithResource(exception = e)
         }
@@ -151,7 +154,7 @@ class DiaryRepositoryImp(
         return try {
             val wasAcknowledged = productDiaryCol.deleteOne(
                 ProductDiaryEntryDto::_id eq productDiaryEntryId.toObjectId(),
-                ProductDiaryEntryDto::userId eq userId.toObjectId()
+                ProductDiaryEntryDto::userId eq userId
             ).wasAcknowledged()
             if (wasAcknowledged) {
                 Resource.Success(data = Unit)
@@ -170,7 +173,7 @@ class DiaryRepositoryImp(
             if (wasAcknowledged) {
                 Resource.Success(data = Unit)
             } else throw Exception()
-        } catch (e:Exception) {
+        } catch (e: Exception) {
             handleExceptionWithResource(exception = e)
         }
     }
@@ -188,7 +191,7 @@ class DiaryRepositoryImp(
             Resource.Success(
                 CaloriesSumResponse(caloriesSum = productDiaryCol.find(
                     ProductDiaryEntryDto::date eq date,
-                    ProductDiaryEntryDto::userId eq userId.toObjectId()
+                    ProductDiaryEntryDto::userId eq userId
                 )
                     .toList()
                     .sumOf { it.nutritionValues.calories })

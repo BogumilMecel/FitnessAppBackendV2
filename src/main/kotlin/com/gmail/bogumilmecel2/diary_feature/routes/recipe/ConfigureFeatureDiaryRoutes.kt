@@ -19,7 +19,7 @@ fun Route.configureDiaryRoutes(
     route("/products") {
         configurePostNewProductRoute(productUseCases.insertProductUseCase)
         configureSearchForProductWithTextRoute(productUseCases.getProducts)
-        configureGetProductHistoryRoute(productUseCases.getProductHistory)
+        configureGetProductHistoryRoute(productUseCases.getProductHistoryUseCase)
         configureSearchForProductWithBarcodeRoute(productUseCases.searchForProductWithBarcode)
         configureAddNewPriceRoute(productUseCases.addNewPrice)
     }
