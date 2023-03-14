@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class NewProductRequest(
     val name: String,
     val measurementUnit: MeasurementUnit,
-    val containerWeight: Int,
+    val containerWeight: Int? = null,
     val barcode: String? = null,
     val nutritionValuesIn: NutritionValuesIn,
     val nutritionValues: NutritionValues,

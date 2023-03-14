@@ -12,7 +12,7 @@ import org.bson.types.ObjectId
 data class Product(
     val id: String = "",
     val name: String,
-    val containerWeight: Int,
+    val containerWeight: Int? = null,
     val timestamp: Long,
     val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
@@ -26,7 +26,7 @@ data class Product(
 data class ProductDto(
     @BsonId val _id: ObjectId,
     val name: String,
-    val containerWeight: Int,
+    val containerWeight: Int? = null,
     val timestamp: Long,
     val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
