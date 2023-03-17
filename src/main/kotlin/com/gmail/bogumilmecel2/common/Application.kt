@@ -25,6 +25,8 @@ import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.AddRecipeDia
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.InsertRecipeUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.RecipeUseCases
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.SearchForRecipes
+import com.gmail.bogumilmecel2.diary_feature.price_feature.data.repository.PriceRepositoryImp
+import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetPriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.routes.recipe.configureDiaryRoutes
 import com.gmail.bogumilmecel2.user.log.domain.use_case.CheckLatestLogEntry
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLatestLogEntry
@@ -66,6 +68,10 @@ fun Application.module() {
     val getUsernameUseCase = GetUsernameUseCase(userRepository = userRepository)
     val isDiaryNameValidUseCase = IsDiaryNameValidUseCase()
     val getProductUseCase = GetProductUseCase(diaryRepository = diaryRepository)
+    val priceRepository = PriceRepositoryImp(
+        priceCol = databaseManager.client.getCollection("price_collection")
+    )
+    val getPriceUseCase = GetPriceUseCase(priceRepository)
 
     val productUseCases = ProductUseCases(
         insertProductUseCase = InsertProductUseCase(
@@ -73,10 +79,13 @@ fun Application.module() {
             getUsernameUseCase = getUsernameUseCase,
             isDiaryNameValidUseCase = isDiaryNameValidUseCase
         ),
-        getProducts = GetProducts(diaryRepository),
+        getProductsUseCase = GetProductsUseCase(repository = diaryRepository, getPrice = getPriceUseCase),
         getProductHistoryUseCase = GetProductHistoryUseCase(diaryRepository),
         searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
-        addNewPrice = AddNewPrice(diaryRepository = diaryRepository, getProductUseCase = getProductUseCase)
+        addNewPriceUseCase = AddNewPriceUseCase(
+            priceRepository = priceRepository,
+            getProductUseCase = getProductUseCase
+        )
     )
 
     val getLatestLogEntry = GetLatestLogEntry(userRepository)

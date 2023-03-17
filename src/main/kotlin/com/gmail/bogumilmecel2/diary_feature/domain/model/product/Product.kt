@@ -1,9 +1,10 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.model.product
 
+import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
-import com.gmail.bogumilmecel2.diary_feature.domain.model.price.Price
+import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.Price
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
@@ -32,12 +33,13 @@ data class ProductDto(
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val nutritionValues: NutritionValues,
     val barcode: String? = null,
-    val price: Price? = null,
+    val priceId: String? = null,
     val username: String,
-    val userId: String
+    val userId: String,
+    val country: Country = Country.POLAND
 )
 
-fun Product.toDto(userId: String): ProductDto = ProductDto(
+fun Product.toDto(userId: String, country: Country): ProductDto = ProductDto(
     _id = id.toObjectId(),
     name = name,
     containerWeight = containerWeight,
@@ -45,10 +47,10 @@ fun Product.toDto(userId: String): ProductDto = ProductDto(
     measurementUnit = measurementUnit,
     nutritionValues = nutritionValues,
     barcode = barcode,
-    price = price,
     userId = userId,
     username = username,
-    timestamp = timestamp
+    timestamp = timestamp,
+    country = country
 )
 
 fun ProductDto.toProduct(): Product = Product(
@@ -59,7 +61,6 @@ fun ProductDto.toProduct(): Product = Product(
     measurementUnit = measurementUnit,
     nutritionValues = nutritionValues,
     barcode = barcode,
-    price = price,
     userId = userId,
     username = username,
     timestamp = timestamp

@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.common.util.extensions
 
+import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.util.Resource
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -11,7 +12,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 suspend inline fun <reified T> ApplicationCall.handleResource(resource: Resource<T>) {
-    when(resource) {
+    when (resource) {
         is Resource.Success -> {
             resource.data?.let {
                 this.respond(
@@ -24,6 +25,7 @@ suspend inline fun <reified T> ApplicationCall.handleResource(resource: Resource
                 )
             }
         }
+
         is Resource.Error -> {
             println("Exception in ${this.request.path()} " + resource.error)
             this.respond(
@@ -47,14 +49,27 @@ suspend fun ApplicationCall.getUserId(): String? {
 
 suspend inline fun <reified T : Any> ApplicationCall.receiveOrRespond(): T? {
     return this.receiveOrNull() ?: kotlin.run {
-        this@receiveOrRespond.respond(HttpStatusCode.BadRequest)
+        respondBadRequest(this)
         null
     }
 }
 
 suspend inline fun ApplicationCall.getParameter(name: String): String? {
     return this.parameters[name] ?: kotlin.run {
-        this@getParameter.respond(HttpStatusCode.BadRequest)
+        respondBadRequest(this)
         null
     }
+}
+
+suspend inline fun ApplicationCall.getCountryParameter(): Country? {
+    return this.request.headers["country"]?.let {
+        Country.getCountryFromString(it)
+    } ?: kotlin.run {
+        respondBadRequest(this)
+        null
+    }
+}
+
+suspend fun respondBadRequest(call: ApplicationCall) {
+    call.respond(HttpStatusCode.BadRequest)
 }

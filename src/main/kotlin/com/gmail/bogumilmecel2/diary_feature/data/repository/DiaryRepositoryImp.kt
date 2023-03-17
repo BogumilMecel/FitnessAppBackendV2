@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.data.repository
 
+import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
@@ -8,7 +9,6 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDia
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toDto
-import com.gmail.bogumilmecel2.diary_feature.domain.model.price.Price
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toDto
@@ -18,7 +18,6 @@ import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import org.litote.kmongo.MongoOperator
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.eq
-import org.litote.kmongo.setValue
 
 class DiaryRepositoryImp(
     private val productDiaryCol: CoroutineCollection<ProductDiaryEntryDto>,
@@ -112,10 +111,10 @@ class DiaryRepositoryImp(
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertProduct(product: Product, userId: String): Resource<Product> {
+    override suspend fun insertProduct(product: Product, userId: String, country: Country): Resource<Product> {
         return handleRequest {
             product.copy(
-                id = product.toDto(userId).apply { productCol.insertOne(this) }._id.toString()
+                id = product.toDto(userId = userId, country = country).apply { productCol.insertOne(this) }._id.toString()
             )
         }
     }
@@ -152,18 +151,6 @@ class DiaryRepositoryImp(
             )
                 .toList()
                 .sumOf { it.nutritionValues.calories })
-        }
-    }
-
-    override suspend fun addNewPrice(productId: String, price: Price): Resource<Price> {
-        return handleRequest {
-            if (productCol.updateOneById(
-                    id = productId.toObjectId(),
-                    update = setValue(ProductDto::price, price)
-                ).wasAcknowledged()
-            ) {
-                price
-            } else throw Exception()
         }
     }
 
