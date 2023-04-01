@@ -80,7 +80,6 @@ fun Application.module() {
             isDiaryNameValidUseCase = isDiaryNameValidUseCase
         ),
         getProductsUseCase = GetProductsUseCase(repository = diaryRepository, getPrice = getPriceUseCase),
-        getProductHistoryUseCase = GetProductHistoryUseCase(diaryRepository),
         searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
         addNewPriceUseCase = AddNewPriceUseCase(
             priceRepository = priceRepository,

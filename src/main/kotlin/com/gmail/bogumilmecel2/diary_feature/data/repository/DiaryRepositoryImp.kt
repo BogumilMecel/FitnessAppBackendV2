@@ -83,24 +83,6 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getProductHistory(userId: String): Resource<List<Product>> {
-        return handleRequest {
-            val history = mutableListOf<Product>()
-            productDiaryCol
-                .find(ProductDiaryEntryDto::userId eq userId)
-                .descendingSort(ProductDiaryEntryDto::timestamp)
-                .limit(20)
-                .toList()
-                .map {
-                    val searchResource = getProduct(productId = it.product.id)
-                    searchResource.data?.let { product ->
-                        history.add(product)
-                    }
-                }
-            history.distinctBy { it.id }
-        }
-    }
-
     override suspend fun getProduct(productId: String): Resource<Product?> {
         return handleRequest {
             productCol.findOne(ProductDto::_id eq productId.toObjectId())?.toProduct()

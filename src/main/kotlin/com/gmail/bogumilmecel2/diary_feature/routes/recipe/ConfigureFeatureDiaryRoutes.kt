@@ -7,7 +7,10 @@ import com.gmail.bogumilmecel2.diary_feature.routes.diary.configureDeleteDiaryEn
 import com.gmail.bogumilmecel2.diary_feature.routes.diary.configureGetDiaryEntriesRoute
 import com.gmail.bogumilmecel2.diary_feature.routes.diary.configureGetUserCaloriesSumRoute
 import com.gmail.bogumilmecel2.diary_feature.routes.diary.configurePostDiaryEntryRoute
-import com.gmail.bogumilmecel2.diary_feature.routes.product.*
+import com.gmail.bogumilmecel2.diary_feature.routes.product.configureAddNewPriceRoute
+import com.gmail.bogumilmecel2.diary_feature.routes.product.configurePostNewProductRoute
+import com.gmail.bogumilmecel2.diary_feature.routes.product.configureSearchForProductWithBarcodeRoute
+import com.gmail.bogumilmecel2.diary_feature.routes.product.configureSearchForProductWithTextRoute
 import io.ktor.server.routing.*
 
 
@@ -19,7 +22,6 @@ fun Route.configureDiaryRoutes(
     route("/products") {
         configurePostNewProductRoute(productUseCases.insertProductUseCase)
         configureSearchForProductWithTextRoute(productUseCases.getProductsUseCase)
-        configureGetProductHistoryRoute(productUseCases.getProductHistoryUseCase)
         configureSearchForProductWithBarcodeRoute(productUseCases.searchForProductWithBarcode)
         configureAddNewPriceRoute(productUseCases.addNewPriceUseCase)
     }
