@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
-import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.Price
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
@@ -19,7 +18,6 @@ data class Product(
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val nutritionValues: NutritionValues,
     val barcode: String? = null,
-    val price: Price? = null,
     val username: String,
     val userId: String
 )
@@ -33,7 +31,6 @@ data class ProductDto(
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val nutritionValues: NutritionValues,
     val barcode: String? = null,
-    val priceId: String? = null,
     val username: String,
     val userId: String,
     val country: Country = Country.POLAND

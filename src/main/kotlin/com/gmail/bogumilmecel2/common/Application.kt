@@ -26,8 +26,9 @@ import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.InsertRecipe
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.RecipeUseCases
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.SearchForRecipes
 import com.gmail.bogumilmecel2.diary_feature.price_feature.data.repository.PriceRepositoryImp
-import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetPriceUseCase
-import com.gmail.bogumilmecel2.diary_feature.routes.recipe.configureDiaryRoutes
+import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetProductPriceUseCase
+import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetRecipePriceUseCase
+import com.gmail.bogumilmecel2.diary_feature.routes.configureDiaryRoutes
 import com.gmail.bogumilmecel2.user.log.domain.use_case.CheckLatestLogEntry
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLatestLogEntry
 import com.gmail.bogumilmecel2.user.log.domain.use_case.InsertLogEntry
@@ -71,7 +72,6 @@ fun Application.module() {
     val priceRepository = PriceRepositoryImp(
         priceCol = databaseManager.client.getCollection("price_collection")
     )
-    val getPriceUseCase = GetPriceUseCase(priceRepository)
 
     val productUseCases = ProductUseCases(
         insertProductUseCase = InsertProductUseCase(
@@ -79,9 +79,13 @@ fun Application.module() {
             getUsernameUseCase = getUsernameUseCase,
             isDiaryNameValidUseCase = isDiaryNameValidUseCase
         ),
-        getProductsUseCase = GetProductsUseCase(repository = diaryRepository, getPrice = getPriceUseCase),
+        getProductsUseCase = GetProductsUseCase(repository = diaryRepository),
         searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
         addNewPriceUseCase = AddNewPriceUseCase(
+            priceRepository = priceRepository,
+            getProductUseCase = getProductUseCase,
+        ),
+        getProductPriceUseCase = GetProductPriceUseCase(
             priceRepository = priceRepository,
             getProductUseCase = getProductUseCase
         )
@@ -130,7 +134,8 @@ fun Application.module() {
             getUsernameUseCase = getUsernameUseCase
         ),
         searchForRecipes = SearchForRecipes(diaryRepository = diaryRepository),
-        addRecipeDiaryEntryUseCase = AddRecipeDiaryEntryUseCase(diaryRepository = diaryRepository)
+        addRecipeDiaryEntryUseCase = AddRecipeDiaryEntryUseCase(diaryRepository = diaryRepository),
+        getRecipePriceUseCase = GetRecipePriceUseCase(priceRepository = priceRepository)
     )
 
     val tokenService = JwtTokenService()

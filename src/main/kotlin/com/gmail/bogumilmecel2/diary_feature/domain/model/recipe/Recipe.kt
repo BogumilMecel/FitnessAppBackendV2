@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.diary_feature.domain.model.recipe
 import com.gmail.bogumilmecel2.common.util.extensions.round
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
-import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.Price
+import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Ingredient
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.TimeRequired
@@ -24,7 +24,7 @@ data class Recipe(
     var isPublic: Boolean = false,
     val username: String = "",
     val userId: String = "",
-    val price: Price? = null
+    val productPrice: ProductPrice? = null
 )
 
 data class RecipeDto(

@@ -1,12 +1,10 @@
 package com.gmail.bogumilmecel2.diary_feature.price_feature.data.repository
 
-import com.gmail.bogumilmecel2.common.domain.model.Currency
+import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.Price
+import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.PriceDto
-import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.toDto
-import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.toPrice
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.repository.PriceRepository
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.eq
@@ -17,34 +15,24 @@ class PriceRepositoryImp(
     private val priceCol: CoroutineCollection<PriceDto>
 ): PriceRepository, BaseRepository() {
 
-    override suspend fun getPriceDto(productId: String, currency: Currency): Resource<PriceDto?> {
+    override suspend fun getPrice(productId: String, country: Country): Resource<PriceDto?> {
         return handleRequest {
-            priceCol.findOne(PriceDto::productId eq productId, PriceDto::currency eq currency)
+            priceCol.findOne(PriceDto::productId eq productId, PriceDto::country eq country)
         }
     }
 
-    override suspend fun getPrice(productId: String, currency: Currency): Resource<Price?> {
+
+    override suspend fun addPrice(productId: String, price: PriceDto): Resource<Boolean> {
         return handleRequest {
-            priceCol.findOne(PriceDto::productId eq productId, PriceDto::currency eq currency)?.toPrice()
+            priceCol.insertOne(price).wasAcknowledged()
         }
     }
 
-    override suspend fun addPrice(productId: String, price: Price): Resource<Boolean> {
-        return handleRequest {
-            priceCol.insertOne(price.toDto(productId = productId)).wasAcknowledged()
-        }
-    }
-
-    override suspend fun updatePrice(price: PriceDto): Resource<Boolean> {
+    override suspend fun updatePrice(newValue: Double, priceId: String): Resource<Boolean> {
         return handleRequest {
            priceCol.updateOneById(
-               id = PriceDto::_id eq price._id,
-               update = set(
-                   PriceDto::valueFor100Calories setTo price.valueFor100Calories,
-                   PriceDto::valueFor100Carbohydrates setTo price.valueFor100Carbohydrates,
-                   PriceDto::valueFor10Protein setTo price.valueFor10Protein,
-                   PriceDto::valueFor10Fat setTo price.valueFor10Fat,
-               )
+               id = PriceDto::_id eq priceId.toObjectId(),
+               update = set(PriceDto::valueFor100gInUSD setTo newValue)
            ).wasAcknowledged()
         }
     }
