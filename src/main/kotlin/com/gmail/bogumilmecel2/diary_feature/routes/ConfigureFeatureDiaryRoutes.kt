@@ -5,10 +5,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.ProductUseC
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.RecipeUseCases
 import com.gmail.bogumilmecel2.diary_feature.price_feature.routes.configureAddNewPriceRoute
 import com.gmail.bogumilmecel2.diary_feature.price_feature.routes.configureGetRecipePriceRoute
-import com.gmail.bogumilmecel2.diary_feature.routes.diary.configureDeleteDiaryEntryRoute
-import com.gmail.bogumilmecel2.diary_feature.routes.diary.configureGetDiaryEntriesRoute
-import com.gmail.bogumilmecel2.diary_feature.routes.diary.configureGetUserCaloriesSumRoute
-import com.gmail.bogumilmecel2.diary_feature.routes.diary.configurePostDiaryEntryRoute
+import com.gmail.bogumilmecel2.diary_feature.routes.diary.*
 import com.gmail.bogumilmecel2.diary_feature.routes.product.configureGetProductPriceRoute
 import com.gmail.bogumilmecel2.diary_feature.routes.product.configurePostNewProductRoute
 import com.gmail.bogumilmecel2.diary_feature.routes.product.configureSearchForProductWithBarcodeRoute
@@ -38,6 +35,7 @@ fun Route.configureDiaryRoutes(
         configureDeleteDiaryEntryRoute(diaryUseCases.deleteDiaryEntry)
         configureGetUserCaloriesSumRoute(diaryUseCases.getUserCaloriesSum)
         configurePostRecipeDiaryEntry(recipeUseCases.addRecipeDiaryEntryUseCase)
+        configureEditProductDiaryEntryRoute(recipeUseCases.editProductDiaryEntryUseCase)
     }
 
     route("/recipes"){

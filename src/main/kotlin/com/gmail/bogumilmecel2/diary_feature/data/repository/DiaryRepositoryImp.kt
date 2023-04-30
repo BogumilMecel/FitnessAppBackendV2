@@ -16,6 +16,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toProduct
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.*
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import org.litote.kmongo.MongoOperator
+import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.eq
 
@@ -89,14 +90,23 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun editDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Boolean> {
-        TODO("Not yet implemented")
+    override suspend fun editDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Boolean> {
+        return handleRequest {
+            productDiaryCol.updateOne(
+                and(
+                    ProductDiaryEntryDto::_id eq productDiaryEntry.id.toObjectId(),
+                    ProductDiaryEntryDto::userId eq userId
+                ),
+                productDiaryEntry.toDto(userId = userId)
+            ).wasAcknowledged()
+        }
     }
 
     override suspend fun insertProduct(product: Product, userId: String, country: Country): Resource<Product> {
         return handleRequest {
             product.copy(
-                id = product.toDto(userId = userId, country = country).apply { productCol.insertOne(this) }._id.toString()
+                id = product.toDto(userId = userId, country = country)
+                    .apply { productCol.insertOne(this) }._id.toString()
             )
         }
     }
