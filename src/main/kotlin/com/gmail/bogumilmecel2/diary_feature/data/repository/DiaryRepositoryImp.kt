@@ -68,9 +68,27 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getDiaryEntry(id: String): Resource<ProductDiaryEntry?> {
+    override suspend fun getProductDiaryEntry(id: String): Resource<ProductDiaryEntry?> {
         return handleRequest {
             productDiaryCol.findOne(ProductDiaryEntryDto::_id eq id.toObjectId())?.toDiaryEntry()
+        }
+    }
+
+    override suspend fun getRecipeDiaryEntry(id: String): Resource<RecipeDiaryEntry?> {
+        return handleRequest {
+            recipeDiaryCol.findOne(RecipeDiaryEntryDto::_id eq id.toObjectId())?.toObject()
+        }
+    }
+
+    override suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Boolean> {
+        return handleRequest {
+            recipeDiaryCol.updateOne(
+                and(
+                    RecipeDiaryEntryDto::_id eq recipeDiaryEntry.id.toObjectId(),
+                    RecipeDiaryEntryDto::userId eq userId
+                ),
+                recipeDiaryEntry.toDto(userId = userId)
+            ).wasAcknowledged()
         }
     }
 
@@ -90,7 +108,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun editDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Boolean> {
+    override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Boolean> {
         return handleRequest {
             productDiaryCol.updateOne(
                 and(

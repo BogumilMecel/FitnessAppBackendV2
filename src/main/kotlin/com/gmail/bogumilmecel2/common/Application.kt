@@ -21,10 +21,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUs
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDiaryNameValidUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.*
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.AddRecipeDiaryEntryUseCase
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.InsertRecipeUseCase
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.RecipeUseCases
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.SearchForRecipes
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.*
 import com.gmail.bogumilmecel2.diary_feature.price_feature.data.repository.PriceRepositoryImp
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetProductPriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetRecipePriceUseCase
@@ -99,11 +96,22 @@ fun Application.module() {
         insertLogEntry = insertLogEntry
     )
 
+    val getRecipeDiaryEntryUseCase = GetRecipeDiaryEntryUseCase(diaryRepository = diaryRepository)
+    val getProductDiaryEntryUseCase = GetProductDiaryEntryUseCase(diaryRepository = diaryRepository)
+
     val diaryUseCases = DiaryUseCases(
         getDiaryEntries = GetDiaryEntries(diaryRepository),
         insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(diaryRepository),
         deleteDiaryEntry = DeleteDiaryEntry(diaryRepository),
-        getUserCaloriesSum = GetUserCaloriesSum(diaryRepository)
+        getUserCaloriesSum = GetUserCaloriesSum(diaryRepository),
+        editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
+            diaryRepository = diaryRepository,
+            getProductDiaryEntryUseCase = getProductDiaryEntryUseCase
+        ),
+        editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
+            diaryRepository = diaryRepository,
+            getRecipeDiaryEntryUseCase = getRecipeDiaryEntryUseCase
+        )
     )
 
     val calculateWeightEntriesUseCase = CalculateWeightProgressUseCase()
@@ -135,8 +143,7 @@ fun Application.module() {
         ),
         searchForRecipes = SearchForRecipes(diaryRepository = diaryRepository),
         addRecipeDiaryEntryUseCase = AddRecipeDiaryEntryUseCase(diaryRepository = diaryRepository),
-        getRecipePriceUseCase = GetRecipePriceUseCase(priceRepository = priceRepository),
-        editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(diaryRepository = diaryRepository)
+        getRecipePriceUseCase = GetRecipePriceUseCase(priceRepository = priceRepository)
     )
 
     val tokenService = JwtTokenService()

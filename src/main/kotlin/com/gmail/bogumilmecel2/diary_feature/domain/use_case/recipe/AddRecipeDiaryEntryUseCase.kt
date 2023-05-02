@@ -25,7 +25,7 @@ class AddRecipeDiaryEntryUseCase(
                     timestamp = request.timestamp,
                     userId = userId,
                     mealName = request.mealName,
-                    portions = request.servings,
+                    servings = request.servings,
                     recipe = request.recipe,
                 ),
                 userId = userId
