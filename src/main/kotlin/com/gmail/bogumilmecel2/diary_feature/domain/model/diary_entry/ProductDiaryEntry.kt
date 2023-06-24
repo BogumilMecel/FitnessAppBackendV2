@@ -51,5 +51,5 @@ fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
     weight = weight,
     mealName = mealName,
     product = product,
-    userId = userId.toString()
+    userId = userId
 )
