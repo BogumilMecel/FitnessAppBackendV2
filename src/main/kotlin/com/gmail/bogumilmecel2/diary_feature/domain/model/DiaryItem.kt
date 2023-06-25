@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.Nutri
 interface DiaryItem {
     val id: String
     val nutritionValues: NutritionValues
-    val timestamp: Long
+    val utcTimestamp: Long
     val userId: String
     val date: String
     val mealName: MealName

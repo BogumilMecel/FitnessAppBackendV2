@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ProductDiaryEntryPostRequest(
     val product: Product,
-    val timestamp: Long,
     val weight: Int,
     val mealName: MealName,
     val date: String

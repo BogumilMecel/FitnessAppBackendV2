@@ -37,7 +37,7 @@ class InsertProductUseCase(
                         name = name,
                         barcode = barcode,
                         containerWeight = containerWeight,
-                        timestamp = timestamp,
+                        utcTimestamp = System.currentTimeMillis(),
                         nutritionValuesIn = nutritionValuesIn,
                         measurementUnit = newProductRequest.measurementUnit,
                         nutritionValues = if (newProductRequest.nutritionValuesIn == NutritionValuesIn.HUNDRED_GRAMS) nutritionValues else {

@@ -13,7 +13,7 @@ import org.bson.types.ObjectId
 data class ProductDiaryEntry(
     override val id: String = "",
     override val nutritionValues: NutritionValues,
-    override val timestamp: Long,
+    override val utcTimestamp: Long,
     override val date: String,
     override val userId: String,
     override val mealName: MealName,
@@ -24,7 +24,7 @@ data class ProductDiaryEntry(
 data class ProductDiaryEntryDto(
     @BsonId val _id: ObjectId = ObjectId(),
     val nutritionValues: NutritionValues,
-    val timestamp: Long,
+    val utcTimestamp: Long,
     val date: String,
     var weight: Int,
     val mealName: MealName,
@@ -34,7 +34,7 @@ data class ProductDiaryEntryDto(
 
 fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiaryEntryDto(
     _id = id.toObjectId(),
-    timestamp = timestamp,
+    utcTimestamp = utcTimestamp,
     userId = userId,
     nutritionValues = nutritionValues,
     date = date,
@@ -45,7 +45,7 @@ fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiary
 
 fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
     id = _id.toString(),
-    timestamp = timestamp,
+    utcTimestamp = utcTimestamp,
     nutritionValues = nutritionValues,
     date = date,
     weight = weight,

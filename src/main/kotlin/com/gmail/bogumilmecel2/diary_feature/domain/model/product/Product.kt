@@ -13,7 +13,7 @@ data class Product(
     val id: String = "",
     val name: String,
     val containerWeight: Int? = null,
-    val timestamp: Long,
+    val utcTimestamp: Long,
     val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val nutritionValues: NutritionValues,
@@ -26,7 +26,7 @@ data class ProductDto(
     @BsonId val _id: ObjectId,
     val name: String,
     val containerWeight: Int? = null,
-    val timestamp: Long,
+    val utcTimestamp: Long,
     val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val nutritionValues: NutritionValues,
@@ -46,7 +46,7 @@ fun Product.toDto(userId: String, country: Country): ProductDto = ProductDto(
     barcode = barcode,
     userId = userId,
     username = username,
-    timestamp = timestamp,
+    utcTimestamp = utcTimestamp,
     country = country
 )
 
@@ -60,7 +60,7 @@ fun ProductDto.toProduct(): Product = Product(
     barcode = barcode,
     userId = userId,
     username = username,
-    timestamp = timestamp
+    utcTimestamp = utcTimestamp
 )
 
 fun Product.calculateNutritionValues(weight: Int): NutritionValues {
