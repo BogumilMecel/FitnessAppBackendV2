@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe
 
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
-import com.gmail.bogumilmecel2.common.util.DateUtils
+import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.NewRecipeRequest
@@ -33,7 +33,7 @@ class InsertRecipeUseCase(
                 val recipe = Recipe(
                     name = recipeName,
                     ingredients = ingredients,
-                    utcTimestamp = DateUtils.getCurrentUtcTimestamp(),
+                    utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
                     nutritionValues = NutritionValues(
                         calories = newRecipeRequest.ingredients.sumOf { it.nutritionValues.calories },
                         carbohydrates = newRecipeRequest.ingredients.sumOf { it.nutritionValues.carbohydrates },

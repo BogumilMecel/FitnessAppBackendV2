@@ -29,7 +29,6 @@ data class UserDto(
     val nutritionValues: NutritionValues? = null,
     val userInformation: UserInformation? = null,
     val favoriteUserRecipesIds: List<String> = emptyList(),
-    val latestLogEntry: LogEntry? = null
 )
 
 fun User.toDto(password: String, salt: String): UserDto = UserDto(
@@ -37,7 +36,6 @@ fun User.toDto(password: String, salt: String): UserDto = UserDto(
     username = username,
     nutritionValues = nutritionValues,
     userInformation = userInformation,
-    latestLogEntry = latestLogEntry,
     email = email,
     password = password,
     salt = salt,
@@ -50,6 +48,5 @@ fun UserDto.toUser():User = User(
     username = username,
     nutritionValues = nutritionValues,
     userInformation = userInformation,
-    latestLogEntry = latestLogEntry,
     favoriteUserRecipesIds = favoriteUserRecipesIds
 )

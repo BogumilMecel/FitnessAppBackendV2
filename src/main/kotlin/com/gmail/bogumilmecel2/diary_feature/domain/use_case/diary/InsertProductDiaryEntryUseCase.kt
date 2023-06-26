@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 
-import com.gmail.bogumilmecel2.common.util.DateUtils
-import com.gmail.bogumilmecel2.common.util.DateUtils.isValidDate
+import com.gmail.bogumilmecel2.common.util.CustomDateUtils
+import com.gmail.bogumilmecel2.common.util.CustomDateUtils.isValidDate
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryPostRequest
@@ -28,7 +28,7 @@ class InsertProductDiaryEntryUseCase(
                     product = productDiaryEntryPostRequest.product,
                     weight = productDiaryEntryPostRequest.weight,
                     mealName = productDiaryEntryPostRequest.mealName,
-                    utcTimestamp = DateUtils.getCurrentUtcTimestamp(),
+                    utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
                     date = productDiaryEntryPostRequest.date,
                     userId = userId,
                     nutritionValues = productDiaryEntryPostRequest.product.calculateNutritionValues(weight = productDiaryEntryPostRequest.weight)
