@@ -114,7 +114,7 @@ class UserRepositoryImp(
                 .limit(limit)
                 .sort(
                     descending(
-                        WeightEntryDto::timestamp
+                        WeightEntryDto::utcTimestamp
                     )
                 )
                 .toList()

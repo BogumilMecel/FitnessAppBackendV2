@@ -6,7 +6,7 @@ import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
 class CalculateWeightProgressUseCase {
     operator fun invoke(weightEntries:List<WeightEntry>):String?{
         if (weightEntries.size > 1) {
-            weightEntries.sortedByDescending { it.timestamp }.also { entries ->
+            weightEntries.sortedByDescending { it.utcTimestamp }.also { entries ->
                 val size = entries.size
 
                 val firstHalf = entries.toTypedArray().copyOfRange(0, (size + 1) / 2)
