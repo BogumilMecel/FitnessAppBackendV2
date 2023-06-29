@@ -33,7 +33,7 @@ import com.gmail.bogumilmecel2.user.log.routes.configureLogRoutes
 import com.gmail.bogumilmecel2.user.user_data.data.repository.UserRepositoryImp
 import com.gmail.bogumilmecel2.user.user_data.domain.use_cases.*
 import com.gmail.bogumilmecel2.user.user_data.routes.configureUserDataRoutes
-import com.gmail.bogumilmecel2.user.weight.domain.use_case.AddWeightEntry
+import com.gmail.bogumilmecel2.user.weight.domain.use_case.AddWeightEntryUseCase
 import com.gmail.bogumilmecel2.user.weight.domain.use_case.CalculateWeightProgressUseCase
 import com.gmail.bogumilmecel2.user.weight.domain.use_case.GetWeightEntriesUseCase
 import com.gmail.bogumilmecel2.user.weight.domain.use_case.WeightUseCases
@@ -117,13 +117,16 @@ fun Application.module() {
 
     val calculateWeightEntriesUseCase = CalculateWeightProgressUseCase()
     val getWeightEntriesUseCase = GetWeightEntriesUseCase(userRepository = userRepository)
+    val checkIfWeightIsValidUseCase = CheckIfWeightIsValidUseCase()
+    val addWeightEntryUseCase = AddWeightEntryUseCase(
+        userRepository = userRepository,
+        calculateWeightProgressUseCase = calculateWeightEntriesUseCase,
+        getWeightEntriesUseCase = getWeightEntriesUseCase,
+        checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase
+    )
 
     val weightUseCases = WeightUseCases(
-        addWeightEntry = AddWeightEntry(
-            userRepository = userRepository,
-            calculateWeightProgressUseCase = calculateWeightEntriesUseCase,
-            getWeightEntriesUseCase = getWeightEntriesUseCase
-        )
+        addWeightEntryUseCase = addWeightEntryUseCase
     )
     val saveNutritionValuesUseCase = SaveNutritionValuesUseCase(userRepository = userRepository)
 
@@ -132,7 +135,9 @@ fun Application.module() {
         handleUserInformationUseCase = HandleUserInformationUseCase(
             userRepository = userRepository,
             saveNutritionValuesUseCase = saveNutritionValuesUseCase,
-            calculateNutritionValuesUseCase = CalculateNutritionValuesUseCase()
+            calculateNutritionValuesUseCase = CalculateNutritionValuesUseCase(),
+            checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
+            addWeightEntryUseCase = addWeightEntryUseCase
         )
     )
 

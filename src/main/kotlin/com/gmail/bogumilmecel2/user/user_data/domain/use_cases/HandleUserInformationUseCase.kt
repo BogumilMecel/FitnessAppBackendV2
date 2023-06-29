@@ -1,31 +1,32 @@
 package com.gmail.bogumilmecel2.user.user_data.domain.use_cases
 
 import com.gmail.bogumilmecel2.authentication.domain.model.user.User
-import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.user_data.domain.model.IntroductionRequest
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
-import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
-import com.gmail.bogumilmecel2.user.weight.domain.use_case.AddWeightEntry
+import com.gmail.bogumilmecel2.user.weight.domain.model.NewWeightEntryRequest
+import com.gmail.bogumilmecel2.user.weight.domain.use_case.AddWeightEntryUseCase
+import kotlinx.datetime.TimeZone
 
 class HandleUserInformationUseCase(
     private val userRepository: UserRepository,
     private val calculateNutritionValuesUseCase: CalculateNutritionValuesUseCase,
     private val saveNutritionValuesUseCase: SaveNutritionValuesUseCase,
-    private val addWeightEntry: AddWeightEntry,
-    private val checkIfWeightIsValid: CheckIfWeightIsValid
+    private val addWeightEntryUseCase: AddWeightEntryUseCase,
+    private val checkIfWeightIsValidUseCase: CheckIfWeightIsValidUseCase
 ) {
 
     suspend operator fun invoke(
         introductionRequest: IntroductionRequest,
-        userId: String
+        userId: String,
+        timezone: TimeZone
     ): Resource<User> = with(introductionRequest) {
         return@with if (age < 0 || age > 100) {
             Resource.Error()
         } else if (height < 0 || height > 250) {
             Resource.Error()
-        } else if (checkIfWeightIsValid(weight)) {
+        } else if (checkIfWeightIsValidUseCase(weight)) {
             Resource.Error()
         } else {
             val nutritionValues = calculateNutritionValuesUseCase(
@@ -44,12 +45,12 @@ class HandleUserInformationUseCase(
                 userId = userId
             )
 
-            addWeightEntry(
-                weightEntry = WeightEntry(
+            addWeightEntryUseCase(
+                newWeightEntryRequest = NewWeightEntryRequest(
                     value = weight,
-                    utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
                 ),
-                userId = userId
+                userId = userId,
+                timeZone = timezone
             )
 
             userRepository.saveUserInformation(
