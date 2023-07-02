@@ -6,25 +6,21 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class LogEntry(
-    val streak: Int = 1,
-    val utcTimestamp: Long = 0
+    val date: String
 )
 
 data class LogEntryDto(
     @BsonId val _id: ObjectId,
-    val streak: Int,
-    val utcTimestamp: Long,
-    val userId: String
+    val userId: String,
+    val date: String
 )
 
 fun LogEntryDto.toLogEntry() = LogEntry(
-    streak = streak,
-    utcTimestamp = utcTimestamp
+    date = date
 )
 
 fun LogEntry.toDto(userId: String) = LogEntryDto(
     _id = ObjectId(),
-    streak = streak,
-    utcTimestamp = utcTimestamp,
-    userId = userId
+    userId = userId,
+    date = date
 )

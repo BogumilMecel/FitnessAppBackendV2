@@ -49,16 +49,18 @@ class UserRepositoryImp(
         }
     }
 
-    override suspend fun saveLogEntry(entry: LogEntry, userId: String): Resource<LogEntry> {
+    override suspend fun saveLogEntry(entry: LogEntry, userId: String): Resource<Unit> {
         return handleRequest {
-            val wasAcknowledged = logEntryCol.insertOne(entry.toDto(userId = userId)).wasAcknowledged()
+            logEntryCol.insertOne(entry.toDto(userId = userId)).wasAcknowledgedOrNull() ?: throw Exception()
+        }
+    }
 
-            if (wasAcknowledged) {
-                LogEntry(
-                    streak = entry.streak,
-                    utcTimestamp = entry.utcTimestamp
-                )
-            } else throw Exception()
+    override suspend fun updateUserLogStreak(userId: String, streak: Int): Resource<Unit> {
+        return handleRequest {
+            userCol.updateOneById(
+                userId.toObjectId(),
+                setValue(UserDto::logStreak, streak)
+            ).wasAcknowledgedOrNull() ?: throw Exception()
         }
     }
 
@@ -66,7 +68,7 @@ class UserRepositoryImp(
         return handleRequest {
             logEntryCol
                 .find(LogEntryDto::userId eq userId)
-                .sort(descending(LogEntryDto::utcTimestamp))
+                .sort(descending(LogEntryDto::date))
                 .first()
                 ?.toLogEntry()
         }

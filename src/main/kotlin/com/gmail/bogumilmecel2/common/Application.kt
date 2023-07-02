@@ -26,10 +26,10 @@ import com.gmail.bogumilmecel2.diary_feature.price_feature.data.repository.Price
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetProductPriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetRecipePriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.routes.configureDiaryRoutes
-import com.gmail.bogumilmecel2.user.log.domain.use_case.CheckLatestLogEntry
+import com.gmail.bogumilmecel2.user.log.domain.use_case.CheckLatestLogEntryAndGetLogStreakUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLatestLogEntry
-import com.gmail.bogumilmecel2.user.log.domain.use_case.InsertLogEntry
-import com.gmail.bogumilmecel2.user.log.routes.configureLogRoutes
+import com.gmail.bogumilmecel2.user.log.domain.use_case.InsertLogEntryUseCase
+import com.gmail.bogumilmecel2.user.log.domain.use_case.UpdateUserLogStreakUseCase
 import com.gmail.bogumilmecel2.user.user_data.data.repository.UserRepositoryImp
 import com.gmail.bogumilmecel2.user.user_data.domain.use_cases.*
 import com.gmail.bogumilmecel2.user.user_data.routes.configureUserDataRoutes
@@ -90,11 +90,12 @@ fun Application.module() {
     )
 
     val getLatestLogEntry = GetLatestLogEntry(userRepository)
-    val insertLogEntry = InsertLogEntry(userRepository)
+    val insertLogEntryUseCase = InsertLogEntryUseCase(userRepository)
 
-    val checkLatestLogEntry = CheckLatestLogEntry(
+    val checkLatestLogEntryAndGetLogStreakUseCase = CheckLatestLogEntryAndGetLogStreakUseCase(
         getLatestLogEntry = getLatestLogEntry,
-        insertLogEntry = insertLogEntry
+        insertLogEntryUseCase = insertLogEntryUseCase,
+        updateUserLogStreakUseCase = UpdateUserLogStreakUseCase(userRepository)
     )
 
     val getRecipeDiaryEntryUseCase = GetRecipeDiaryEntryUseCase(diaryRepository = diaryRepository)
@@ -191,17 +192,13 @@ fun Application.module() {
                     hashingService = hashingService,
                     tokenService = tokenService,
                 ),
-                getUser = GetUser(
+                getUserUseCase = GetUserUseCase(
                     userRepository = userRepository,
-                    checkLatestLogEntry = checkLatestLogEntry,
+                    checkLatestLogEntryAndGetLogStreakUseCase = checkLatestLogEntryAndGetLogStreakUseCase,
                     getWeightEntriesUseCase = getWeightEntriesUseCase,
                     calculateWeightProgressUseCase = calculateWeightEntriesUseCase
                 )
             )
-        )
-
-        configureLogRoutes(
-            checkLatestLogEntry = checkLatestLogEntry
         )
 
         configureWeightRoutes(
