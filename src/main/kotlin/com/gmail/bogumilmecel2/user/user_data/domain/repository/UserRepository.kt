@@ -13,7 +13,7 @@ interface UserRepository {
     suspend fun saveUserInformation(userInformation: UserInformation, userId: String): Resource<Boolean>
     suspend fun saveLogEntry(entry: LogEntry, userId: String): Resource<Unit>
     suspend fun updateUserLogStreak(userId: String, streak: Int): Resource<Unit>
-    suspend fun getLatestLogEntry(userId: String): Resource<LogEntry?>
+    suspend fun getLogEntries(limit: Int, userId: String): Resource<List<LogEntry>>
     suspend fun getUserByEmail(email: String): Resource<UserDto?>
     suspend fun registerNewUser(user: UserDto): Resource<Boolean>
     suspend fun addWeightEntry(weightEntry: WeightEntry, userId: String): Resource<Boolean>

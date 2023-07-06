@@ -6,5 +6,6 @@ import io.ktor.server.routing.*
 fun Route.configureWeightRoutes(weightUseCases: WeightUseCases){
     route("/weightEntries"){
         configureAddWeightEntryRoute(weightUseCases.addWeightEntryUseCase)
+        configureCheckIfShouldAskForWeightDialogsRoute(weightUseCases.checkIfShouldAskForWeightDialogsUseCase)
     }
 }
