@@ -1,13 +1,6 @@
 package com.gmail.bogumilmecel2.user.weight.domain.model
 
-import kotlinx.serialization.Serializable
-
 @kotlinx.serialization.Serializable
 data class WeightDialogsRequest(
-    val answer: WeightDialogsAnswer
+    val accepted: Boolean?
 )
-
-@Serializable
-enum class WeightDialogsAnswer {
-    Accepted, Declined, NotNow
-}

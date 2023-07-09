@@ -6,6 +6,7 @@ import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.user.log.domain.model.LogEntry
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsLastTimeAsked
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
 
 interface UserRepository {
@@ -21,4 +22,6 @@ interface UserRepository {
     suspend fun getUser(userId: String): Resource<User?>
     suspend fun getUsername(userId: String): Resource<String?>
     suspend fun getWeightEntries(userId: String, limit: Int): Resource<List<WeightEntry>>
+    suspend fun updateWeightDialogsQuestion(userId: String, accepted: Boolean): Resource<Unit>
+    suspend fun updateLastTimeAskedForWeightDialogs(userId: String, lastTimeAsked: WeightDialogsLastTimeAsked): Resource<WeightDialogsLastTimeAsked>
 }
