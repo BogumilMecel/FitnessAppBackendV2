@@ -10,10 +10,6 @@ object CustomDateUtils {
             .toInstant(UtcOffset.ZERO)
             .toEpochMilliseconds()
 
-    private fun getCurrentUtcLocalDateString() = getClockNow()
-        .toLocalDateTime(timeZone = TimeZone.UTC)
-        .date.toString()
-
     private fun getCurrentUtcLocalDate() = getClockNow()
         .toLocalDateTime(timeZone = TimeZone.UTC)
         .date
@@ -24,15 +20,6 @@ object CustomDateUtils {
             .date
     } catch (e: Exception) {
         getCurrentUtcLocalDate()
-    }
-
-    fun getCurrentTimeZoneLocalDateString(timeZone: TimeZone) = try {
-        getClockNow()
-            .toLocalDateTime(timeZone)
-            .date
-            .toString()
-    } catch (e: Exception) {
-        getCurrentUtcLocalDateString()
     }
 
     fun String.isValidDate(): Boolean = this.matches(regex = ("""^\d{4}-\d{2}-\d{2}$""").toRegex())

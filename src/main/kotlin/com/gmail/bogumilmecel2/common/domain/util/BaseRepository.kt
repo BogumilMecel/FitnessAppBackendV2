@@ -23,6 +23,6 @@ open class BaseRepository() {
         )
     }
 
-    protected fun InsertOneResult.wasAcknowledgedOrNull() = if (this.wasAcknowledged()) true else null
-    protected fun UpdateResult.wasAcknowledgedOrNull() = if (this.wasAcknowledged()) true else null
+    protected fun InsertOneResult.wasAcknowledgedOrThrow() = if (this.wasAcknowledged()) true else throw Exception()
+    protected fun UpdateResult.wasAcknowledgedOrThrow() = if (this.wasAcknowledged()) true else throw Exception()
 }

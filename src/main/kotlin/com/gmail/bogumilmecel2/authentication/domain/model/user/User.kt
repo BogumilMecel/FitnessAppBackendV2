@@ -17,8 +17,7 @@ data class User(
     val logStreak: Int = 1,
     val latestWeightEntry: WeightEntry? = null,
     val weightProgress: String? = null,
-    val weightDialogsAccepted: Boolean? = null,
-    val lastTimeAskedAboutWeightDialogs: WeightDialogsLastTimeAsked? = null
+    val weightDialogsData: WeightDialogsData? = null
 )
 
 data class UserDto(
@@ -30,8 +29,6 @@ data class UserDto(
     val logStreak: Int = 1,
     val nutritionValues: NutritionValues? = null,
     val userInformation: UserInformation? = null,
-    val weightDialogsAccepted: Boolean? = null,
-    val lastTimeAskedAboutWeightDialogs: WeightDialogsLastTimeAsked? = null,
 )
 
 fun UserDto.toUser():User = User(
@@ -41,6 +38,10 @@ fun UserDto.toUser():User = User(
     nutritionValues = nutritionValues,
     userInformation = userInformation,
     logStreak = logStreak,
-    weightDialogsAccepted = weightDialogsAccepted,
-    lastTimeAskedAboutWeightDialogs = lastTimeAskedAboutWeightDialogs,
+)
+
+@Serializable
+data class WeightDialogsData(
+    val accepted: Boolean? = null,
+    val lastTimeAsked: WeightDialogsLastTimeAsked? = null
 )

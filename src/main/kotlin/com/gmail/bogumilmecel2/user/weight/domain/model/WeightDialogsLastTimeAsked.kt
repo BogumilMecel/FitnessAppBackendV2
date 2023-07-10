@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class WeightDialogsLastTimeAsked(
-    val lastTimeAsked: String,
+    val lastTimeAsked: String?,
     val askedCount: Int = 0
 )

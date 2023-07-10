@@ -7,5 +7,6 @@ fun Route.configureWeightRoutes(weightUseCases: WeightUseCases){
     route("/weightEntries"){
         configureAddWeightEntryRoute(weightUseCases.addWeightEntryUseCase)
         configureCheckIfShouldAskForWeightDialogsRoute(weightUseCases.checkIfShouldAskForWeightDialogsUseCase)
+        configureHandleWeightDialogsAnswerRoute(weightUseCases.handleWeightDialogsAnswerUseCase)
     }
 }
