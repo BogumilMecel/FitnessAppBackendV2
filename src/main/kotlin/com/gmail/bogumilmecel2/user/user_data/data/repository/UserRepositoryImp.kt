@@ -17,14 +17,12 @@ import com.gmail.bogumilmecel2.user.weight.domain.model.*
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.descending
 import org.litote.kmongo.eq
-import org.litote.kmongo.inc
 import org.litote.kmongo.setValue
 
 class UserRepositoryImp(
     private val userCol: CoroutineCollection<UserDto>,
     private val weightCol: CoroutineCollection<WeightEntryDto>,
     private val logEntryCol: CoroutineCollection<LogEntryDto>,
-    private val weightDialogsCol: CoroutineCollection<WeightDialogsDto>
 ) : UserRepository, BaseRepository() {
 
     override suspend fun saveUserInformation(userInformation: UserInformation, userId: String): Resource<Boolean> {
@@ -129,50 +127,14 @@ class UserRepositoryImp(
         }
     }
 
-    override suspend fun insertWeightDialogsData(weightDialogs: WeightDialogs, userId: String): Resource<Unit> {
+    override suspend fun updateWeightDialogsData(weightDialogs: WeightDialogs, userId: String): Resource<Unit> {
         return handleRequest {
-            weightDialogsCol
-                .insertOne(weightDialogs.toDto(userId = userId))
+            userCol
+                .updateOneById(
+                    id = userId.toObjectId(),
+                    update = setValue(UserDto::weightDialogs, weightDialogs)
+                )
                 .wasAcknowledgedOrThrow()
-        }
-    }
-
-    override suspend fun getWeightDialogsData(userId: String): Resource<WeightDialogs?> {
-        return handleRequest {
-            weightDialogsCol
-                .findOne(WeightDialogsDto::userId eq userId)
-                ?.toWeightDialogs()
-        }
-    }
-
-    override suspend fun updateWeightDialogsAccepted(userId: String, accepted: Boolean): Resource<Unit> {
-        return handleRequest {
-            weightDialogsCol
-                .updateOne(
-                    filter = WeightDialogsDto::userId eq userId,
-                    update = setValue(WeightDialogsDto::accepted, accepted)
-                ).wasAcknowledgedOrThrow()
-        }
-    }
-
-    override suspend fun updateWeightDialogsLastTimeAsked(userId: String, date: String): Resource<Int> {
-        return handleRequest {
-            weightDialogsCol.run {
-                val filter = WeightDialogsDto::userId eq userId
-                updateOne(
-                    filter = filter,
-                    update = inc(WeightDialogsDto::askedCount, 1)
-                ).wasAcknowledgedOrThrow()
-
-                updateOne(
-                    filter = filter,
-                    update = setValue(WeightDialogsDto::lastTimeAsked, date)
-                ).wasAcknowledgedOrThrow()
-
-                findOne(
-                    filter = filter
-                )?.askedCount ?: 1
-            }
         }
     }
 }

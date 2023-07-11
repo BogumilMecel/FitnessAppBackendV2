@@ -16,11 +16,9 @@ class CheckIfShouldAskForWeightDialogsUseCase(
         userId: String,
         timeZone: TimeZone
     ): Resource<Unit> {
-        val userWeightDialogsResource = userRepository.getWeightDialogsData(userId = userId)
+        val user = userRepository.getUser(userId = userId).data ?: return Resource.Error()
 
-        if (userWeightDialogsResource is Resource.Error) return Resource.Error()
-
-        val userWeightDialogsData = userWeightDialogsResource.data
+        val userWeightDialogsData = user.weightDialogs
 
         if (userWeightDialogsData != null) {
             if (userWeightDialogsData.accepted == true) return Resource.Error()
