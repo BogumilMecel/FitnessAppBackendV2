@@ -1,8 +1,8 @@
 package com.gmail.bogumilmecel2.user.user_data.domain.use_cases
 
-import com.gmail.bogumilmecel2.authentication.domain.model.user.User
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.user_data.domain.model.IntroductionRequest
+import com.gmail.bogumilmecel2.user.user_data.domain.model.IntroductionResponse
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.weight.domain.model.NewWeightEntryRequest
@@ -21,7 +21,7 @@ class HandleUserInformationUseCase(
         introductionRequest: IntroductionRequest,
         userId: String,
         timezone: TimeZone
-    ): Resource<User> = with(introductionRequest) {
+    ): Resource<IntroductionResponse> = with(introductionRequest) {
         return@with if (age < 0 || age > 100) {
             Resource.Error()
         } else if (height < 0 || height > 250) {
@@ -45,6 +45,8 @@ class HandleUserInformationUseCase(
                 userId = userId
             )
 
+            if (nutritionValuesResource is Resource.Error) return Resource.Error()
+
             addWeightEntryUseCase(
                 newWeightEntryRequest = NewWeightEntryRequest(
                     value = weight,
@@ -53,25 +55,28 @@ class HandleUserInformationUseCase(
                 timeZone = timezone
             )
 
+            val userInformation = UserInformation(
+                activityLevel = activityLevel,
+                typeOfWork = typeOfWork,
+                trainingFrequency = trainingFrequency,
+                gender = gender,
+                height = height,
+                currentWeight = weight,
+                desiredWeight = desiredWeight,
+                age = age
+            )
+
             userRepository.saveUserInformation(
-                userInformation = UserInformation(
-                    activityLevel = activityLevel,
-                    typeOfWork = typeOfWork,
-                    trainingFrequency = trainingFrequency,
-                    gender = gender,
-                    height = height,
-                    currentWeight = weight,
-                    desiredWeight = desiredWeight,
-                    age = age
-                ),
+                userInformation = userInformation,
                 userId = userId
             )
 
-            if (nutritionValuesResource.data == true) {
-                userRepository.getUser(userId = userId).data?.let {
-                    Resource.Success(it)
-                } ?: Resource.Error()
-            } else Resource.Error()
+            return Resource.Success(
+                data = IntroductionResponse(
+                    nutritionValues = nutritionValues,
+                    userInformation = userInformation
+                )
+            )
         }
     }
 }
