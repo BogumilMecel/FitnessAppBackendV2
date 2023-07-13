@@ -134,10 +134,7 @@ fun Application.module() {
     val weightUseCases = WeightUseCases(
         addWeightEntryUseCase = addWeightEntryUseCase,
         checkIfShouldAskForWeightDialogsUseCase = checkIfShouldAskForWeightDialogsUseCase,
-        handleWeightDialogsAnswerUseCase = HandleWeightDialogsAnswerUseCase(
-            userRepository = userRepository,
-            getWeightEntriesUseCase = getWeightEntriesUseCase
-        )
+        handleWeightDialogsAnswerUseCase = HandleWeightDialogsAnswerUseCase(userRepository = userRepository)
     )
     val saveNutritionValuesUseCase = SaveNutritionValuesUseCase(userRepository = userRepository)
 
