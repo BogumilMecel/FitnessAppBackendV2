@@ -82,8 +82,9 @@ fun Application.module() {
         ),
         getProductPriceUseCase = GetProductPriceUseCase(
             priceRepository = priceRepository,
-            getProductUseCase = getProductUseCase
-        )
+            getProductUseCase = getProductUseCase,
+        ),
+        getProductUseCase = getProductUseCase
     )
 
     val insertLogEntryUseCase = InsertLogEntryUseCase(userRepository)
@@ -100,12 +101,16 @@ fun Application.module() {
 
     val diaryUseCases = DiaryUseCases(
         getDiaryEntries = GetDiaryEntries(diaryRepository),
-        insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(diaryRepository),
+        insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
+            diaryRepository = diaryRepository,
+            getProductUseCase = getProductUseCase
+        ),
         deleteDiaryEntry = DeleteDiaryEntry(diaryRepository),
         getUserCaloriesSum = GetUserCaloriesSum(diaryRepository),
         editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
             diaryRepository = diaryRepository,
-            getProductDiaryEntryUseCase = getProductDiaryEntryUseCase
+            getProductDiaryEntryUseCase = getProductDiaryEntryUseCase,
+            getProductUseCase = getProductUseCase
         ),
         editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
