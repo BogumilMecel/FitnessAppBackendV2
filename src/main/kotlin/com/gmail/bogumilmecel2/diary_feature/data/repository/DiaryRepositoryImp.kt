@@ -172,6 +172,12 @@ class DiaryRepositoryImp(
         }
     }
 
+    override suspend fun getRecipe(recipeId: String): Resource<Recipe?> {
+        return handleRequest {
+            recipeCol.findOneById(id = recipeId.toObjectId())?.toObject()
+        }
+    }
+
     override suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>> {
         return handleRequest {
             recipeCol.find("{'name': {'${MongoOperator.regex}': '$searchText', '${MongoOperator.options}': 'i'}}")

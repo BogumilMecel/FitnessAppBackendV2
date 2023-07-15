@@ -98,6 +98,7 @@ fun Application.module() {
 
     val getRecipeDiaryEntryUseCase = GetRecipeDiaryEntryUseCase(diaryRepository = diaryRepository)
     val getProductDiaryEntryUseCase = GetProductDiaryEntryUseCase(diaryRepository = diaryRepository)
+    val getRecipeUseCase = GetRecipeUseCase(diaryRepository)
 
     val diaryUseCases = DiaryUseCases(
         getDiaryEntries = GetDiaryEntries(diaryRepository),
@@ -114,7 +115,8 @@ fun Application.module() {
         ),
         editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
-            getRecipeDiaryEntryUseCase = getRecipeDiaryEntryUseCase
+            getRecipeDiaryEntryUseCase = getRecipeDiaryEntryUseCase,
+            getRecipeUseCase = getRecipeUseCase
         )
     )
 
@@ -161,8 +163,12 @@ fun Application.module() {
             getUsernameUseCase = getUsernameUseCase
         ),
         searchForRecipes = SearchForRecipes(diaryRepository = diaryRepository),
-        addRecipeDiaryEntryUseCase = AddRecipeDiaryEntryUseCase(diaryRepository = diaryRepository),
-        getRecipePriceUseCase = GetRecipePriceUseCase(priceRepository = priceRepository)
+        addRecipeDiaryEntryUseCase = AddRecipeDiaryEntryUseCase(
+            diaryRepository = diaryRepository,
+            getRecipeUseCase = getRecipeUseCase
+        ),
+        getRecipePriceUseCase = GetRecipePriceUseCase(priceRepository = priceRepository),
+        getRecipeUseCase = getRecipeUseCase
     )
 
     val tokenService = JwtTokenService()

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RecipeDiaryEntryRequest(
-    val recipe: Recipe,
+    val recipeId: String,
     val servings: Int,
     val date: String,
     val mealName: MealName

@@ -7,7 +7,8 @@ import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 
 class EditRecipeDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
-    private val getRecipeDiaryEntryUseCase: GetRecipeDiaryEntryUseCase
+    private val getRecipeDiaryEntryUseCase: GetRecipeDiaryEntryUseCase,
+    private val getRecipeUseCase: GetRecipeUseCase
 ) {
     suspend operator fun invoke(
         editRecipeDiaryEntryRequest: EditRecipeDiaryEntryRequest,
@@ -27,7 +28,9 @@ class EditRecipeDiaryEntryUseCase(
             return Resource.Error()
         }
 
-        val newNutritionValues = recipeDiaryEntry.recipe.calculateNutritionValues(servings = newServings)
+        val recipe = getRecipeUseCase(recipeId = recipeDiaryEntry.recipeId).data ?: return Resource.Error()
+
+        val newNutritionValues = recipe.calculateNutritionValues(servings = newServings)
 
         val wasAcknowledged = diaryRepository.editRecipeDiaryEntry(
             recipeDiaryEntry = recipeDiaryEntry.copy(

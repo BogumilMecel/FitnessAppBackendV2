@@ -9,10 +9,13 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.calculateNutrit
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 
 class AddRecipeDiaryEntryUseCase(
-    private val diaryRepository: DiaryRepository
+    private val diaryRepository: DiaryRepository,
+    private val getRecipeUseCase: GetRecipeUseCase
 ) {
 
     suspend operator fun invoke(request: RecipeDiaryEntryRequest, userId: String): Resource<Boolean> {
+        val recipe = getRecipeUseCase(recipeId = request.recipeId).data ?: return Resource.Error()
+
         return if (request.servings <= 0 || request.date.isEmpty()) {
             Resource.Error()
         } else if (!request.date.isValidDate()) {
@@ -21,13 +24,14 @@ class AddRecipeDiaryEntryUseCase(
             diaryRepository.insertRecipeDiaryEntry(
                 recipeDiaryEntry = RecipeDiaryEntry(
                     id = "",
-                    nutritionValues = request.recipe.calculateNutritionValues(request.servings),
+                    nutritionValues = recipe.calculateNutritionValues(request.servings),
                     date = request.date,
                     utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
                     userId = userId,
                     mealName = request.mealName,
                     servings = request.servings,
-                    recipe = request.recipe,
+                    recipeName = recipe.name,
+                    recipeId = recipe.id
                 ),
                 userId = userId
             )
