@@ -5,13 +5,14 @@ import com.gmail.bogumilmecel2.common.util.CustomDateUtils.isValidDate
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryPostRequest
-import com.gmail.bogumilmecel2.diary_feature.domain.model.product.calculateNutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateProductNutritionValuesUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
 
 class InsertProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
-    private val getProductUseCase: GetProductUseCase
+    private val getProductUseCase: GetProductUseCase,
+    private val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
 ) {
 
     suspend operator fun invoke(
@@ -34,7 +35,10 @@ class InsertProductDiaryEntryUseCase(
                     utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
                     date = productDiaryEntryPostRequest.date,
                     userId = userId,
-                    nutritionValues = product.calculateNutritionValues(weight = productDiaryEntryPostRequest.weight),
+                    nutritionValues = calculateProductNutritionValuesUseCase(
+                        product = product,
+                        weight = productDiaryEntryPostRequest.weight
+                    ).data ?: return Resource.Error(),
                     productId = productDiaryEntryPostRequest.productId,
                     productName = product.name,
                     productMeasurementUnit = product.measurementUnit

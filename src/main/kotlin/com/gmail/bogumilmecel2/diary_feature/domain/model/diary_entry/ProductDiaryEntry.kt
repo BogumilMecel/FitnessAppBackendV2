@@ -12,14 +12,14 @@ import org.bson.types.ObjectId
 @Serializable
 data class ProductDiaryEntry(
     override val id: String = "",
-    override val nutritionValues: NutritionValues,
-    override val utcTimestamp: Long,
-    override val date: String,
-    override val userId: String,
-    override val mealName: MealName,
-    val productMeasurementUnit: MeasurementUnit,
-    val productName: String,
-    val productId: String,
+    override val nutritionValues: NutritionValues = NutritionValues(),
+    override val utcTimestamp: Long = 0,
+    override val date: String = "",
+    override val userId: String = "",
+    override val mealName: MealName = MealName.BREAKFAST,
+    val productMeasurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
+    val productName: String = "",
+    val productId: String = "",
     val weight: Int = 0,
 ) : DiaryItem
 

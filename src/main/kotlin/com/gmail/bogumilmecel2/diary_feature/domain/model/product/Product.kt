@@ -2,7 +2,6 @@ package com.gmail.bogumilmecel2.diary_feature.domain.model.product
 
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
-import com.gmail.bogumilmecel2.common.util.extensions.round
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import kotlinx.serialization.Serializable
@@ -14,7 +13,7 @@ data class Product(
     val id: String = "",
     val name: String = "",
     val containerWeight: Int? = null,
-    val utcTimestamp: Long = System.currentTimeMillis(),
+    val utcTimestamp: Long = 0,
     val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val nutritionValues: NutritionValues = NutritionValues(),
@@ -63,14 +62,3 @@ fun ProductDto.toProduct(): Product = Product(
     username = username,
     utcTimestamp = utcTimestamp
 )
-
-fun Product.calculateNutritionValues(weight: Int): NutritionValues {
-    return NutritionValues(
-        calories = ((nutritionValues.calories).toDouble() / 100.0 * weight.toDouble()).toInt(),
-        carbohydrates = nutritionValues.carbohydrates / 100.0 * weight.toDouble().round(2),
-        protein = nutritionValues.protein / 100.0 * weight.toDouble().round(2),
-        fat = nutritionValues.fat / 100.0 * weight.toDouble().round(2),
-    )
-}
-
-
