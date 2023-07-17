@@ -95,7 +95,7 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private fun mockData(
         productDiaryEntryResource: Resource<ProductDiaryEntry?> = Resource.Success(mockProductDiaryEntry()),
-        productResource: Resource<Product?> = Resource.Success(mockProduct()),
+        productResource: Resource<Product?> = Resource.Success(MockConstants.Diary.getSampleProduct()),
         calculateProductNutritionValuesResource: Resource<NutritionValues> = Resource.Success(NutritionValues()),
         repositoryResource: Resource<Unit> = Resource.Success(Unit)
     ) {
@@ -103,7 +103,7 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_11) } returns productResource
         coEvery {
             calculateProductNutritionValuesUseCase(
-                product = mockProduct(),
+                product = MockConstants.Diary.getSampleProduct(),
                 weight = any()
             )
         } returns calculateProductNutritionValuesResource
@@ -118,10 +118,6 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     private fun mockEditProductDiaryEntryRequest(weight: Int) = EditProductDiaryEntryRequest(
         productDiaryEntryId = MockConstants.Diary.DIARY_ENTRY_ID_21,
         newWeight = weight
-    )
-
-    private fun mockProduct() = Product(
-        id = MockConstants.Diary.PRODUCT_ID_11
     )
 
     private fun mockProductDiaryEntry() = ProductDiaryEntry(
