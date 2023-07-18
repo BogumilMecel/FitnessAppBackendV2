@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.user.user_data.domain.use_cases
 
-import com.gmail.bogumilmecel2.MockConstants.USER_ID
+import com.gmail.bogumilmecel2.MockConstants.USER_ID_1
 import com.gmail.bogumilmecel2.authentication.domain.model.user.User
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
@@ -22,7 +22,7 @@ class GetUserObjectUseCaseTest {
 
     @Test
     fun `check if user id is correct, resource success is returned`() = runTest {
-        coEvery { userRepository.getUser(USER_ID) } returns Resource.Success(data = null)
-        assertIs<Resource.Success<User?>>(getUserObjectUseCase(userId = USER_ID))
+        coEvery { userRepository.getUser(USER_ID_1) } returns Resource.Success(data = null)
+        assertIs<Resource.Success<User?>>(getUserObjectUseCase(userId = USER_ID_1))
     }
 }

@@ -7,17 +7,11 @@ import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 class GetRecipeDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository
 ) {
-    suspend operator fun invoke(recipeDiaryEntryId: String): Resource<RecipeDiaryEntry> {
-        if (recipeDiaryEntryId.isEmpty()) {
-            return Resource.Error()
-        }
+    suspend operator fun invoke(recipeDiaryEntryId: String): Resource<RecipeDiaryEntry?> {
+        if (recipeDiaryEntryId.isEmpty()) return Resource.Error()
 
-        val recipeDiaryEntry = diaryRepository.getRecipeDiaryEntry(
+        return diaryRepository.getRecipeDiaryEntry(
             id = recipeDiaryEntryId
-        ).data ?: return Resource.Error()
-
-        return Resource.Success(
-            data = recipeDiaryEntry
         )
     }
 }

@@ -14,19 +14,11 @@ class EditRecipeDiaryEntryUseCase(
         editRecipeDiaryEntryRequest: EditRecipeDiaryEntryRequest,
         userId: String
     ): Resource<Unit> = with(editRecipeDiaryEntryRequest) {
-        if (newServings <= 0) {
-            return Resource.Error()
-        }
-
         val recipeDiaryEntry = getRecipeDiaryEntryUseCase(recipeDiaryEntryId = recipeDiaryEntryId).data ?: return Resource.Error()
 
-        if (recipeDiaryEntry.userId != userId) {
-            return Resource.Error()
-        }
+        if (recipeDiaryEntry.userId != userId) return Resource.Error()
 
-        if (recipeDiaryEntry.servings == newServings) {
-            return Resource.Error()
-        }
+        if (recipeDiaryEntry.servings == newServings) return Resource.Error()
 
         val recipe = getRecipeUseCase(recipeId = recipeDiaryEntry.recipeId).data ?: return Resource.Error()
 
