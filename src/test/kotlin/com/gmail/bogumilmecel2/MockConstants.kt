@@ -38,6 +38,8 @@ object MockConstants {
 
         fun getSampleNutritionValues() = NutritionValues(calories = 255, carbohydrates = 31.0, protein = 17.0, fat = 7.0)
 
+        fun getSampleNutritionValues2() = NutritionValues(calories = 2863, carbohydrates = 206.4, protein = 152.3, fat = 158.97)
+
         fun getSampleProduct() = Product(
             id = PRODUCT_ID_11,
             name = PRODUCT_NAME_1,
