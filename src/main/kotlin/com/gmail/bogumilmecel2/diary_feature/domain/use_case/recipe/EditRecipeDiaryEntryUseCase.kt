@@ -2,13 +2,13 @@ package com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe
 
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.EditRecipeDiaryEntryRequest
-import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.calculateNutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 
 class EditRecipeDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
     private val getRecipeDiaryEntryUseCase: GetRecipeDiaryEntryUseCase,
-    private val getRecipeUseCase: GetRecipeUseCase
+    private val getRecipeUseCase: GetRecipeUseCase,
+    private val calculateRecipeNutritionValuesUseCase: CalculateRecipeNutritionValuesUseCase
 ) {
     suspend operator fun invoke(
         editRecipeDiaryEntryRequest: EditRecipeDiaryEntryRequest,
@@ -30,20 +30,17 @@ class EditRecipeDiaryEntryUseCase(
 
         val recipe = getRecipeUseCase(recipeId = recipeDiaryEntry.recipeId).data ?: return Resource.Error()
 
-        val newNutritionValues = recipe.calculateNutritionValues(servings = newServings)
+        val newNutritionValues = calculateRecipeNutritionValuesUseCase(
+            recipe = recipe,
+            servings = newServings
+        ).data ?: return Resource.Error()
 
-        val wasAcknowledged = diaryRepository.editRecipeDiaryEntry(
+        return diaryRepository.editRecipeDiaryEntry(
             recipeDiaryEntry = recipeDiaryEntry.copy(
                 servings = newServings,
                 nutritionValues = newNutritionValues
             ),
             userId = userId
-        ).data ?: return Resource.Error()
-
-        if (!wasAcknowledged) {
-            return Resource.Error()
-        }
-
-        return Resource.Success(Unit)
+        )
     }
 }

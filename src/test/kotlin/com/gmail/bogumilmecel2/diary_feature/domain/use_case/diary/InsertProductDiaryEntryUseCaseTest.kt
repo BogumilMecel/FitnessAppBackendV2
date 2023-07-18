@@ -41,26 +41,6 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     }
 
     @Test
-    fun `Check if request weight is 0, resource error is returned`() = runTest {
-        mockData()
-        assertIs<Resource.Error<ProductDiaryEntry>>(
-            callTestedMethod(
-                productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(weight = MockConstants.Diary.ZERO_PRODUCT_DIARY_ENTRY_WEIGHT)
-            )
-        )
-    }
-
-    @Test
-    fun `Check if request weight is less than 0, resource error is returned`() = runTest {
-        mockData()
-        assertIs<Resource.Error<ProductDiaryEntry>>(
-            callTestedMethod(
-                productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(weight = MockConstants.Diary.NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT)
-            )
-        )
-    }
-
-    @Test
     fun `Check if request date is empty, resource error is returned`() = runTest {
         mockData()
         assertIs<Resource.Error<ProductDiaryEntry>>(

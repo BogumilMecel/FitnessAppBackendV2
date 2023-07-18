@@ -1,6 +1,5 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.model.recipe
 
-import com.gmail.bogumilmecel2.common.util.extensions.round
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Difficulty
@@ -71,13 +70,3 @@ fun RecipeDto.toObject(): Recipe = Recipe(
     userId = userId,
     isPublic = isPublic,
 )
-
-fun Recipe.calculateNutritionValues(servings: Int): NutritionValues {
-    val nutritionValues = this.nutritionValues
-    return NutritionValues(
-        calories = (nutritionValues.calories.toDouble() * (servings.toDouble() / this.servings.toDouble())).toInt(),
-        carbohydrates = (nutritionValues.carbohydrates * (servings.toDouble() / this.servings.toDouble())).round(2),
-        protein = (nutritionValues.protein * (servings.toDouble() / this.servings.toDouble())).round(2),
-        fat = (nutritionValues.fat * (servings.toDouble() / this.servings.toDouble())).round(2)
-    )
-}

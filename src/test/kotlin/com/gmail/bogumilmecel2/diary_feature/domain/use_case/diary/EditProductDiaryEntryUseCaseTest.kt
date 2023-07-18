@@ -29,16 +29,6 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     )
 
     @Test
-    fun `Check if request weight is less than 0, resource error is returned`() = runTest {
-        assertIs<Resource.Error<Unit>>(callTestedMethod(weight = -1))
-    }
-
-    @Test
-    fun `Check if request weight is 0, resource error is returned`() = runTest {
-        assertIs<Resource.Error<Unit>>(callTestedMethod(weight = 0))
-    }
-
-    @Test
     fun `Check if getProductDiaryEntry returns resource error, resource error is returned`() = runTest {
         mockData(productDiaryEntryResource = Resource.Error())
         assertIs<Resource.Error<Unit>>(callTestedMethod())

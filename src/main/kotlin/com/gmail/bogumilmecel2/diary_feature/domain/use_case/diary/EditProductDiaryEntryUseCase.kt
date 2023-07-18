@@ -16,10 +16,6 @@ class EditProductDiaryEntryUseCase(
         editProductDiaryEntryRequest: EditProductDiaryEntryRequest,
         userId: String
     ): Resource<Unit> = with(editProductDiaryEntryRequest) {
-        if (newWeight <= 0) {
-            return Resource.Error()
-        }
-
         val productDiaryEntry = getProductDiaryEntryUseCase(productDiaryEntryId = productDiaryEntryId).data ?: return Resource.Error()
         val product = getProductUseCase(productId = productDiaryEntry.productId).data ?: return Resource.Error()
         val newNutritionValues = calculateProductNutritionValuesUseCase(
