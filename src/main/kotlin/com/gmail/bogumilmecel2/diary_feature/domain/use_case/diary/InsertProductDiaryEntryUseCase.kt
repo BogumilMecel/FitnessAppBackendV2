@@ -18,7 +18,7 @@ class InsertProductDiaryEntryUseCase(
     suspend operator fun invoke(
         productDiaryEntryPostRequest: ProductDiaryEntryPostRequest,
         userId: String
-    ): Resource<ProductDiaryEntry> = with(productDiaryEntryPostRequest) {
+    ): Resource<Unit> = with(productDiaryEntryPostRequest) {
         val product = getProductUseCase(productId = productDiaryEntryPostRequest.productId).data ?: return Resource.Error()
 
         return if (productDiaryEntryPostRequest.date.isEmpty()) {
@@ -26,7 +26,7 @@ class InsertProductDiaryEntryUseCase(
         } else if (!productDiaryEntryPostRequest.date.isValidDate()) {
             Resource.Error()
         } else {
-            diaryRepository.insertDiaryEntry(
+            diaryRepository.insertProductDiaryEntry(
                 productDiaryEntry = ProductDiaryEntry(
                     weight = productDiaryEntryPostRequest.weight,
                     mealName = productDiaryEntryPostRequest.mealName,
