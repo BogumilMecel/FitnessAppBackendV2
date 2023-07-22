@@ -9,5 +9,5 @@ data class DiaryUseCases(
     val getUserCaloriesSum: GetUserCaloriesSum,
     val editProductDiaryEntryUseCase: EditProductDiaryEntryUseCase,
     val editRecipeDiaryEntryUseCase: EditRecipeDiaryEntryUseCase,
-    val getProductDiaryHistoryUseCase: GetProductDiaryHistoryUseCase
+    val getProductDiaryHistoryUseCase: GetProductDiaryHistoryUseCase,
 )
