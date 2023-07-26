@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.CaloriesSumResponse
-import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiarySearchItem
+import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.*
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
@@ -70,7 +70,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getProductDiaryHistory(userId: String): Resource<List<ProductDiarySearchItem>> {
+    override suspend fun getProductDiaryHistory(userId: String): Resource<List<ProductDiaryHistoryItem>> {
         return handleRequest {
             productDiaryCol
                 .aggregate<ProductDiaryEntryDto>(

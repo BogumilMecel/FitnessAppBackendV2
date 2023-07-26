@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.diary_feature.domain.repository
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.CaloriesSumResponse
-import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiarySearchItem
+import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
@@ -14,7 +14,6 @@ interface DiaryRepository {
     suspend fun getRecipeDiaryEntries(date: String, userId: String): Resource<List<RecipeDiaryEntry>>
     suspend fun getProductDiaryEntry(id: String): Resource<ProductDiaryEntry?>
     suspend fun getRecipeDiaryEntry(id: String): Resource<RecipeDiaryEntry?>
-    suspend fun getProductDiaryHistory(userId: String): Resource<List<ProductDiarySearchItem>>
     suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Unit>
     suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Unit>
     suspend fun getProducts(text: String): Resource<List<Product>>
@@ -29,4 +28,5 @@ interface DiaryRepository {
     suspend fun addNewRecipe(recipe: Recipe): Resource<Recipe>
     suspend fun getRecipe(recipeId: String): Resource<Recipe?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
+    suspend fun getProductDiaryHistory(userId: String): Resource<List<ProductDiaryHistoryItem>>
 }
