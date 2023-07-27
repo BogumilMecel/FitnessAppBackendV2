@@ -223,7 +223,7 @@ fun Application.module() {
                     getUserObjectUseCase = getUserObjectUseCase,
                     checkLatestLogEntryAndGetLogStreakUseCase = checkLatestLogEntryAndGetLogStreakUseCase,
                     getWeightEntriesUseCase = getWeightEntriesUseCase,
-                    calculateWeightProgressUseCase = calculateWeightEntriesUseCase
+                    calculateWeightProgressUseCase = calculateWeightEntriesUseCase,
                 )
             )
         )
