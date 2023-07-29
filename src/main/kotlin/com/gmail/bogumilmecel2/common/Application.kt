@@ -19,6 +19,7 @@ import com.gmail.bogumilmecel2.common.plugins.configureSerialization
 import com.gmail.bogumilmecel2.diary_feature.data.repository.DiaryRepositoryImp
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateProductNutritionValuesUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetUserDiaryItemsUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDiaryNameValidUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.*
@@ -161,7 +162,8 @@ fun Application.module() {
             calculateNutritionValuesUseCase = CalculateNutritionValuesUseCase(),
             checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
             addWeightEntryUseCase = addWeightEntryUseCase
-        )
+        ),
+        getUserDiaryItemsUseCase = GetUserDiaryItemsUseCase(diaryRepository)
     )
 
     val recipeUseCases = RecipeUseCases(
