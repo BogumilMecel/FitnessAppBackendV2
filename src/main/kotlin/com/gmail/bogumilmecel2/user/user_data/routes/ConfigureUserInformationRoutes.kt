@@ -7,5 +7,6 @@ fun Route.configureUserDataRoutes(userDataUseCases: UserDataUseCases) {
     route("/userData/") {
         configureSaveUserNutritionValuesRoute(userDataUseCases.saveNutritionValuesUseCase)
         configureHandleUserInformationRoute(userDataUseCases.handleUserInformationUseCase)
+        configureGetUserDiaryItemsRoute(userDataUseCases.getUserDiaryItemsUseCase)
     }
 }

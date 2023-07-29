@@ -198,4 +198,24 @@ class DiaryRepositoryImp(
                 }
         }
     }
+
+    override suspend fun getUserProducts(userId: String): Resource<List<Product>> {
+        return handleRequest {
+            productCol
+                .find(ProductDto::userId eq userId)
+                .limit(50).descendingSort(ProductDto::utcTimestamp)
+                .toList()
+                .map {it.toProduct() }
+        }
+    }
+
+    override suspend fun getUserRecipes(userId: String): Resource<List<Recipe>> {
+        return handleRequest {
+            recipeCol
+                .find(RecipeDto::userId eq userId)
+                .limit(50).descendingSort(RecipeDto::utcTimestamp)
+                .toList()
+                .map {it.toObject() }
+        }
+    }
 }
