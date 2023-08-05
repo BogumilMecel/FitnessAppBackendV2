@@ -15,6 +15,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.*
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.Aggregates
+import com.mongodb.client.model.Filters
 import org.litote.kmongo.MongoOperator
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
@@ -70,11 +71,15 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getProductDiaryHistory(userId: String): Resource<List<ProductDiaryHistoryItem>> {
+    override suspend fun getProductDiaryHistory(
+        userId: String,
+        fromTimestamp: Long
+    ): Resource<List<ProductDiaryHistoryItem>> {
         return handleRequest {
             productDiaryCol
                 .aggregate<ProductDiaryEntryDto>(
                     pipeline = listOf(
+                        Aggregates.match(Filters.gt("utcTimestamp", fromTimestamp)),
                         Aggregates.group("\$productId", Accumulators.first("entry", "\$\$ROOT")),
                         Aggregates.replaceRoot("\$entry"),
                         Aggregates.limit(20)

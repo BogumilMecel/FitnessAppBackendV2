@@ -57,6 +57,13 @@ suspend inline fun ApplicationCall.getParameter(name: String): String? {
     }
 }
 
+suspend fun ApplicationCall.getNullableParameter(name: String): String? {
+    return this.parameters[name] ?: kotlin.run {
+        respondBadRequest(this)
+        null
+    }
+}
+
 suspend inline fun ApplicationCall.getCountryHeader(): Country? {
     return this.request.headers["country"]?.let {
         Country.getCountryFromString(it)
