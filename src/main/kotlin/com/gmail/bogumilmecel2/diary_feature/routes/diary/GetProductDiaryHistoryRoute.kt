@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.routes.diary
 
+import com.gmail.bogumilmecel2.common.util.extensions.getNullableParameter
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.GetProductDiaryHistoryUseCase
@@ -14,7 +15,8 @@ fun Route.configureGetProductDiaryHistoryRoute(getProductDiaryHistoryUseCase: Ge
                 getUserId()?.let { userId ->
                     call.handleResource(
                         resource = getProductDiaryHistoryUseCase(
-                            userId = userId
+                            userId = userId,
+                            latestEntryTimestamp = getNullableParameter("latestEntryTimestamp")
                         )
                     )
                 }

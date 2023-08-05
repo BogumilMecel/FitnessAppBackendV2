@@ -5,7 +5,15 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryIte
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 
 class GetProductDiaryHistoryUseCase(private val diaryRepository: DiaryRepository) {
-    suspend operator fun invoke(userId: String): Resource<List<ProductDiaryHistoryItem>> {
-        return diaryRepository.getProductDiaryHistory(userId = userId)
+    suspend operator fun invoke(
+        userId: String,
+        latestEntryTimestamp: String?
+    ): Resource<List<ProductDiaryHistoryItem>> {
+        val latestEntryTimestampValue = latestEntryTimestamp?.toLongOrNull() ?: 0
+
+        return diaryRepository.getProductDiaryHistory(
+            userId = userId,
+            fromTimestamp = latestEntryTimestampValue
+        )
     }
 }
