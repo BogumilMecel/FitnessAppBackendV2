@@ -1,6 +1,8 @@
 package com.gmail.bogumilmecel2.diary_feature.routes.diary
 
+import com.gmail.bogumilmecel2.common.domain.constants.Constants
 import com.gmail.bogumilmecel2.common.util.extensions.getNullableParameter
+import com.gmail.bogumilmecel2.common.util.extensions.getParameter
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.GetProductDiaryHistoryUseCase
@@ -13,12 +15,17 @@ fun Route.configureGetProductDiaryHistoryRoute(getProductDiaryHistoryUseCase: Ge
         get("/history/product") {
             call.run {
                 getUserId()?.let { userId ->
-                    call.handleResource(
-                        resource = getProductDiaryHistoryUseCase(
-                            userId = userId,
-                            latestEntryTimestamp = getNullableParameter("latestEntryTimestamp")
-                        )
-                    )
+                    getParameter(Constants.ApiConstants.PAGE)?.let { page ->
+                        getNullableParameter(Constants.ApiConstants.SEARCH_TEXT).let { searchText ->
+                            call.handleResource(
+                                resource = getProductDiaryHistoryUseCase(
+                                    userId = userId,
+                                    pageStringValue = page,
+                                    searchText = searchText
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }

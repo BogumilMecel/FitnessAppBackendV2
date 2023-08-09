@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.user.weight.domain.use_case
 import com.gmail.bogumilmecel2.BaseTest
 import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.authentication.domain.model.user.User
-import com.gmail.bogumilmecel2.common.domain.constants.ValidationConstants
+import com.gmail.bogumilmecel2.common.domain.constants.Constants
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.log.domain.model.LogEntry
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLogEntriesUseCase
@@ -54,7 +54,7 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest: BaseTest() {
     @Test
     fun `check if get data returns resource success with already asked for weight dialogs 3 times, resource error is returned`() =
         runTest {
-            mockClasses(userResource = Resource.Success(data = User(weightDialogs = mockWeightDialogs(askedCount = ValidationConstants.Weight.MINIMUM_ENTRIES_COUNT))))
+            mockClasses(userResource = Resource.Success(data = User(weightDialogs = mockWeightDialogs(askedCount = Constants.Weight.MINIMUM_ENTRIES_COUNT))))
             assertIs<Resource.Error<Unit>>(callTestesUseCase())
         }
 
@@ -111,13 +111,13 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest: BaseTest() {
         coEvery {
             getLogEntriesUseCase(
                 userId = MockConstants.USER_ID_1,
-                limit = ValidationConstants.Weight.MINIMUM_ENTRIES_COUNT
+                limit = Constants.Weight.MINIMUM_ENTRIES_COUNT
             )
         } returns logEntriesResource
         coEvery {
             getWeightEntriesUseCase(
                 userId = MockConstants.USER_ID_1,
-                limit = ValidationConstants.Weight.MINIMUM_ENTRIES_COUNT
+                limit = Constants.Weight.MINIMUM_ENTRIES_COUNT
             )
         } returns weightEntriesResource
     }

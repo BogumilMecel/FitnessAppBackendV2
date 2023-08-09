@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.product
 
-import com.gmail.bogumilmecel2.common.domain.constants.ValidationConstants
+import com.gmail.bogumilmecel2.common.domain.constants.Constants
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.util.Resource
@@ -28,7 +28,7 @@ class InsertProductUseCase(
                 Resource.Error()
             } else if (!checkIfNutritionValuesAreNaturalNumbers(nutritionValues = nutritionValues)) {
                 Resource.Error()
-            } else if (barcode != null && barcode.isLengthInRange(maximum = ValidationConstants.Diary.BARCODE_MAX_LENGTH)) {
+            } else if (barcode != null && barcode.isLengthInRange(maximum = Constants.Diary.BARCODE_MAX_LENGTH)) {
                 Resource.Error()
             } else {
                 val username = getUsernameUseCase(userId = userId)
