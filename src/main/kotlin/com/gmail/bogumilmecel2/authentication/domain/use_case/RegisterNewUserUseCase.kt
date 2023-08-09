@@ -2,7 +2,7 @@ package com.gmail.bogumilmecel2.authentication.domain.use_case
 
 import com.gmail.bogumilmecel2.authentication.domain.model.user.UserDto
 import com.gmail.bogumilmecel2.authentication.domain.service.HashingService
-import com.gmail.bogumilmecel2.common.domain.constants.ValidationConstants
+import com.gmail.bogumilmecel2.common.domain.constants.Constants
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import org.bson.types.ObjectId
@@ -19,9 +19,9 @@ class RegisterNewUserUseCase(
     ): Resource<Boolean> {
         return if (username.isBlank() || email.isBlank() || password.isBlank()) {
             Resource.Error()
-        } else if (password.length < ValidationConstants.Authentication.PASSWORD_MIN_LENGTH || password.length > ValidationConstants.Authentication.PASSWORD_MAX_LENGTH) {
+        } else if (password.length < Constants.Authentication.PASSWORD_MIN_LENGTH || password.length > Constants.Authentication.PASSWORD_MAX_LENGTH) {
             Resource.Error()
-        } else if (username.length < ValidationConstants.Authentication.USERNAME_MIN_LENGTH || username.length > ValidationConstants.Authentication.USERNAME_MAX_LENGTH) {
+        } else if (username.length < Constants.Authentication.USERNAME_MIN_LENGTH || username.length > Constants.Authentication.USERNAME_MAX_LENGTH) {
             Resource.Error()
         } else {
             val usernameExistsResource = checkIfUsernameExists(
