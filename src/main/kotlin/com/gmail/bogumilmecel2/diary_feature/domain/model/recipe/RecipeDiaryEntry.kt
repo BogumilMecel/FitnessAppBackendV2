@@ -25,6 +25,7 @@ data class RecipeDiaryEntryDto(
     @BsonId val _id: ObjectId,
     val nutritionValues: NutritionValues,
     val utcTimestamp: Long,
+    val lastEditedUtcTimestamp: Long,
     val recipeName: String,
     val recipeId: String,
     val servings: Int,
@@ -33,7 +34,10 @@ data class RecipeDiaryEntryDto(
     val mealName: MealName,
 )
 
-fun RecipeDiaryEntry.toDto(userId: String): RecipeDiaryEntryDto = RecipeDiaryEntryDto(
+fun RecipeDiaryEntry.toDto(
+    userId: String,
+    currentUtcTimestamp: Long
+): RecipeDiaryEntryDto = RecipeDiaryEntryDto(
     _id = id.toObjectId(),
     servings = servings,
     date = date,
@@ -42,7 +46,8 @@ fun RecipeDiaryEntry.toDto(userId: String): RecipeDiaryEntryDto = RecipeDiaryEnt
     nutritionValues = nutritionValues,
     mealName = mealName,
     recipeId = recipeId,
-    recipeName = recipeName
+    recipeName = recipeName,
+    lastEditedUtcTimestamp = currentUtcTimestamp
 )
 
 fun RecipeDiaryEntryDto.toObject(): RecipeDiaryEntry = RecipeDiaryEntry(
