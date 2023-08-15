@@ -26,5 +26,8 @@ object Constants {
     object ApiConstants {
         const val PAGE = "page"
         const val SEARCH_TEXT = "search_text"
+        const val TIME_ZONE = "time_zone"
+        const val CURRENCY = "currency"
+        const val COUNTRY = "country"
     }
 }
