@@ -27,4 +27,35 @@ class GetDiaryEntries(
             )
         )
     }
+
+    suspend operator fun invoke(
+        userId: String,
+        latestProductDiaryEntryUtcTimestampString: String?,
+        latestRecipeDiaryEntryUtcTimestampString: String?
+    ): Resource<DiaryEntriesResponse> {
+        val productDiaryEntries = if (latestProductDiaryEntryUtcTimestampString == null) {
+            diaryRepository.getProductDiaryEntries(userId = userId)
+        } else {
+            diaryRepository.getProductDiaryEntries(
+                userId = userId,
+                latestProductDiaryEntryTimestamp = latestProductDiaryEntryUtcTimestampString.toLongOrNull() ?: return Resource.Error()
+            )
+        }.data ?: return Resource.Error()
+
+        val recipeDiaryEntries = if (latestRecipeDiaryEntryUtcTimestampString == null) {
+            diaryRepository.getRecipeDiaryEntries(userId = userId)
+        } else {
+            diaryRepository.getRecipeDiaryEntries(
+                userId = userId,
+                latestRecipeDiaryEntryTimestamp = latestRecipeDiaryEntryUtcTimestampString.toLongOrNull() ?: return Resource.Error()
+            )
+        }.data ?: return Resource.Error()
+
+        return Resource.Success(
+            data = DiaryEntriesResponse(
+                productDiaryEntries = productDiaryEntries,
+                recipeDiaryEntries = recipeDiaryEntries
+            )
+        )
+    }
 }

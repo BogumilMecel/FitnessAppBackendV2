@@ -29,5 +29,7 @@ object Constants {
         const val TIME_ZONE = "time_zone"
         const val CURRENCY = "currency"
         const val COUNTRY = "country"
+        const val LATEST_PRODUCT_DIARY_ENTRY_UTC_TIMESTAMP = "product_diary_timestamp"
+        const val LATEST_RECIPE_DIARY_ENTRY_UTC_TIMESTAMP = "recipe_diary_timestamp"
     }
 }

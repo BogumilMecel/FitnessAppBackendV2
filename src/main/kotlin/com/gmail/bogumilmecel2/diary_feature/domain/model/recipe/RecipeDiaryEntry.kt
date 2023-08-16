@@ -16,6 +16,7 @@ data class RecipeDiaryEntry(
     override val userId: String = "",
     override val date: String = "",
     override val mealName: MealName = MealName.BREAKFAST,
+    val lastEditedUtcTimestamp: Long,
     val recipeName: String = "",
     val recipeId: String = "",
     val servings: Int = 0,
@@ -59,5 +60,6 @@ fun RecipeDiaryEntryDto.toObject(): RecipeDiaryEntry = RecipeDiaryEntry(
     nutritionValues = nutritionValues,
     mealName = mealName,
     recipeName = recipeName,
-    recipeId = recipeId
+    recipeId = recipeId,
+    lastEditedUtcTimestamp = lastEditedUtcTimestamp
 )
