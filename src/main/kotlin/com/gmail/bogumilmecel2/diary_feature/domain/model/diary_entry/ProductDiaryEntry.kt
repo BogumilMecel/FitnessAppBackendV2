@@ -19,6 +19,7 @@ data class ProductDiaryEntry(
     override val userId: String = "",
     override val mealName: MealName = MealName.BREAKFAST,
     val productMeasurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
+    val lastEditedUtcTimestamp: Long,
     val productName: String = "",
     val productId: String = "",
     val weight: Int = 0,
@@ -65,7 +66,8 @@ fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
     productId = productId,
     userId = userId,
     productName = productName,
-    productMeasurementUnit = measurementUnit
+    productMeasurementUnit = measurementUnit,
+    lastEditedUtcTimestamp = lastEditedUtcTimestamp
 )
 
 fun ProductDiaryEntryDto.toProductDiarySearchItem() = ProductDiaryHistoryItem(
