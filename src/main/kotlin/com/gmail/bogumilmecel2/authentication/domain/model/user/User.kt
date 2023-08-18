@@ -1,6 +1,5 @@
 package com.gmail.bogumilmecel2.authentication.domain.model.user
 
-import com.gmail.bogumilmecel2.diary_feature.domain.model.Device
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogs
@@ -31,7 +30,6 @@ data class UserDto(
     val nutritionValues: NutritionValues? = null,
     val userInformation: UserInformation? = null,
     val weightDialogs: WeightDialogs? = null,
-    val devices: List<Device> = emptyList()
 )
 
 fun UserDto.toUser():User = User(
