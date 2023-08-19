@@ -98,6 +98,17 @@ suspend inline fun ApplicationCall.getTimezoneHeader(): TimeZone? {
     }
 }
 
+suspend inline fun ApplicationCall.getDeviceIdHeader(): String? {
+    return try {
+        this.request.headers[Constants.ApiConstants.DEVICE_ID]
+    } catch (e: Exception) {
+        null
+    } ?: kotlin.run {
+        respondBadRequest(this)
+        null
+    }
+}
+
 suspend fun respondBadRequest(call: ApplicationCall) {
     call.respond(HttpStatusCode.BadRequest)
 }
