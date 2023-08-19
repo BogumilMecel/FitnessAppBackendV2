@@ -13,7 +13,11 @@ class GetUserUseCase(
     private val calculateWeightProgressUseCase: CalculateWeightProgressUseCase,
     private val getUserObjectUseCase: GetUserObjectUseCase,
 ) {
-    suspend operator fun invoke(userId: String, timezone: TimeZone): Resource<User?> {
+    suspend operator fun invoke(
+        userId: String,
+        timezone: TimeZone,
+        deviceId: String
+    ): Resource<User?> {
         val user = getUserObjectUseCase(userId = userId).data ?: return Resource.Error()
 
         val logEntryResource = checkLatestLogEntryAndGetLogStreakUseCase(
