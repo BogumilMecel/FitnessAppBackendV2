@@ -5,6 +5,7 @@ import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.CaloriesSumResponse
 import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
@@ -23,8 +24,18 @@ interface DiaryRepository {
     suspend fun getProducts(text: String): Resource<List<Product>>
     suspend fun getProduct(productId: String): Resource<Product?>
     suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Boolean>
-    suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Unit>
-    suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Unit>
+    suspend fun editProductDiaryEntry(
+        productDiaryEntryId: String,
+        newWeight: Int,
+        newNutritionValues: NutritionValues,
+        userId: String
+    ): Resource<Unit>
+    suspend fun editRecipeDiaryEntry(
+        newNutritionValues: NutritionValues,
+        newServings: Int,
+        recipeDiaryEntryId: String,
+        userId: String
+    ): Resource<Unit>
     suspend fun insertProduct(product: Product, userId: String, country: Country): Resource<Product>
     suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Boolean>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>

@@ -2,12 +2,12 @@ package com.gmail.bogumilmecel2.diary_feature.data.repository
 
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
-import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.CaloriesSumResponse
 import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.*
+import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toDto
@@ -16,19 +16,18 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.*
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.Aggregates
-import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Filters.*
 import com.mongodb.client.model.Sorts
-import org.litote.kmongo.MongoOperator
-import org.litote.kmongo.and
-import org.litote.kmongo.coroutine.CoroutineCollection
-import org.litote.kmongo.eq
-import org.litote.kmongo.gt
+import com.mongodb.client.model.Updates
+import com.mongodb.kotlin.client.coroutine.MongoCollection
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 
 class DiaryRepositoryImp(
-    private val productDiaryCol: CoroutineCollection<ProductDiaryEntryDto>,
-    private val recipeDiaryCol: CoroutineCollection<RecipeDiaryEntryDto>,
-    private val productCol: CoroutineCollection<ProductDto>,
-    private val recipeCol: CoroutineCollection<RecipeDto>
+    private val productDiaryCol: MongoCollection<ProductDiaryEntryDto>,
+    private val recipeDiaryCol: MongoCollection<RecipeDiaryEntryDto>,
+    private val productCol: MongoCollection<ProductDto>,
+    private val recipeCol: MongoCollection<RecipeDto>
 ) : DiaryRepository, BaseRepository() {
 
     override suspend fun insertProductDiaryEntry(
@@ -59,8 +58,10 @@ class DiaryRepositoryImp(
     override suspend fun getProductDiaryEntries(date: String, userId: String): Resource<List<ProductDiaryEntry>> {
         return handleRequest {
             productDiaryCol.find(
-                ProductDiaryEntryDto::userId eq userId,
-                ProductDiaryEntryDto::date eq date
+                filter = and(
+                    eq(ProductDiaryEntryDto::userId.name, userId),
+                    eq(ProductDiaryEntryDto::date.name, date)
+                ),
             ).toList().map {
                 it.toDiaryEntry()
             }
@@ -70,8 +71,10 @@ class DiaryRepositoryImp(
     override suspend fun getRecipeDiaryEntries(date: String, userId: String): Resource<List<RecipeDiaryEntry>> {
         return handleRequest {
             recipeDiaryCol.find(
-                RecipeDiaryEntryDto::userId eq userId,
-                RecipeDiaryEntryDto::date eq date,
+                filter = and(
+                    eq(RecipeDiaryEntryDto::userId.name, userId),
+                    eq(RecipeDiaryEntryDto::date.name, date)
+                ),
             ).toList().map {
                 it.toObject()
             }
@@ -80,7 +83,10 @@ class DiaryRepositoryImp(
 
     override suspend fun getProductDiaryEntry(id: String): Resource<ProductDiaryEntry?> {
         return handleRequest {
-            productDiaryCol.findOne(ProductDiaryEntryDto::_id eq id.toObjectId())?.toDiaryEntry()
+            productDiaryCol
+                .find(eq(ProductDiaryEntryDto::_id.name, id.toObjectId()))
+                .firstOrNull()
+                ?.toDiaryEntry()
         }
     }
 
@@ -95,11 +101,11 @@ class DiaryRepositoryImp(
                 .aggregate<ProductDiaryEntryDto>(
                     pipeline = buildList {
                         if (searchText != null) {
-                            add(Aggregates.match(Filters.regex("productName", searchText, "i")))
+                            add(Aggregates.match(regex("productName", searchText, "i")))
                         }
                         addAll(
                             listOf(
-                                Aggregates.match(Filters.eq("userId", userId)),
+                                Aggregates.match(eq("userId", userId)),
                                 Aggregates.sort(Sorts.descending("utcTimestamp")),
                                 Aggregates.skip(skip),
                                 Aggregates.limit(limit),
@@ -116,23 +122,25 @@ class DiaryRepositoryImp(
 
     override suspend fun getRecipeDiaryEntry(id: String): Resource<RecipeDiaryEntry?> {
         return handleRequest {
-            recipeDiaryCol.findOne(RecipeDiaryEntryDto::_id eq id.toObjectId())?.toObject()
+            recipeDiaryCol.find(eq(RecipeDiaryEntryDto::_id.name, id.toObjectId())).firstOrNull()?.toObject()
         }
     }
 
     override suspend fun editRecipeDiaryEntry(
-        recipeDiaryEntry: RecipeDiaryEntry,
+        newNutritionValues: NutritionValues,
+        newServings: Int,
+        recipeDiaryEntryId: String,
         userId: String,
     ): Resource<Unit> {
         return handleRequest {
             recipeDiaryCol.updateOne(
-                and(
-                    RecipeDiaryEntryDto::_id eq recipeDiaryEntry.id.toObjectId(),
-                    RecipeDiaryEntryDto::userId eq userId
+                filter = and(
+                    eq(RecipeDiaryEntryDto::_id.name, recipeDiaryEntryId.toObjectId()),
+                    eq(RecipeDiaryEntryDto::userId.name, userId),
                 ),
-                recipeDiaryEntry.toDto(
-                    userId = userId,
-                    currentUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
+                update = Updates.combine(
+                    Updates.set(RecipeDiaryEntryDto::nutritionValues.name, newNutritionValues),
+                    Updates.set(RecipeDiaryEntryDto::servings.name, newServings)
                 )
             ).wasAcknowledgedOrThrow()
         }
@@ -140,30 +148,34 @@ class DiaryRepositoryImp(
 
     override suspend fun getProducts(text: String): Resource<List<Product>> {
         return handleRequest {
-            productCol.find("{'name': {'${MongoOperator.regex}': '$text', '${MongoOperator.options}': 'i'}}")
+            productCol
+                .find(regex(ProductDto::name.name, text, "i"))
                 .toList()
-                .map {
-                    it.toProduct()
-                }
+                .map { it.toProduct() }
         }
     }
 
     override suspend fun getProduct(productId: String): Resource<Product?> {
         return handleRequest {
-            productCol.findOne(ProductDto::_id eq productId.toObjectId())?.toProduct()
+            productCol.find(eq(ProductDto::_id.name, productId.toObjectId())).firstOrNull()?.toProduct()
         }
     }
 
-    override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Unit> {
+    override suspend fun editProductDiaryEntry(
+        productDiaryEntryId: String,
+        newWeight: Int,
+        newNutritionValues: NutritionValues,
+        userId: String
+    ): Resource<Unit> {
         return handleRequest {
             productDiaryCol.updateOne(
-                and(
-                    ProductDiaryEntryDto::_id eq productDiaryEntry.id.toObjectId(),
-                    ProductDiaryEntryDto::userId eq userId
+                filter = and(
+                    eq(ProductDiaryEntryDto::_id.name, productDiaryEntryId.toObjectId()),
+                    eq(ProductDiaryEntryDto::userId.name, userId)
                 ),
-                productDiaryEntry.toDto(
-                    userId = userId,
-                    currentUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
+                update = Updates.combine(
+                    Updates.set(ProductDiaryEntryDto::weight.name, newWeight),
+                    Updates.set(ProductDiaryEntryDto::nutritionValues.name, newNutritionValues)
                 )
             ).wasAcknowledgedOrThrow()
         }
@@ -181,8 +193,10 @@ class DiaryRepositoryImp(
     override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Boolean> {
         return handleRequest {
             productDiaryCol.deleteOne(
-                ProductDiaryEntryDto::_id eq productDiaryEntryId.toObjectId(),
-                ProductDiaryEntryDto::userId eq userId
+                and(
+                    eq(ProductDiaryEntryDto::_id.name, productDiaryEntryId.toObjectId()),
+                    eq(ProductDiaryEntryDto::userId.name, userId)
+                )
             ).wasAcknowledged()
         }
     }
@@ -190,26 +204,32 @@ class DiaryRepositoryImp(
     override suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Boolean> {
         return handleRequest {
             recipeDiaryCol.deleteOne(
-                RecipeDiaryEntryDto::_id eq recipeDiaryEntryId.toObjectId(),
-                RecipeDiaryEntryDto::userId eq userId
+                and(
+                    eq(ProductDiaryEntryDto::_id.name, recipeDiaryEntryId.toObjectId()),
+                    eq(ProductDiaryEntryDto::userId.name, userId)
+                )
             ).wasAcknowledged()
         }
     }
 
     override suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?> {
         return handleRequest {
-            productCol.findOne(ProductDto::barcode eq barcode)?.toProduct()
+            productCol.find(eq(ProductDto::barcode.name, barcode)).firstOrNull()?.toProduct()
         }
     }
 
     override suspend fun getUserCaloriesSum(date: String, userId: String): Resource<CaloriesSumResponse> {
         return handleRequest {
-            CaloriesSumResponse(caloriesSum = productDiaryCol.find(
-                ProductDiaryEntryDto::date eq date,
-                ProductDiaryEntryDto::userId eq userId
-            )
-                .toList()
-                .sumOf { it.nutritionValues.calories })
+            CaloriesSumResponse(
+                caloriesSum = productDiaryCol.find(
+                    and(
+                        eq(ProductDiaryEntryDto::date.name, date),
+                        eq(ProductDiaryEntryDto::userId.name, userId)
+                    )
+
+                )
+                    .toList()
+                    .sumOf { it.nutritionValues.calories })
         }
     }
 
@@ -223,25 +243,31 @@ class DiaryRepositoryImp(
 
     override suspend fun getRecipe(recipeId: String): Resource<Recipe?> {
         return handleRequest {
-            recipeCol.findOneById(id = recipeId.toObjectId())?.toObject()
+            recipeCol.find(eq(RecipeDto::_id.name, recipeId.toObjectId())).firstOrNull()?.toObject()
         }
     }
 
     override suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>> {
         return handleRequest {
-            recipeCol.find("{'name': {'${MongoOperator.regex}': '$searchText', '${MongoOperator.options}': 'i'}}")
+            recipeCol
+                .find(
+                    regex(
+                        RecipeDto::name.name,
+                        searchText,
+                        "i"
+                    )
+                )
                 .toList()
-                .map {
-                    it.toObject()
-                }
+                .map { it.toObject() }
         }
     }
 
     override suspend fun getUserProducts(userId: String): Resource<List<Product>> {
         return handleRequest {
             productCol
-                .find(ProductDto::userId eq userId)
-                .limit(50).descendingSort(ProductDto::utcTimestamp)
+                .find(eq(ProductDto::userId.name, userId))
+                .limit(50)
+                .sort(Sorts.descending(ProductDto::utcTimestamp.name))
                 .toList()
                 .map { it.toProduct() }
         }
@@ -250,8 +276,9 @@ class DiaryRepositoryImp(
     override suspend fun getUserRecipes(userId: String): Resource<List<Recipe>> {
         return handleRequest {
             recipeCol
-                .find(RecipeDto::userId eq userId)
-                .limit(50).descendingSort(RecipeDto::utcTimestamp)
+                .find(eq(RecipeDto::userId.name, userId))
+                .limit(50)
+                .sort(Sorts.descending(RecipeDto::utcTimestamp.name))
                 .toList()
                 .map { it.toObject() }
         }
@@ -260,7 +287,7 @@ class DiaryRepositoryImp(
     override suspend fun getProductDiaryEntries(userId: String): Resource<List<ProductDiaryEntry>> {
         return handleRequest {
             productDiaryCol
-                .find(ProductDiaryEntryDto::userId eq userId)
+                .find(eq(ProductDiaryEntryDto::userId.name, userId))
                 .toList()
                 .map { it.toDiaryEntry() }
         }
@@ -269,7 +296,7 @@ class DiaryRepositoryImp(
     override suspend fun getRecipeDiaryEntries(userId: String): Resource<List<RecipeDiaryEntry>> {
         return handleRequest {
             recipeDiaryCol
-                .find(RecipeDiaryEntryDto::userId eq userId)
+                .find(eq(RecipeDiaryEntryDto::userId.name, userId))
                 .toList()
                 .map { it.toObject() }
         }
@@ -280,8 +307,8 @@ class DiaryRepositoryImp(
             productDiaryCol
                 .find(
                     and(
-                        ProductDiaryEntryDto::userId eq userId,
-                        ProductDiaryEntryDto::lastEditedUtcTimestamp gt latestProductDiaryEntryTimestamp
+                        eq(ProductDiaryEntryDto::userId.name, userId),
+                        gt(ProductDiaryEntryDto::lastEditedUtcTimestamp.name, latestProductDiaryEntryTimestamp)
                     )
                 )
                 .toList()
@@ -294,8 +321,8 @@ class DiaryRepositoryImp(
             recipeDiaryCol
                 .find(
                     and(
-                        RecipeDiaryEntryDto::userId eq userId,
-                        RecipeDiaryEntryDto::lastEditedUtcTimestamp gt latestRecipeDiaryEntryTimestamp
+                        eq(RecipeDiaryEntryDto::userId.name, userId),
+                        gt(RecipeDiaryEntryDto::lastEditedUtcTimestamp.name, latestRecipeDiaryEntryTimestamp)
                     )
                 )
                 .toList()

@@ -28,10 +28,9 @@ class EditRecipeDiaryEntryUseCase(
         ).data ?: return Resource.Error()
 
         return diaryRepository.editRecipeDiaryEntry(
-            recipeDiaryEntry = recipeDiaryEntry.copy(
-                servings = newServings,
-                nutritionValues = newNutritionValues
-            ),
+            recipeDiaryEntryId = recipeDiaryEntryId,
+            newNutritionValues = newNutritionValues,
+            newServings = newServings,
             userId = userId
         )
     }

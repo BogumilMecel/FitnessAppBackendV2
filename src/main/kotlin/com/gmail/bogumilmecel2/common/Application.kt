@@ -5,6 +5,7 @@ import ch.qos.logback.classic.LoggerContext
 import com.gmail.bogumilmecel2.authentication.data.service.JwtTokenService
 import com.gmail.bogumilmecel2.authentication.data.service.SHA256HashingService
 import com.gmail.bogumilmecel2.authentication.domain.model.token.TokenConfig
+import com.gmail.bogumilmecel2.authentication.domain.model.user.UserDto
 import com.gmail.bogumilmecel2.authentication.domain.use_case.AuthUseCases
 import com.gmail.bogumilmecel2.authentication.domain.use_case.CheckIfUsernameExists
 import com.gmail.bogumilmecel2.authentication.domain.use_case.GetUserByUsername
@@ -25,9 +26,11 @@ import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.*
 import com.gmail.bogumilmecel2.diary_feature.price_feature.data.repository.PriceRepositoryImp
+import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.PriceDto
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetProductPriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetRecipePriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.routes.configureDiaryRoutes
+import com.gmail.bogumilmecel2.user.log.domain.model.LogEntryDto
 import com.gmail.bogumilmecel2.user.log.domain.use_case.CheckLatestLogEntryAndGetLogStreakUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLogEntriesUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.InsertLogEntryUseCase
@@ -35,6 +38,7 @@ import com.gmail.bogumilmecel2.user.log.domain.use_case.UpdateUserLogStreakUseCa
 import com.gmail.bogumilmecel2.user.user_data.data.repository.UserRepositoryImp
 import com.gmail.bogumilmecel2.user.user_data.domain.use_cases.*
 import com.gmail.bogumilmecel2.user.user_data.routes.configureUserDataRoutes
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
 import com.gmail.bogumilmecel2.user.weight.domain.use_case.*
 import com.gmail.bogumilmecel2.user.weight.routes.configureWeightRoutes
 import io.ktor.server.application.*
@@ -51,23 +55,23 @@ fun Application.module() {
     val databaseManager = DatabaseManager()
 
     val diaryRepository = DiaryRepositoryImp(
-        recipeCol = databaseManager.client.getCollection("recipe_collection"),
+        recipeCol = databaseManager.client.getCollection(collectionName = "recipe_collection"),
         productCol = databaseManager.client.getCollection("product_collection"),
         productDiaryCol = databaseManager.client.getCollection("diary_collection"),
         recipeDiaryCol = databaseManager.client.getCollection("recipe_diary_collection")
     )
 
     val userRepository = UserRepositoryImp(
-        userCol = databaseManager.client.getCollection("user_collection"),
-        weightCol = databaseManager.client.getCollection("weight_collection"),
-        logEntryCol = databaseManager.client.getCollection("log_entry_collection"),
+        userCol = databaseManager.client.getCollection<UserDto>("user_collection"),
+        weightCol = databaseManager.client.getCollection<WeightEntryDto>("weight_collection"),
+        logEntryCol = databaseManager.client.getCollection<LogEntryDto>("log_entry_collection"),
     )
 
     val getUsernameUseCase = GetUsernameUseCase(userRepository = userRepository)
     val isDiaryNameValidUseCase = IsDiaryNameValidUseCase()
     val getProductUseCase = GetProductUseCase(diaryRepository = diaryRepository)
     val priceRepository = PriceRepositoryImp(
-        priceCol = databaseManager.client.getCollection("price_collection")
+        priceCol = databaseManager.client.getCollection<PriceDto>("price_collection")
     )
 
     val productUseCases = ProductUseCases(
