@@ -6,18 +6,25 @@ import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.PriceDto
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.repository.PriceRepository
-import org.litote.kmongo.coroutine.CoroutineCollection
-import org.litote.kmongo.eq
-import org.litote.kmongo.set
-import org.litote.kmongo.setTo
+import com.mongodb.client.model.Filters.and
+import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Updates
+import com.mongodb.kotlin.client.coroutine.MongoCollection
+import kotlinx.coroutines.flow.firstOrNull
 
 class PriceRepositoryImp(
-    private val priceCol: CoroutineCollection<PriceDto>
-): PriceRepository, BaseRepository() {
+    private val priceCol: MongoCollection<PriceDto>
+) : PriceRepository, BaseRepository() {
 
     override suspend fun getPrice(productId: String, country: Country): Resource<PriceDto?> {
         return handleRequest {
-            priceCol.findOne(PriceDto::productId eq productId, PriceDto::country eq country)
+            priceCol
+                .find(
+                    and(
+                        eq(PriceDto::productId.name, productId),
+                        eq(PriceDto::country.name, country)
+                    )
+                ).firstOrNull()
         }
     }
 
@@ -30,10 +37,10 @@ class PriceRepositoryImp(
 
     override suspend fun updatePrice(newValue: Double, priceId: String): Resource<Boolean> {
         return handleRequest {
-           priceCol.updateOneById(
-               id = PriceDto::_id eq priceId.toObjectId(),
-               update = set(PriceDto::valueFor100gInUSD setTo newValue)
-           ).wasAcknowledged()
+            priceCol.updateOne(
+                filter = eq(PriceDto::_id.name, priceId.toObjectId()),
+                update = Updates.set(PriceDto::valueFor100gInUSD.name, newValue)
+            ).wasAcknowledged()
         }
     }
 }

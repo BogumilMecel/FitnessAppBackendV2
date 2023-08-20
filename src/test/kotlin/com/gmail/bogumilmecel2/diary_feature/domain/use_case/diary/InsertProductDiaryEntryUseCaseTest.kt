@@ -2,7 +2,6 @@ package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 
 import com.gmail.bogumilmecel2.BaseDiaryTest
 import com.gmail.bogumilmecel2.MockConstants
-import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
@@ -77,7 +76,7 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         val product = MockConstants.Diary.getSampleProduct()
         val nutritionValues = MockConstants.Diary.getSampleNutritionValues()
         val productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest()
-        mockLocalDate()
+        mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP)
         mockData()
         assertIs<Resource.Success<Unit>>(callTestedMethod(productDiaryEntryPostRequest = productDiaryEntryPostRequest))
         coVerify(exactly = 1) {
@@ -85,13 +84,14 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
                 productDiaryEntry = ProductDiaryEntry(
                     weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
                     mealName = productDiaryEntryPostRequest.mealName,
-                    utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
+                    utcTimestamp = MockConstants.TIMESTAMP,
                     date = productDiaryEntryPostRequest.date,
                     userId = MockConstants.USER_ID_1,
                     nutritionValues = nutritionValues,
                     productId = productDiaryEntryPostRequest.productId,
                     productName = product.name,
-                    productMeasurementUnit = product.measurementUnit
+                    productMeasurementUnit = product.measurementUnit,
+                    lastEditedUtcTimestamp = MockConstants.TIMESTAMP
                 ),
                 userId = MockConstants.USER_ID_1
             )
@@ -103,7 +103,7 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         repositoryResource: Resource<Unit> = Resource.Success(Unit),
         calculateProductNutritionValuesResource: Resource<NutritionValues> = Resource.Success(MockConstants.Diary.getSampleNutritionValues())
     ) {
-        coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_11) } returns productResource
+        coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_1) } returns productResource
         coEvery { diaryRepository.insertProductDiaryEntry(productDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns repositoryResource
         coEvery {
             calculateProductNutritionValuesUseCase(
@@ -124,7 +124,7 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         weight: Int = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
         date: String = MockConstants.MOCK_DATE_2021
     ) = ProductDiaryEntryPostRequest(
-        productId = MockConstants.Diary.PRODUCT_ID_11,
+        productId = MockConstants.Diary.PRODUCT_ID_1,
         weight = weight,
         mealName = MealName.BREAKFAST,
         date = date

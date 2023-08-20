@@ -21,10 +21,10 @@ object MockConstants {
         private const val PRODUCT_NAME_1 = "Rice"
         const val RECIPE_NAME = "Rice And Chicken"
 
-        const val PRODUCT_ID_11 = "11"
-        const val DIARY_ENTRY_ID_21 = "21"
-        const val RECIPE_ID_31 = "31"
-        const val RECIPE_DIARY_ENTRY_ID_41 = "41"
+        const val PRODUCT_ID_1 = "product_id_1"
+        const val PRODUCT_DIARY_ENTRY_ID_1 = "diary_entry_id_1"
+        const val RECIPE_ID_1 = "recipe_id_1"
+        const val RECIPE_DIARY_ENTRY_ID_1 = "recipe_diary_entry_id_1"
 
         const val NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT = -1
         const val ZERO_PRODUCT_DIARY_ENTRY_WEIGHT = 0
@@ -41,7 +41,7 @@ object MockConstants {
         fun getSampleNutritionValues2() = NutritionValues(calories = 2863, carbohydrates = 206.4, protein = 152.3, fat = 158.97)
 
         fun getSampleProduct() = Product(
-            id = PRODUCT_ID_11,
+            id = PRODUCT_ID_1,
             name = PRODUCT_NAME_1,
             containerWeight = null,
             utcTimestamp = 1,
@@ -54,7 +54,7 @@ object MockConstants {
         )
 
         fun getSampleRecipe() = Recipe(
-            id = RECIPE_ID_31,
+            id = RECIPE_ID_1,
             name = RECIPE_NAME,
             ingredients = emptyList(),
             utcTimestamp = TIMESTAMP,

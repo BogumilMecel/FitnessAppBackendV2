@@ -73,12 +73,16 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
             )
         )
         val expectedProductDiaryEntry = mockProductDiaryEntry().copy(
+            id = MockConstants.Diary.PRODUCT_DIARY_ENTRY_ID_1,
             weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_2
         )
+        // TODO: Better test nutrition values
         coVerify(exactly = 1) {
             diaryRepository.editProductDiaryEntry(
-                productDiaryEntry = expectedProductDiaryEntry,
-                userId = MockConstants.USER_ID_1
+                userId = MockConstants.USER_ID_1,
+                productDiaryEntryId = expectedProductDiaryEntry.id,
+                newWeight = expectedProductDiaryEntry.weight,
+                newNutritionValues = expectedProductDiaryEntry.nutritionValues
             )
         }
     }
@@ -89,29 +93,37 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         calculateProductNutritionValuesResource: Resource<NutritionValues> = Resource.Success(NutritionValues()),
         repositoryResource: Resource<Unit> = Resource.Success(Unit)
     ) {
-        coEvery { getProductDiaryEntryUseCase(MockConstants.Diary.DIARY_ENTRY_ID_21) } returns productDiaryEntryResource
-        coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_11) } returns productResource
+        coEvery { getProductDiaryEntryUseCase(MockConstants.Diary.PRODUCT_DIARY_ENTRY_ID_1) } returns productDiaryEntryResource
+        coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_1) } returns productResource
         coEvery {
             calculateProductNutritionValuesUseCase(
                 product = MockConstants.Diary.getSampleProduct(),
                 weight = any()
             )
         } returns calculateProductNutritionValuesResource
-        coEvery { diaryRepository.editProductDiaryEntry(productDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns repositoryResource
+        coEvery {
+            diaryRepository.editProductDiaryEntry(
+                userId = MockConstants.USER_ID_1,
+                productDiaryEntryId = any(),
+                newWeight = any(),
+                newNutritionValues = any()
+            )
+        } returns repositoryResource
     }
 
-    private suspend fun callTestedMethod(weight: Int = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1) = editProductDiaryEntryUseCase(
-        editProductDiaryEntryRequest = mockEditProductDiaryEntryRequest(weight = weight),
-        userId = MockConstants.USER_ID_1
-    )
+    private suspend fun callTestedMethod(weight: Int = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1) =
+        editProductDiaryEntryUseCase(
+            editProductDiaryEntryRequest = mockEditProductDiaryEntryRequest(weight = weight),
+            userId = MockConstants.USER_ID_1
+        )
 
     private fun mockEditProductDiaryEntryRequest(weight: Int) = EditProductDiaryEntryRequest(
-        productDiaryEntryId = MockConstants.Diary.DIARY_ENTRY_ID_21,
+        productDiaryEntryId = MockConstants.Diary.PRODUCT_DIARY_ENTRY_ID_1,
         newWeight = weight
     )
 
     private fun mockProductDiaryEntry() = ProductDiaryEntry(
-        productId = MockConstants.Diary.PRODUCT_ID_11,
+        productId = MockConstants.Diary.PRODUCT_ID_1,
         weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
     )
 }

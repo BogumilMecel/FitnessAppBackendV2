@@ -114,8 +114,9 @@ class AddRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
                     date = request.date,
                     mealName = request.mealName,
                     recipeName = MockConstants.Diary.RECIPE_NAME,
-                    recipeId = MockConstants.Diary.RECIPE_ID_31,
-                    servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1
+                    recipeId = MockConstants.Diary.RECIPE_ID_1,
+                    servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1,
+                    lastEditedUtcTimestamp = MockConstants.TIMESTAMP
                 ),
                 userId = MockConstants.USER_ID_1
             )
@@ -127,7 +128,7 @@ class AddRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
         diaryResource: Resource<Unit> = Resource.Success(Unit),
         nutritionValuesResource: Resource<NutritionValues> = Resource.Success(data = MockConstants.Diary.getSampleNutritionValues())
     ) {
-        coEvery { getRecipeUseCase(recipeId = MockConstants.Diary.RECIPE_ID_31) } returns recipeResource
+        coEvery { getRecipeUseCase(recipeId = MockConstants.Diary.RECIPE_ID_1) } returns recipeResource
         coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns diaryResource
         coEvery { calculateRecipeNutritionValuesUseCase(recipe = any(), servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1) } returns nutritionValuesResource
     }
@@ -141,7 +142,7 @@ class AddRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     private fun mockRecipeDiaryEntryRequest() = RecipeDiaryEntryRequest(
         date = MockConstants.MOCK_DATE_2021,
         mealName = MealName.BREAKFAST,
-        recipeId = MockConstants.Diary.RECIPE_ID_31,
+        recipeId = MockConstants.Diary.RECIPE_ID_1,
         servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1
     )
 }

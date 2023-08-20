@@ -24,11 +24,10 @@ class EditProductDiaryEntryUseCase(
         ).data ?: return Resource.Error()
 
         return diaryRepository.editProductDiaryEntry(
-            productDiaryEntry = productDiaryEntry.copy(
-                nutritionValues = newNutritionValues,
-                weight = newWeight
-            ),
-            userId = userId
+            userId = userId,
+            productDiaryEntryId = productDiaryEntryId,
+            newWeight = newWeight,
+            newNutritionValues = newNutritionValues
         )
     }
 }

@@ -14,22 +14,24 @@ import com.gmail.bogumilmecel2.user.log.domain.model.toLogEntry
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.weight.domain.model.*
-import org.litote.kmongo.coroutine.CoroutineCollection
-import org.litote.kmongo.descending
-import org.litote.kmongo.eq
-import org.litote.kmongo.setValue
+import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Sorts
+import com.mongodb.client.model.Updates
+import com.mongodb.kotlin.client.coroutine.MongoCollection
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 
 class UserRepositoryImp(
-    private val userCol: CoroutineCollection<UserDto>,
-    private val weightCol: CoroutineCollection<WeightEntryDto>,
-    private val logEntryCol: CoroutineCollection<LogEntryDto>,
+    private val userCol: MongoCollection<UserDto>,
+    private val weightCol: MongoCollection<WeightEntryDto>,
+    private val logEntryCol: MongoCollection<LogEntryDto>,
 ) : UserRepository, BaseRepository() {
 
     override suspend fun saveUserInformation(userInformation: UserInformation, userId: String): Resource<Boolean> {
         return handleRequest {
-            userCol.updateOneById(
-                userId.toObjectId(),
-                setValue(User::userInformation, userInformation)
+            userCol.updateOne(
+                filter = eq(UserDto::_id.name, userId.toObjectId()),
+                update = Updates.set(User::userInformation.name, userInformation)
             ).wasAcknowledged()
         }
     }
@@ -39,9 +41,9 @@ class UserRepositoryImp(
         userId: String
     ): Resource<Boolean> {
         return handleRequest {
-            userCol.updateOneById(
-                userId.toObjectId(),
-                setValue(User::nutritionValues, nutritionValues)
+            userCol.updateOne(
+                filter = eq(UserDto::_id.name, userId.toObjectId()),
+                update = Updates.set(User::nutritionValues.name, nutritionValues)
             ).wasAcknowledged()
         }
     }
@@ -54,9 +56,9 @@ class UserRepositoryImp(
 
     override suspend fun updateUserLogStreak(userId: String, streak: Int): Resource<Unit> {
         return handleRequest {
-            userCol.updateOneById(
-                userId.toObjectId(),
-                setValue(UserDto::logStreak, streak)
+            userCol.updateOne(
+                filter = eq(UserDto::_id.name, userId.toObjectId()),
+                update = Updates.set(User::logStreak.name, streak)
             ).wasAcknowledgedOrThrow()
         }
     }
@@ -67,9 +69,9 @@ class UserRepositoryImp(
     ): Resource<List<LogEntry>> {
         return handleRequest {
             logEntryCol
-                .find(LogEntryDto::userId eq userId)
+                .find(eq(LogEntryDto::userId.name, userId))
                 .limit(limit)
-                .sort(descending(LogEntryDto::date))
+                .sort(Sorts.descending(LogEntryDto::date.name))
                 .toList()
                 .map {
                     it.toLogEntry()
@@ -79,7 +81,7 @@ class UserRepositoryImp(
 
     override suspend fun getUserByEmail(email: String): Resource<UserDto?> {
         return handleRequest {
-            userCol.findOne(User::email eq email)
+            userCol.find(eq(User::email.name, email)).firstOrNull()
         }
     }
 
@@ -97,13 +99,13 @@ class UserRepositoryImp(
 
     override suspend fun checkIfUsernameExists(username: String): Resource<Boolean> {
         return handleRequest {
-            userCol.find(UserDto::username eq username).toList().isEmpty()
+            userCol.find(eq(UserDto::username.name, username)).toList().isEmpty()
         }
     }
 
     override suspend fun getUser(userId: String): Resource<User?> {
         return handleRequest {
-            userCol.findOneById(userId.toObjectId())?.toUser()
+            userCol.find(eq(UserDto::_id.name, userId.toObjectId())).firstOrNull()?.toUser()
         }
     }
 
@@ -115,13 +117,9 @@ class UserRepositoryImp(
 
     override suspend fun getWeightEntries(userId: String, limit: Int): Resource<List<WeightEntry>> {
         return handleRequest {
-            weightCol.find(WeightEntryDto::userId eq userId)
+            weightCol.find(eq(WeightEntryDto::userId.name, userId))
                 .limit(limit)
-                .sort(
-                    descending(
-                        WeightEntryDto::utcTimestamp
-                    )
-                )
+                .sort(Sorts.descending(WeightEntryDto::utcTimestamp.name))
                 .toList()
                 .map { it.toObject() }
         }
@@ -130,9 +128,9 @@ class UserRepositoryImp(
     override suspend fun updateWeightDialogsData(weightDialogs: WeightDialogs, userId: String): Resource<Unit> {
         return handleRequest {
             userCol
-                .updateOneById(
-                    id = userId.toObjectId(),
-                    update = setValue(UserDto::weightDialogs, weightDialogs)
+                .updateOne(
+                    filter = eq(UserDto::_id.name, userId.toObjectId()),
+                    update = Updates.set(UserDto::weightDialogs.name, weightDialogs)
                 )
                 .wasAcknowledgedOrThrow()
         }

@@ -26,11 +26,12 @@ class InsertProductDiaryEntryUseCase(
         } else if (!productDiaryEntryPostRequest.date.isValidDate()) {
             Resource.Error()
         } else {
+            val currentUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
             diaryRepository.insertProductDiaryEntry(
                 productDiaryEntry = ProductDiaryEntry(
                     weight = productDiaryEntryPostRequest.weight,
                     mealName = productDiaryEntryPostRequest.mealName,
-                    utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
+                    utcTimestamp = currentUtcTimestamp,
                     date = productDiaryEntryPostRequest.date,
                     userId = userId,
                     nutritionValues = calculateProductNutritionValuesUseCase(
@@ -39,7 +40,8 @@ class InsertProductDiaryEntryUseCase(
                     ).data ?: return Resource.Error(),
                     productId = productDiaryEntryPostRequest.productId,
                     productName = product.name,
-                    productMeasurementUnit = product.measurementUnit
+                    productMeasurementUnit = product.measurementUnit,
+                    lastEditedUtcTimestamp = currentUtcTimestamp
                 ),
                 userId = userId
             )

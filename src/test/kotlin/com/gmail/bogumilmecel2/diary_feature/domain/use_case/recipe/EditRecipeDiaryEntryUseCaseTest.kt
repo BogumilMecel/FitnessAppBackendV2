@@ -85,15 +85,19 @@ class EditRecipeDiaryEntryUseCaseTest: BaseDiaryTest() {
     @Test
     fun `Check if repository returns resource success, resource success is returned`() = runTest {
         val recipeDiaryEntry = mockRecipeDiaryEntry().copy(
+            id = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_1,
             nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
             servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2
         )
         mockData()
         assertIs<Resource.Success<Unit>>(callTestedMethod())
+        // TODO: Better test nutrition values
         coVerify(exactly = 1) {
             diaryRepository.editRecipeDiaryEntry(
-                recipeDiaryEntry = recipeDiaryEntry,
-                userId = MockConstants.USER_ID_1
+                userId = MockConstants.USER_ID_1,
+                newNutritionValues = recipeDiaryEntry.nutritionValues,
+                newServings = recipeDiaryEntry.servings,
+                recipeDiaryEntryId = recipeDiaryEntry.id
             )
         }
     }
@@ -104,10 +108,17 @@ class EditRecipeDiaryEntryUseCaseTest: BaseDiaryTest() {
         nutritionResource: Resource<NutritionValues> = Resource.Success(MockConstants.Diary.getSampleNutritionValues()),
         diaryResource: Resource<Unit> = Resource.Success(Unit)
     ) {
-        coEvery { getRecipeDiaryEntryUseCase(recipeDiaryEntryId = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_41) } returns recipeDiaryEntryResource
-        coEvery { getRecipeUseCase(recipeId = MockConstants.Diary.RECIPE_ID_31) } returns recipeResource
+        coEvery { getRecipeDiaryEntryUseCase(recipeDiaryEntryId = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_1) } returns recipeDiaryEntryResource
+        coEvery { getRecipeUseCase(recipeId = MockConstants.Diary.RECIPE_ID_1) } returns recipeResource
         coEvery { calculateRecipeNutritionValuesUseCase(recipe = any(), servings = any()) } returns nutritionResource
-        coEvery { diaryRepository.editRecipeDiaryEntry(recipeDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns diaryResource
+        coEvery {
+            diaryRepository.editRecipeDiaryEntry(
+                userId = MockConstants.USER_ID_1,
+                newNutritionValues = any(),
+                newServings = any(),
+                recipeDiaryEntryId = any()
+            )
+        } returns diaryResource
     }
 
     private fun mockRecipeDiaryEntry(
@@ -116,7 +127,7 @@ class EditRecipeDiaryEntryUseCaseTest: BaseDiaryTest() {
     ) = RecipeDiaryEntry(
         userId = userId,
         servings = servings,
-        recipeId = MockConstants.Diary.RECIPE_ID_31
+        recipeId = MockConstants.Diary.RECIPE_ID_1
     )
     private suspend fun callTestedMethod(
         editRecipeDiaryEntryRequest: EditRecipeDiaryEntryRequest = mockEditRecipeDiaryEntryRequest(),
@@ -127,7 +138,7 @@ class EditRecipeDiaryEntryUseCaseTest: BaseDiaryTest() {
     )
 
     private fun mockEditRecipeDiaryEntryRequest() = EditRecipeDiaryEntryRequest(
-        recipeDiaryEntryId = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_41,
+        recipeDiaryEntryId = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID_1,
         newServings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2
     )
 }
