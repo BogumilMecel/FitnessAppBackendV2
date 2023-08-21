@@ -21,6 +21,8 @@ class AddRecipeDiaryEntryUseCase(
         } else if (!request.date.isValidDate()) {
             Resource.Error()
         } else {
+            val currentTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
+
             diaryRepository.insertRecipeDiaryEntry(
                 recipeDiaryEntry = RecipeDiaryEntry(
                     id = "",
@@ -29,12 +31,13 @@ class AddRecipeDiaryEntryUseCase(
                         servings = request.servings
                     ).data ?: return Resource.Error(),
                     date = request.date,
-                    utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
+                    utcTimestamp = currentTimestamp,
                     userId = userId,
                     mealName = request.mealName,
                     servings = request.servings,
                     recipeName = recipe.name,
-                    recipeId = recipe.id
+                    recipeId = recipe.id,
+                    lastEditedUtcTimestamp = currentTimestamp
                 ),
                 userId = userId
             )
