@@ -19,7 +19,7 @@ data class ProductDiaryEntry(
     override val userId: String = "",
     override val mealName: MealName = MealName.BREAKFAST,
     val productMeasurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
-    val lastEditedUtcTimestamp: Long,
+    val lastEditedUtcTimestamp: Long = 0,
     val productName: String = "",
     val productId: String = "",
     val weight: Int = 0,
