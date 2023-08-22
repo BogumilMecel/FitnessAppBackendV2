@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.EditRecipeDiaryEntryRe
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsTimestampInTwoWeeksUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockkClass
@@ -23,7 +24,8 @@ class EditRecipeDiaryEntryUseCaseTest: BaseDiaryTest() {
         diaryRepository = diaryRepository,
         calculateRecipeNutritionValuesUseCase = calculateRecipeNutritionValuesUseCase,
         getRecipeUseCase = getRecipeUseCase,
-        getRecipeDiaryEntryUseCase = getRecipeDiaryEntryUseCase
+        getRecipeDiaryEntryUseCase = getRecipeDiaryEntryUseCase,
+        isTimestampInTwoWeeksUseCase = IsTimestampInTwoWeeksUseCase()
     )
 
     @Test
@@ -59,6 +61,13 @@ class EditRecipeDiaryEntryUseCaseTest: BaseDiaryTest() {
     }
 
     @Test
+    fun `Check if entry is older than 2 weeks, resource error is returned`() = runTest {
+        mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP_MORE_THAN_2_LATER)
+        mockData()
+        assertIs<Resource.Error<Unit>>(callTestedMethod())
+    }
+
+    @Test
     fun `Check if getRecipe returns resource error, resource error is returned`() = runTest {
         mockData(recipeResource = Resource.Error())
         assertIs<Resource.Error<Unit>>(callTestedMethod())
@@ -86,8 +95,10 @@ class EditRecipeDiaryEntryUseCaseTest: BaseDiaryTest() {
     fun `Check if repository returns resource success, resource success is returned`() = runTest {
         val recipeDiaryEntry = mockRecipeDiaryEntry().copy(
             nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
-            servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2
+            servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
+            utcTimestamp = MockConstants.TIMESTAMP
         )
+        mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP_1_WEEKS_LATER)
         mockData()
         assertIs<Resource.Success<Unit>>(callTestedMethod())
         coVerify(exactly = 1) {
@@ -116,7 +127,8 @@ class EditRecipeDiaryEntryUseCaseTest: BaseDiaryTest() {
     ) = RecipeDiaryEntry(
         userId = userId,
         servings = servings,
-        recipeId = MockConstants.Diary.RECIPE_ID_31
+        recipeId = MockConstants.Diary.RECIPE_ID_31,
+        utcTimestamp = MockConstants.TIMESTAMP,
     )
     private suspend fun callTestedMethod(
         editRecipeDiaryEntryRequest: EditRecipeDiaryEntryRequest = mockEditRecipeDiaryEntryRequest(),

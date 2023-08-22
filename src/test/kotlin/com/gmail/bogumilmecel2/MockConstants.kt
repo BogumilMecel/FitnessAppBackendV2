@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.TimeRequired
+import org.apache.commons.lang3.time.DateUtils
 
 object MockConstants {
     const val USER_ID_1 = "user_id_1"
@@ -15,7 +16,9 @@ object MockConstants {
     const val MOCK_DATE_2022 = "2022-12-12"
     const val MOCK_DATE_2021 = "2021-12-12"
     const val INVALID_DATE_2021 = "12-2021-12"
-    const val TIMESTAMP = 2000L
+    const val TIMESTAMP = DateUtils.MILLIS_PER_DAY * 30
+    const val TIMESTAMP_1_WEEKS_LATER = TIMESTAMP + DateUtils.MILLIS_PER_DAY * 7
+    const val TIMESTAMP_MORE_THAN_2_LATER = TIMESTAMP + DateUtils.MILLIS_PER_DAY * 14 + 1
 
     object Diary {
         private const val PRODUCT_NAME_1 = "Rice"
