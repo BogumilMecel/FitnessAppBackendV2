@@ -60,6 +60,43 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     }
 
     @Test
+    fun `Check if date is 2 weeks ago, resource error is returned`() = runTest {
+        mockLocalDate(value = MockConstants.MOCK_DATE_2022)
+        mockData()
+        assertIs<Resource.Error<Unit>>(
+            callTestedMethod(
+                productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(
+                    date = MockConstants.MOCK_DATE_2022_11_27
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `Check if weight is 0, resource error is returned`() = runTest {
+        mockData()
+        assertIs<Resource.Error<Unit>>(
+            callTestedMethod(
+                productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(
+                    weight = MockConstants.Diary.ZERO_PRODUCT_DIARY_ENTRY_WEIGHT
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `Check if weight is less than 0, resource error is returned`() = runTest {
+        mockData()
+        assertIs<Resource.Error<Unit>>(
+            callTestedMethod(
+                productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(
+                    weight = MockConstants.Diary.NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT
+                )
+            )
+        )
+    }
+
+    @Test
     fun `Check if calculateProductNutritionValues returns resource error, resource error is returned`() = runTest {
         mockData(calculateProductNutritionValuesResource = Resource.Error())
         assertIs<Resource.Error<Unit>>(callTestedMethod())
