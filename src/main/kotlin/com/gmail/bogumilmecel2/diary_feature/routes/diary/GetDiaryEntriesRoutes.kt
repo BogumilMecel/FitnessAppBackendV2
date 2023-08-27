@@ -1,7 +1,5 @@
 package com.gmail.bogumilmecel2.diary_feature.routes.diary
 
-import com.gmail.bogumilmecel2.common.domain.constants.Constants
-import com.gmail.bogumilmecel2.common.util.extensions.getNullableParameter
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.GetDiaryEntries
@@ -36,8 +34,24 @@ fun Route.configureGetDiaryEntriesExperimentalRoute(getDiaryEntries: GetDiaryEnt
                     call.handleResource(
                         resource = getDiaryEntries(
                             userId = userId,
-                            latestRecipeDiaryEntryUtcTimestampString = getNullableParameter(Constants.ApiConstants.LATEST_RECIPE_DIARY_ENTRY_UTC_TIMESTAMP),
-                            latestProductDiaryEntryUtcTimestampString = getNullableParameter(Constants.ApiConstants.LATEST_PRODUCT_DIARY_ENTRY_UTC_TIMESTAMP),
+                            complete = false
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
+fun Route.configureGetDiaryEntriesCompleteRoute(getDiaryEntries: GetDiaryEntries) {
+    authenticate {
+        get("complete") {
+            call.run {
+                getUserId()?.let { userId ->
+                    call.handleResource(
+                        resource = getDiaryEntries(
+                            userId = userId,
+                            complete = true
                         )
                     )
                 }

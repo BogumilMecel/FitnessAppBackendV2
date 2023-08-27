@@ -30,31 +30,24 @@ class GetDiaryEntries(
 
     suspend operator fun invoke(
         userId: String,
-        latestProductDiaryEntryUtcTimestampString: String?,
-        latestRecipeDiaryEntryUtcTimestampString: String?
-    ): Resource<DiaryEntriesResponse> {
-        val productDiaryEntries = if (latestProductDiaryEntryUtcTimestampString == null) {
-            diaryRepository.getProductDiaryEntries(userId = userId)
+        complete: Boolean
+    ): Resource<DiaryEntriesResponse>{
+        val productDiaryEntries = if (complete) {
+            diaryRepository.getProductDiaryEntries(userId = userId).data ?: return Resource.Error()
         } else {
-            diaryRepository.getProductDiaryEntries(
-                userId = userId,
-                latestProductDiaryEntryTimestamp = latestProductDiaryEntryUtcTimestampString.toLongOrNull() ?: return Resource.Error()
-            )
-        }.data ?: return Resource.Error()
+            emptyList()
+        }
 
-        val recipeDiaryEntries = if (latestRecipeDiaryEntryUtcTimestampString == null) {
-            diaryRepository.getRecipeDiaryEntries(userId = userId)
+        val recipeDiaryEntries = if (complete) {
+            diaryRepository.getRecipeDiaryEntries(userId = userId).data ?: return Resource.Error()
         } else {
-            diaryRepository.getRecipeDiaryEntries(
-                userId = userId,
-                latestRecipeDiaryEntryTimestamp = latestRecipeDiaryEntryUtcTimestampString.toLongOrNull() ?: return Resource.Error()
-            )
-        }.data ?: return Resource.Error()
+            emptyList()
+        }
 
         return Resource.Success(
             data = DiaryEntriesResponse(
-                productDiaryEntries = productDiaryEntries,
-                recipeDiaryEntries = recipeDiaryEntries
+                recipeDiaryEntries = recipeDiaryEntries,
+                productDiaryEntries = productDiaryEntries
             )
         )
     }
