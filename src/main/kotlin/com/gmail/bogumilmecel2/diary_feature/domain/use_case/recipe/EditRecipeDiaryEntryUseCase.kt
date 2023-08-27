@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe
 
+import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.EditRecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
@@ -32,9 +33,10 @@ class EditRecipeDiaryEntryUseCase(
         return diaryRepository.editRecipeDiaryEntry(
             recipeDiaryEntry = recipeDiaryEntry.copy(
                 servings = newServings,
-                nutritionValues = newNutritionValues
+                nutritionValues = newNutritionValues,
+                lastEditedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
             ),
-            userId = userId
+            userId = userId,
         )
     }
 }

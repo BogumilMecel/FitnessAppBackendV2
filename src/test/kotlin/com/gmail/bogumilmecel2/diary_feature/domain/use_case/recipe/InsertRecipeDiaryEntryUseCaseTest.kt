@@ -15,11 +15,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertIs
 
-class AddRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
+class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private val getRecipeUseCase = mockkClass(GetRecipeUseCase::class)
     private val calculateRecipeNutritionValuesUseCase = mockkClass(CalculateRecipeNutritionValuesUseCase::class)
-    private val addRecipeDiaryEntryUseCase = AddRecipeDiaryEntryUseCase(
+    private val insertRecipeDiaryEntryUseCase = InsertRecipeDiaryEntryUseCase(
         diaryRepository = diaryRepository,
         getRecipeUseCase = getRecipeUseCase,
         calculateRecipeNutritionValuesUseCase = calculateRecipeNutritionValuesUseCase
@@ -93,7 +93,8 @@ class AddRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     @Test
     fun `Check if data is correct and repository returns resource error, resource error is returned`() = runTest {
-        mockData(diaryResource = Resource.Error())
+        mockData()
+        mockRepositoryResponse()
         assertIs<Resource.Error<Unit>>(callTestedMethod())
     }
 
@@ -103,21 +104,23 @@ class AddRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
         val request = mockRecipeDiaryEntryRequest()
         mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP)
         mockData()
+        val expectedRecipeDiaryEntry = RecipeDiaryEntry(
+            id = "",
+            nutritionValues = nutritionValues,
+            utcTimestamp = MockConstants.TIMESTAMP,
+            userId = MockConstants.USER_ID_1,
+            date = request.date,
+            mealName = request.mealName,
+            recipeName = MockConstants.Diary.RECIPE_NAME,
+            recipeId = MockConstants.Diary.RECIPE_ID_31,
+            servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1,
+            lastEditedUtcTimestamp = MockConstants.TIMESTAMP
+        )
+        mockRepositoryResponse(Resource.Success(expectedRecipeDiaryEntry))
         assertIs<Resource.Success<Unit>>(callTestedMethod())
         coVerify(exactly = 1) {
             diaryRepository.insertRecipeDiaryEntry(
-                recipeDiaryEntry = RecipeDiaryEntry(
-                    id = "",
-                    nutritionValues = nutritionValues,
-                    utcTimestamp = MockConstants.TIMESTAMP,
-                    userId = MockConstants.USER_ID_1,
-                    date = request.date,
-                    mealName = request.mealName,
-                    recipeName = MockConstants.Diary.RECIPE_NAME,
-                    recipeId = MockConstants.Diary.RECIPE_ID_31,
-                    servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1,
-                    lastEditedUtcTimestamp = MockConstants.TIMESTAMP
-                ),
+                recipeDiaryEntry = expectedRecipeDiaryEntry,
                 userId = MockConstants.USER_ID_1
             )
         }
@@ -125,16 +128,18 @@ class AddRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private fun mockData(
         recipeResource: Resource<Recipe?> = Resource.Success(MockConstants.Diary.getSampleRecipe()),
-        diaryResource: Resource<Unit> = Resource.Success(Unit),
         nutritionValuesResource: Resource<NutritionValues> = Resource.Success(data = MockConstants.Diary.getSampleNutritionValues())
     ) {
         coEvery { getRecipeUseCase(recipeId = MockConstants.Diary.RECIPE_ID_31) } returns recipeResource
-        coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns diaryResource
         coEvery { calculateRecipeNutritionValuesUseCase(recipe = any(), servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1) } returns nutritionValuesResource
     }
 
+    private fun mockRepositoryResponse(diaryResource: Resource<RecipeDiaryEntry> = Resource.Error()) {
+        coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns diaryResource
+    }
+
     private suspend fun callTestedMethod(recipeDiaryEntryRequest: RecipeDiaryEntryRequest = mockRecipeDiaryEntryRequest()) =
-        addRecipeDiaryEntryUseCase(
+        insertRecipeDiaryEntryUseCase(
             request = recipeDiaryEntryRequest,
             userId = MockConstants.USER_ID_1
         )

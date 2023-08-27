@@ -39,10 +39,7 @@ data class ProductDiaryEntryDto(
     val weight: Int,
 )
 
-fun ProductDiaryEntry.toDto(
-    userId: String,
-    currentUtcTimestamp: Long
-): ProductDiaryEntryDto = ProductDiaryEntryDto(
+fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiaryEntryDto(
     _id = id.toObjectId(),
     utcTimestamp = utcTimestamp,
     userId = userId,
@@ -53,7 +50,7 @@ fun ProductDiaryEntry.toDto(
     productName = productName,
     measurementUnit = productMeasurementUnit,
     productId = productId,
-    lastEditedUtcTimestamp = currentUtcTimestamp
+    lastEditedUtcTimestamp = lastEditedUtcTimestamp
 )
 
 fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
