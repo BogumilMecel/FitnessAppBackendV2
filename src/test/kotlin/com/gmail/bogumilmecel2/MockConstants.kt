@@ -15,6 +15,7 @@ object MockConstants {
     const val USERNAME = "username"
     const val MOCK_DATE_2022 = "2022-12-12"
     const val MOCK_DATE_2021 = "2021-12-12"
+    const val MOCK_DATE_2022_11_27 = "2022-11-27"
     const val INVALID_DATE_2021 = "12-2021-12"
     const val TIMESTAMP = DateUtils.MILLIS_PER_DAY * 30
     const val TIMESTAMP_1_WEEKS_LATER = TIMESTAMP + DateUtils.MILLIS_PER_DAY * 7
