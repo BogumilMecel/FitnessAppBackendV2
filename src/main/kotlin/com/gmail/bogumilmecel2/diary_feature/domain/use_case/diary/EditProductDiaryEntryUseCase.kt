@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 
+import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.EditProductDiaryEntryRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
@@ -34,7 +35,8 @@ class EditProductDiaryEntryUseCase(
         return diaryRepository.editProductDiaryEntry(
             productDiaryEntry = productDiaryEntry.copy(
                 nutritionValues = newNutritionValues,
-                weight = newWeight
+                weight = newWeight,
+                lastEditedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
             ),
             userId = userId
         )

@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetR
 data class RecipeUseCases(
     val insertRecipeUseCase: InsertRecipeUseCase,
     val searchForRecipes: SearchForRecipes,
-    val addRecipeDiaryEntryUseCase: AddRecipeDiaryEntryUseCase,
+    val insertRecipeDiaryEntryUseCase: InsertRecipeDiaryEntryUseCase,
     val getRecipePriceUseCase: GetRecipePriceUseCase,
     val getRecipeUseCase: GetRecipeUseCase
 )

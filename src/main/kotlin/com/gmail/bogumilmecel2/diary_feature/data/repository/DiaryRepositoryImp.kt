@@ -2,7 +2,6 @@ package com.gmail.bogumilmecel2.diary_feature.data.repository
 
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
-import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.CaloriesSumResponse
@@ -34,25 +33,21 @@ class DiaryRepositoryImp(
     override suspend fun insertProductDiaryEntry(
         productDiaryEntry: ProductDiaryEntry,
         userId: String
-    ): Resource<Unit> {
+    ): Resource<ProductDiaryEntry> {
         return handleRequest {
-            productDiaryCol.insertOne(
-                productDiaryEntry.toDto(
-                    userId = userId,
-                    currentUtcTimestamp = productDiaryEntry.utcTimestamp
-                )
-            ).wasAcknowledgedOrThrow()
+            productDiaryEntry.copy(
+                id = productDiaryEntry.toDto(userId = userId)
+                    .apply { productDiaryCol.insertOne(this) }._id.toString()
+            )
         }
     }
 
-    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Unit> {
+    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<RecipeDiaryEntry> {
         return handleRequest {
-            recipeDiaryCol.insertOne(
-                recipeDiaryEntry.toDto(
-                    userId = userId,
-                    currentUtcTimestamp = recipeDiaryEntry.utcTimestamp
-                )
-            ).wasAcknowledgedOrThrow()
+            recipeDiaryEntry.copy(
+                id = recipeDiaryEntry.toDto(userId = userId)
+                    .apply { recipeDiaryCol.insertOne(this) }._id.toString()
+            )
         }
     }
 
@@ -130,10 +125,7 @@ class DiaryRepositoryImp(
                     RecipeDiaryEntryDto::_id eq recipeDiaryEntry.id.toObjectId(),
                     RecipeDiaryEntryDto::userId eq userId
                 ),
-                recipeDiaryEntry.toDto(
-                    userId = userId,
-                    currentUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
-                )
+                recipeDiaryEntry.toDto(userId = userId)
             ).wasAcknowledgedOrThrow()
         }
     }
@@ -161,10 +153,7 @@ class DiaryRepositoryImp(
                     ProductDiaryEntryDto::_id eq productDiaryEntry.id.toObjectId(),
                     ProductDiaryEntryDto::userId eq userId
                 ),
-                productDiaryEntry.toDto(
-                    userId = userId,
-                    currentUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
-                )
+                productDiaryEntry.toDto(userId = userId)
             ).wasAcknowledgedOrThrow()
         }
     }
