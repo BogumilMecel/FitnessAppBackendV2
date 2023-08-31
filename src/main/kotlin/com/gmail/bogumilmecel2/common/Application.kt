@@ -118,15 +118,11 @@ fun Application.module() {
         editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getProductDiaryEntryUseCase = getProductDiaryEntryUseCase,
-            getProductUseCase = getProductUseCase,
-            calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase,
             isTimestampInTwoWeeksUseCase = isTimestampInTwoWeeksUseCase
         ),
         editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getRecipeDiaryEntryUseCase = getRecipeDiaryEntryUseCase,
-            getRecipeUseCase = getRecipeUseCase,
-            calculateRecipeNutritionValuesUseCase = calculateRecipeNutritionValuesUseCase,
             isTimestampInTwoWeeksUseCase = isTimestampInTwoWeeksUseCase
         ),
         getProductDiaryHistoryUseCase = getProductDiaryHistoryUseCase
