@@ -14,7 +14,7 @@ class EditProductDiaryEntryUseCase(
     suspend operator fun invoke(
         productDiaryEntry: ProductDiaryEntry,
         userId: String
-    ): Resource<Unit> = with(productDiaryEntry) {
+    ): Resource<ProductDiaryEntry> = with(productDiaryEntry) {
         val originalProductDiaryEntry = getProductDiaryEntryUseCase(
             productDiaryEntryId = id
         ).data ?: return Resource.Error()
@@ -23,9 +23,21 @@ class EditProductDiaryEntryUseCase(
         if (productDiaryEntry.weight == originalProductDiaryEntry.weight) return Resource.Error()
         if (!isTimestampInTwoWeeksUseCase(originalProductDiaryEntry.utcTimestamp)) return Resource.Error()
 
-        return diaryRepository.editProductDiaryEntry(
-            productDiaryEntry = productDiaryEntry.copy(lastEditedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()),
+        val newProductDiaryEntry = productDiaryEntry.copy(lastEditedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp())
+
+        val resource = diaryRepository.editProductDiaryEntry(
+            productDiaryEntry = newProductDiaryEntry,
             userId = userId
         )
+
+        return when(resource) {
+            is Resource.Error -> {
+                Resource.Error()
+            }
+
+            is Resource.Success -> {
+                Resource.Success(newProductDiaryEntry)
+            }
+        }
     }
 }
