@@ -24,7 +24,6 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     private val insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
         diaryRepository = diaryRepository,
         getProductUseCase = getProductUseCase,
-        calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
     )
 
     @Test
@@ -112,7 +111,6 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     @Test
     fun `Check if repository returns success, resource success is returned and correct data is used`() = runTest {
         val product = MockConstants.Diary.getSampleProduct()
-        val nutritionValues = MockConstants.Diary.getSampleNutritionValues()
         val productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest()
         mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP)
         mockData()
@@ -122,7 +120,7 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
             utcTimestamp = MockConstants.TIMESTAMP,
             date = productDiaryEntryPostRequest.date,
             userId = MockConstants.USER_ID_1,
-            nutritionValues = nutritionValues,
+            nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
             productId = productDiaryEntryPostRequest.productId,
             productName = product.name,
             productMeasurementUnit = product.measurementUnit,
@@ -169,11 +167,13 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private fun mockProductDiaryEntryPostRequest(
         weight: Int = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
-        date: String = MockConstants.MOCK_DATE_2021
+        date: String = MockConstants.MOCK_DATE_2021,
+        nutritionValues: NutritionValues = MockConstants.Diary.getSampleNutritionValues()
     ) = ProductDiaryEntryPostRequest(
         productId = MockConstants.Diary.PRODUCT_ID_11,
         weight = weight,
         mealName = MealName.BREAKFAST,
-        date = date
+        date = date,
+        nutritionValues = nutritionValues
     )
 }

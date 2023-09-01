@@ -108,7 +108,6 @@ fun Application.module() {
         insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getProductUseCase = getProductUseCase,
-            calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
         ),
         deleteDiaryEntry = DeleteDiaryEntry(
             diaryRepository = diaryRepository,
@@ -175,7 +174,6 @@ fun Application.module() {
         insertRecipeDiaryEntryUseCase = InsertRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getRecipeUseCase = getRecipeUseCase,
-            calculateRecipeNutritionValuesUseCase = calculateRecipeNutritionValuesUseCase
         ),
         getRecipePriceUseCase = GetRecipePriceUseCase(priceRepository = priceRepository),
         getRecipeUseCase = getRecipeUseCase

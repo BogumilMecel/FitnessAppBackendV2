@@ -12,7 +12,6 @@ import kotlinx.datetime.LocalDate
 class InsertRecipeDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
     private val getRecipeUseCase: GetRecipeUseCase,
-    private val calculateRecipeNutritionValuesUseCase: CalculateRecipeNutritionValuesUseCase
 ) {
 
     suspend operator fun invoke(request: RecipeDiaryEntryRequest, userId: String): Resource<RecipeDiaryEntry> = with(request) {
@@ -28,10 +27,7 @@ class InsertRecipeDiaryEntryUseCase(
         return diaryRepository.insertRecipeDiaryEntry(
             recipeDiaryEntry = RecipeDiaryEntry(
                 id = "",
-                nutritionValues = calculateRecipeNutritionValuesUseCase(
-                    recipe = recipe,
-                    servings = servings
-                ).data ?: return Resource.Error(),
+                nutritionValues = nutritionValues,
                 date = date,
                 utcTimestamp = currentTimestamp,
                 userId = userId,

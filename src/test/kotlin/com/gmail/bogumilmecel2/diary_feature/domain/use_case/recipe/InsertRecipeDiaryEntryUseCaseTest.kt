@@ -22,7 +22,6 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     private val insertRecipeDiaryEntryUseCase = InsertRecipeDiaryEntryUseCase(
         diaryRepository = diaryRepository,
         getRecipeUseCase = getRecipeUseCase,
-        calculateRecipeNutritionValuesUseCase = calculateRecipeNutritionValuesUseCase
     )
 
     @Test
@@ -113,13 +112,12 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     @Test
     fun `Check if data is correct and repository returns resource success, resource success is returned`() = runTest {
-        val nutritionValues = MockConstants.Diary.getSampleNutritionValues()
         val request = mockRecipeDiaryEntryRequest()
         mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP)
         mockData()
         val expectedRecipeDiaryEntry = RecipeDiaryEntry(
             id = "",
-            nutritionValues = nutritionValues,
+            nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
             utcTimestamp = MockConstants.TIMESTAMP,
             userId = MockConstants.USER_ID_1,
             date = request.date,
@@ -161,6 +159,7 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
         date = MockConstants.MOCK_DATE_2021,
         mealName = MealName.BREAKFAST,
         recipeId = MockConstants.Diary.RECIPE_ID_31,
-        servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1
+        servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1,
+        nutritionValues = MockConstants.Diary.getSampleNutritionValues()
     )
 }
