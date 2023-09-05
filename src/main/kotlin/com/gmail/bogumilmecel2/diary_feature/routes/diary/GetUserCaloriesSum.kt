@@ -9,6 +9,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.resources.*
 import io.ktor.server.routing.*
 
+@Deprecated(message = "End point no longer used. Now client calculates calories sum")
 fun Route.configureGetUserCaloriesSumRoute(
     getUserCaloriesSum: GetUserCaloriesSum
 ){
