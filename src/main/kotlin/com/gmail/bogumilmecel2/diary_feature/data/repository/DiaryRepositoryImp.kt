@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
-import com.gmail.bogumilmecel2.diary_feature.domain.model.CaloriesSumResponse
 import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.*
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
@@ -188,17 +187,6 @@ class DiaryRepositoryImp(
     override suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?> {
         return handleRequest {
             productCol.findOne(ProductDto::barcode eq barcode)?.toProduct()
-        }
-    }
-
-    override suspend fun getUserCaloriesSum(date: String, userId: String): Resource<CaloriesSumResponse> {
-        return handleRequest {
-            CaloriesSumResponse(caloriesSum = productDiaryCol.find(
-                ProductDiaryEntryDto::date eq date,
-                ProductDiaryEntryDto::userId eq userId
-            )
-                .toList()
-                .sumOf { it.nutritionValues.calories })
         }
     }
 

@@ -17,7 +17,10 @@ import com.gmail.bogumilmecel2.common.plugins.configureLocations
 import com.gmail.bogumilmecel2.common.plugins.configureMonitoring
 import com.gmail.bogumilmecel2.common.plugins.configureSerialization
 import com.gmail.bogumilmecel2.diary_feature.data.repository.DiaryRepositoryImp
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.*
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetUserDiaryItemsUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDiaryNameValidUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsTimestampInTwoWeeksUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.*
@@ -98,8 +101,6 @@ fun Application.module() {
     val getRecipeDiaryEntryUseCase = GetRecipeDiaryEntryUseCase(diaryRepository = diaryRepository)
     val getProductDiaryEntryUseCase = GetProductDiaryEntryUseCase(diaryRepository = diaryRepository)
     val getRecipeUseCase = GetRecipeUseCase(diaryRepository)
-    val calculateProductNutritionValuesUseCase = CalculateProductNutritionValuesUseCase()
-    val calculateRecipeNutritionValuesUseCase = CalculateRecipeNutritionValuesUseCase()
     val getProductDiaryHistoryUseCase = GetProductDiaryHistoryUseCase(diaryRepository = diaryRepository)
     val isTimestampInTwoWeeksUseCase = IsTimestampInTwoWeeksUseCase()
 
@@ -113,7 +114,6 @@ fun Application.module() {
             diaryRepository = diaryRepository,
             isTimestampInTwoWeeksUseCase = isTimestampInTwoWeeksUseCase
         ),
-        getUserCaloriesSum = GetUserCaloriesSum(diaryRepository),
         editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getProductDiaryEntryUseCase = getProductDiaryEntryUseCase,
