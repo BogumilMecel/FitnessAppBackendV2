@@ -6,7 +6,6 @@ data class DiaryUseCases(
     val getDiaryEntries: GetDiaryEntries,
     val insertProductDiaryEntryUseCase: InsertProductDiaryEntryUseCase,
     val deleteDiaryEntry: DeleteDiaryEntry,
-    val getUserCaloriesSum: GetUserCaloriesSum,
     val editProductDiaryEntryUseCase: EditProductDiaryEntryUseCase,
     val editRecipeDiaryEntryUseCase: EditRecipeDiaryEntryUseCase,
     val getProductDiaryHistoryUseCase: GetProductDiaryHistoryUseCase,
