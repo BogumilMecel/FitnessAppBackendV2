@@ -17,10 +17,7 @@ import com.gmail.bogumilmecel2.common.plugins.configureLocations
 import com.gmail.bogumilmecel2.common.plugins.configureMonitoring
 import com.gmail.bogumilmecel2.common.plugins.configureSerialization
 import com.gmail.bogumilmecel2.diary_feature.data.repository.DiaryRepositoryImp
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetUserDiaryItemsUseCase
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDiaryNameValidUseCase
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsTimestampInTwoWeeksUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.*
@@ -70,12 +67,17 @@ fun Application.module() {
         priceCol = databaseManager.client.getCollection("price_collection")
     )
 
+    val calculateNutritionValuesUseCase = CalculateNutritionValuesUseCase()
+    val insertProductUseCase = InsertProductUseCase(
+        diaryRepository = diaryRepository,
+        getUsernameUseCase = getUsernameUseCase,
+        isDiaryNameValidUseCase = isDiaryNameValidUseCase,
+        areNutritionValuesValid = AreNutritionValuesValid(),
+        calculateNutritionValuesUseCase = calculateNutritionValuesUseCase
+    )
+
     val productUseCases = ProductUseCases(
-        insertProductUseCase = InsertProductUseCase(
-            diaryRepository = diaryRepository,
-            getUsernameUseCase = getUsernameUseCase,
-            isDiaryNameValidUseCase = isDiaryNameValidUseCase
-        ),
+        insertProductUseCase = insertProductUseCase,
         getProductsUseCase = GetProductsUseCase(repository = diaryRepository),
         searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
         addNewPriceUseCase = AddNewPriceUseCase(
@@ -157,7 +159,7 @@ fun Application.module() {
         handleUserInformationUseCase = HandleUserInformationUseCase(
             userRepository = userRepository,
             saveNutritionValuesUseCase = saveNutritionValuesUseCase,
-            calculateNutritionValuesUseCase = CalculateNutritionValuesUseCase(),
+            calculateNutritionValuesUseCase = CalculateNutritionValuesFromIntroductionUseCase(),
             checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
             addWeightEntryUseCase = addWeightEntryUseCase
         ),

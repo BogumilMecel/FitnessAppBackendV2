@@ -3,13 +3,12 @@ package com.gmail.bogumilmecel2.diary_feature.domain.use_case.common
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.round
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
-import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 
-class CalculateProductNutritionValuesUseCase {
+class CalculateNutritionValuesUseCase {
     operator fun invoke(
-        product: Product,
+        nutritionValues: NutritionValues,
         weight: Int
-    ): Resource<NutritionValues> = with(product.nutritionValues) {
+    ): Resource<NutritionValues> = with(nutritionValues) {
         if (weight <= 0) return Resource.Error()
 
         val doubleWeight = weight.toDouble()

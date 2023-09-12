@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.common.util.extensions.round
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.user.user_data.domain.model.*
 
-class CalculateNutritionValuesUseCase {
+class CalculateNutritionValuesFromIntroductionUseCase {
 
     operator fun invoke(
         gender: Gender,
