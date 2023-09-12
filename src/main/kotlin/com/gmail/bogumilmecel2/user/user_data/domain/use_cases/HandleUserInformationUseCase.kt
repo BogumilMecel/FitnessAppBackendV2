@@ -11,7 +11,7 @@ import kotlinx.datetime.TimeZone
 
 class HandleUserInformationUseCase(
     private val userRepository: UserRepository,
-    private val calculateNutritionValuesUseCase: CalculateNutritionValuesUseCase,
+    private val calculateNutritionValuesUseCase: CalculateNutritionValuesFromIntroductionUseCase,
     private val saveNutritionValuesUseCase: SaveNutritionValuesUseCase,
     private val addWeightEntryUseCase: AddWeightEntryUseCase,
     private val checkIfWeightIsValidUseCase: CheckIfWeightIsValidUseCase

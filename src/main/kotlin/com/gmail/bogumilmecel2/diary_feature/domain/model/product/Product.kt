@@ -17,7 +17,7 @@ data class Product(
     val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
     val measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
     val nutritionValues: NutritionValues = NutritionValues(),
-    val barcode: String? = "",
+    val barcode: String? = null,
     val username: String = "",
     val userId: String = ""
 )
