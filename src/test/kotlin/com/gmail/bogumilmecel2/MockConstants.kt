@@ -35,14 +35,13 @@ object MockConstants {
         const val RECIPE_ID_31 = "31"
         const val RECIPE_DIARY_ENTRY_ID_41 = "41"
 
-        const val NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT = -1
+        const val NEGATIVE_VALUE = -1
         const val ZERO_PRODUCT_DIARY_ENTRY_WEIGHT = 0
         const val CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1 = 25
         const val CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_2 = 50
 
         const val CORRECT_RECIPE_SERVINGS_1 = 2
         const val CORRECT_RECIPE_SERVINGS_2 = 3
-        const val NEGATIVE_RECIPE_SERVINGS = NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT
         const val ZERO_RECIPE_SERVINGS = ZERO_PRODUCT_DIARY_ENTRY_WEIGHT
 
         fun getSampleNutritionValues() = NutritionValues(calories = 255, carbohydrates = 31.0, protein = 17.0, fat = 7.0)

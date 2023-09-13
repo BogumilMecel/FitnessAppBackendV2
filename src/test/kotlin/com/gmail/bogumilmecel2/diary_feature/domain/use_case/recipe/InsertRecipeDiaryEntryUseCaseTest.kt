@@ -54,7 +54,7 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
         assertIs<Resource.Error<Unit>>(
             callTestedMethod(
                 recipeDiaryEntryRequest = mockRecipeDiaryEntryRequest().copy(
-                    servings = MockConstants.Diary.NEGATIVE_RECIPE_SERVINGS
+                    servings = MockConstants.Diary.NEGATIVE_VALUE
                 )
             )
         )
