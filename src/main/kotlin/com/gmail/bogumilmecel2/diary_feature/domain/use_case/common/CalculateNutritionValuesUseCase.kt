@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.common
 
+import com.github.aymanizz.ktori18n.R
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.round
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
@@ -9,7 +10,7 @@ class CalculateNutritionValuesUseCase {
         nutritionValues: NutritionValues,
         weight: Int
     ): Resource<NutritionValues> = with(nutritionValues) {
-        if (weight <= 0) return Resource.Error()
+        if (weight <= 0) return Resource.Error.create(message = R("insert_product_invalid_weight"))
 
         val doubleWeight = weight.toDouble()
 

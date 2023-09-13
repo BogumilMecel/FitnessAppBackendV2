@@ -8,7 +8,7 @@ sealed class Resource<T>(open val data: T? = null, open val error: CustomExcepti
     data class Success<T>(override val data: T) : Resource<T>(data)
     data class Error<T>(override val error: CustomException = CustomException(), override val data: T? = null) : Resource<T>(data, error) {
         companion object {
-            fun <T> create(message: R, httpStatusCode: HttpStatusCode = HttpStatusCode.Conflict) = Error<T>(
+            fun <T> create(message: R, httpStatusCode: HttpStatusCode = HttpStatusCode.BadRequest) = Error<T>(
                 error = CustomException(
                     message = message,
                     httpStatusCode = httpStatusCode
@@ -17,3 +17,11 @@ sealed class Resource<T>(open val data: T? = null, open val error: CustomExcepti
         }
     }
 }
+
+fun <T> Resource.Error<*>.copyType() = Resource.Error<T>(
+    error = CustomException(
+        message = this.error.message,
+        httpStatusCode = this.error.httpStatusCode
+    ),
+    data = null
+)
