@@ -78,7 +78,7 @@ fun Application.module() {
         diaryRepository = diaryRepository,
         getUsernameUseCase = getUsernameUseCase,
         isDiaryNameValidUseCase = isDiaryNameValidUseCase,
-        areNutritionValuesValid = AreNutritionValuesValid(),
+        areNutritionValuesValidUseCase = AreNutritionValuesValidUseCase(),
         calculateNutritionValuesUseCase = calculateNutritionValuesUseCase
     )
 

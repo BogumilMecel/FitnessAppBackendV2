@@ -12,7 +12,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NewProductRequ
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.AreNutritionValuesValid
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.AreNutritionValuesValidUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateNutritionValuesUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDiaryNameValidUseCase
 import io.mockk.*
@@ -25,13 +25,13 @@ class InsertProductUseCaseTest : BaseTest() {
     private val diaryRepository = mockk<DiaryRepository>()
     private val getUsernameUseCase = mockkClass(GetUsernameUseCase::class)
     private val isDiaryNameValidUseCase = mockkClass(IsDiaryNameValidUseCase::class)
-    private val areNutritionValuesValid = mockkClass(AreNutritionValuesValid::class)
+    private val areNutritionValuesValidUseCase = mockkClass(AreNutritionValuesValidUseCase::class)
     private val calculateNutritionValuesUseCase = mockkClass(CalculateNutritionValuesUseCase::class)
     private val insertProductUseCase = InsertProductUseCase(
         diaryRepository = diaryRepository,
         getUsernameUseCase = getUsernameUseCase,
         isDiaryNameValidUseCase = isDiaryNameValidUseCase,
-        areNutritionValuesValid = areNutritionValuesValid,
+        areNutritionValuesValidUseCase = areNutritionValuesValidUseCase,
         calculateNutritionValuesUseCase = calculateNutritionValuesUseCase
     )
 
@@ -48,7 +48,7 @@ class InsertProductUseCaseTest : BaseTest() {
             assertIs<Resource.Error<Product>>(
                 callTestedUseCase(
                     request = mockNewProductRequest(
-                        containerWeight = MockConstants.Diary.NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT
+                        containerWeight = MockConstants.Diary.NEGATIVE_VALUE
                     )
                 )
             )
@@ -99,7 +99,7 @@ class InsertProductUseCaseTest : BaseTest() {
             assertIs<Resource.Error<Product>>(
                 callTestedUseCase(
                     request = mockNewProductRequest(
-                        containerWeight = MockConstants.Diary.NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT,
+                        containerWeight = MockConstants.Diary.NEGATIVE_VALUE,
                         nutritionValuesIn = it
                     )
                 )
@@ -258,7 +258,7 @@ class InsertProductUseCaseTest : BaseTest() {
         repositoryResource: Resource<Product> = Resource.Success(data = MockConstants.Diary.getSampleProduct())
     ) {
         every { isDiaryNameValidUseCase(MockConstants.Diary.PRODUCT_NAME_1) } returns isDiaryNameValid
-        every { areNutritionValuesValid(MockConstants.Diary.getSampleNutritionValues()) } returns areNutritionValuesValid
+        every { areNutritionValuesValidUseCase(MockConstants.Diary.getSampleNutritionValues()) } returns areNutritionValuesValid
         coEvery { getUsernameUseCase(userId = MockConstants.USER_ID_1) } returns username
         every {
             calculateNutritionValuesUseCase(
