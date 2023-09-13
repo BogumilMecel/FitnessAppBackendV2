@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.common.util.extensions
 
+import com.github.aymanizz.ktori18n.t
 import com.gmail.bogumilmecel2.common.domain.constants.Constants
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.Currency
@@ -27,7 +28,7 @@ suspend inline fun <reified T> ApplicationCall.handleResource(resource: Resource
             println("Exception in ${this.request.path()} " + resource.error)
             this.respond(
                 status = resource.error.httpStatusCode,
-                message = resource.error.exception.message ?: ""
+                message = resource.error.message?.let { t(it) }.orEmpty()
             )
         }
     }
