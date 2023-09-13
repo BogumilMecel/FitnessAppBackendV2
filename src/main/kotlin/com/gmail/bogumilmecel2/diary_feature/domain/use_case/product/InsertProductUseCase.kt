@@ -1,10 +1,12 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.product
 
+import com.github.aymanizz.ktori18n.R
 import com.gmail.bogumilmecel2.common.domain.constants.Constants
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
+import com.gmail.bogumilmecel2.common.util.copyType
 import com.gmail.bogumilmecel2.common.util.extensions.isLengthInRange
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NewProductRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
@@ -23,30 +25,47 @@ class InsertProductUseCase(
 ) {
     suspend operator fun invoke(newProductRequest: NewProductRequest, userId: String, country: Country): Resource<Product> =
         with(newProductRequest) {
-            if (!isDiaryNameValidUseCase(name = name)) return Resource.Error()
+            if (!isDiaryNameValidUseCase(name = name)) return Resource.Error.create(message = R("insert_product_invalid_name"))
 
             when (nutritionValuesIn) {
                 NutritionValuesIn.HUNDRED_GRAMS -> {
-                    if (containerWeight != null && containerWeight <= 0) return Resource.Error()
+                    if (containerWeight != null && containerWeight <= 0) return Resource.Error.create(
+                        message = R("insert_product_invalid_weight")
+                    )
                 }
 
                 else -> {
-                    if (containerWeight == null || containerWeight <= 0) return Resource.Error()
+                    if (containerWeight == null || containerWeight <= 0) return Resource.Error.create(
+                        message = R("insert_product_invalid_weight")
+                    )
                 }
             }
 
-            if (!areNutritionValuesValid(nutritionValues = nutritionValues)) return Resource.Error()
+            if (!areNutritionValuesValid(nutritionValues = nutritionValues)) return Resource.Error.create(
+                message = R("insert_product_invalid_nutrition_values")
+            )
 
             if (barcode != null) {
-                if (!barcode.isLengthInRange(maximum = Constants.Diary.BARCODE_MAX_LENGTH)) return Resource.Error()
+                if (!barcode.isLengthInRange(maximum = Constants.Diary.BARCODE_MAX_LENGTH)) return Resource.Error.create(
+                    message = R("insert_product_invalid_barcode_length")
+                )
             }
 
-            val username = getUsernameUseCase(userId = userId) ?: return Resource.Error()
+            val username = getUsernameUseCase(userId = userId) ?: return Resource.Error.create(
+                message = R("insert_product_username_not_available")
+            )
 
-            val nutritionValues = when (nutritionValuesIn) { 
+            val nutritionValues = when (nutritionValuesIn) {
                 NutritionValuesIn.HUNDRED_GRAMS -> nutritionValues
                 else -> {
-                    calculateNutritionValuesUseCase(nutritionValues = nutritionValues, weight = containerWeight ?: 100).data ?: return Resource.Error()
+                    val calculateResource = calculateNutritionValuesUseCase(
+                        nutritionValues = nutritionValues,
+                        weight = containerWeight ?: 100
+                    )
+                    when (calculateResource) {
+                        is Resource.Error -> return calculateResource.copyType()
+                        is Resource.Success -> calculateResource.data
+                    }
                 }
             }
 
