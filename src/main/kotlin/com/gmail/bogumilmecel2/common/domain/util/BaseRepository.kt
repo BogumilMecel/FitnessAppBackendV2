@@ -18,7 +18,7 @@ open class BaseRepository() {
     fun <T> handleExceptionWithResource(exception: Exception, data: T? = null): Resource<T> {
         exception.printStackTrace()
         return Resource.Error(
-            error = CustomException(exception = exception),
+            error = CustomException(),
             data = data
         )
     }

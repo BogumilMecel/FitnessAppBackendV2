@@ -12,10 +12,7 @@ import com.gmail.bogumilmecel2.authentication.domain.use_case.RegisterNewUserUse
 import com.gmail.bogumilmecel2.authentication.routes.configureAuthRoutes
 import com.gmail.bogumilmecel2.common.data.database.DatabaseManager
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
-import com.gmail.bogumilmecel2.common.plugins.configureAuthentication
-import com.gmail.bogumilmecel2.common.plugins.configureLocations
-import com.gmail.bogumilmecel2.common.plugins.configureMonitoring
-import com.gmail.bogumilmecel2.common.plugins.configureSerialization
+import com.gmail.bogumilmecel2.common.plugins.*
 import com.gmail.bogumilmecel2.diary_feature.data.repository.DiaryRepositoryImp
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.*
@@ -198,14 +195,11 @@ fun Application.module() {
 
     val hashingService = SHA256HashingService()
 
-    configureAuthentication(
-        tokenConfig = tokenConfig
-    )
+    configureAuthentication(tokenConfig = tokenConfig)
     configureMonitoring()
     configureSerialization()
     configureLocations()
-
-
+    configureInternationalization()
 
     routing {
         configureDiaryRoutes(
