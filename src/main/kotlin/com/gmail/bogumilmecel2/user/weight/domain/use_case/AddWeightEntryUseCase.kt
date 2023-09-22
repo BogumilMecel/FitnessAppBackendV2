@@ -52,7 +52,10 @@ class AddWeightEntryUseCase(
                         data = NewWeightEntryResponse(
                             latestWeightEntry = weightEntry,
                             weightProgress = weightEntries.data?.let {
-                                calculateWeightProgressUseCase(it)
+                                calculateWeightProgressUseCase(
+                                    weightEntries = it,
+                                    userId = userId
+                                )
                             }
                         )
                     )

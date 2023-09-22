@@ -4,12 +4,8 @@ import com.gmail.bogumilmecel2.authentication.domain.model.user.User
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 
-class GetUserObjectUseCase(
-    private val userRepository: UserRepository
-) {
+class GetUserObjectUseCase(private val userRepository: UserRepository) {
     suspend operator fun invoke(userId: String): Resource<User?> {
-        if (userId.isEmpty()) return Resource.Error()
-
         return userRepository.getUser(userId = userId)
     }
 }

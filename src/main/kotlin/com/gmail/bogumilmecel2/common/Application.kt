@@ -129,9 +129,7 @@ fun Application.module() {
         getProductDiaryHistoryUseCase = getProductDiaryHistoryUseCase
     )
 
-    val getUserObjectUseCase = GetUserObjectUseCase(userRepository = userRepository)
-
-    val calculateWeightEntriesUseCase = CalculateWeightProgressUseCase()
+    val calculateWeightEntriesUseCase = CalculateWeightProgressUseCase(userRepository)
     val getWeightEntriesUseCase = GetWeightEntriesUseCase(userRepository = userRepository)
     val checkIfWeightIsValidUseCase = CheckIfWeightIsValidUseCase()
     val addWeightEntryUseCase = AddWeightEntryUseCase(
@@ -221,10 +219,9 @@ fun Application.module() {
                     tokenService = tokenService,
                 ),
                 getUserUseCase = GetUserUseCase(
-                    getUserObjectUseCase = getUserObjectUseCase,
+                    getUserObjectUseCase = GetUserObjectUseCase(userRepository = userRepository),
                     checkLatestLogEntryAndGetLogStreakUseCase = checkLatestLogEntryAndGetLogStreakUseCase,
                     getWeightEntriesUseCase = getWeightEntriesUseCase,
-                    calculateWeightProgressUseCase = calculateWeightEntriesUseCase,
                 )
             )
         )

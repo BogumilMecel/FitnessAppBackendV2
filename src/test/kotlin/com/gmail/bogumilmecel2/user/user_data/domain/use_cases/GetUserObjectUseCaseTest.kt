@@ -16,11 +16,6 @@ class GetUserObjectUseCaseTest {
     private val getUserObjectUseCase = GetUserObjectUseCase(userRepository = userRepository)
 
     @Test
-    fun `check if user id is empty, resource error is returned`() = runTest {
-        assertIs<Resource.Error<User?>>(getUserObjectUseCase(userId = ""))
-    }
-
-    @Test
     fun `check if user id is correct, resource success is returned`() = runTest {
         coEvery { userRepository.getUser(USER_ID_1) } returns Resource.Success(data = null)
         assertIs<Resource.Success<User?>>(getUserObjectUseCase(userId = USER_ID_1))
