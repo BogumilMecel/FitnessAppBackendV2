@@ -36,10 +36,14 @@ import com.gmail.bogumilmecel2.user.weight.domain.use_case.*
 import com.gmail.bogumilmecel2.user.weight.routes.configureWeightRoutes
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
+@OptIn(DelicateCoroutinesApi::class)
 fun Application.module() {
     val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
     val rootLogger = loggerContext.getLogger("org.mongodb.driver")
@@ -47,24 +51,28 @@ fun Application.module() {
 
     val databaseManager = DatabaseManager()
 
+    GlobalScope.launch {
+        databaseManager.listAllIndexes()
+    }
+
     val diaryRepository = DiaryRepositoryImp(
-        recipeCol = databaseManager.client.getCollection("recipe_collection"),
-        productCol = databaseManager.client.getCollection("product_collection"),
-        productDiaryCol = databaseManager.client.getCollection("diary_collection"),
-        recipeDiaryCol = databaseManager.client.getCollection("recipe_diary_collection")
+        recipeCol = databaseManager.getRecipeCollection(),
+        productCol = databaseManager.getProductCollection(),
+        productDiaryCol = databaseManager.getProductDiaryCollection(),
+        recipeDiaryCol = databaseManager.getRecipeDiaryCollection()
     )
 
     val userRepository = UserRepositoryImp(
-        userCol = databaseManager.client.getCollection("user_collection"),
-        weightCol = databaseManager.client.getCollection("weight_collection"),
-        logEntryCol = databaseManager.client.getCollection("log_entry_collection"),
+        userCol = databaseManager.getUserCollection(),
+        weightCol = databaseManager.getWeightCollection(),
+        logEntryCol = databaseManager.getLogEntryCollection(),
     )
 
     val getUsernameUseCase = GetUsernameUseCase(userRepository = userRepository)
     val isDiaryNameValidUseCase = IsDiaryNameValidUseCase()
     val getProductUseCase = GetProductUseCase(diaryRepository = diaryRepository)
     val priceRepository = PriceRepositoryImp(
-        priceCol = databaseManager.client.getCollection("price_collection")
+        priceCol = databaseManager.getPriceCollection()
     )
 
     val calculateNutritionValuesUseCase = CalculateNutritionValuesUseCase()
