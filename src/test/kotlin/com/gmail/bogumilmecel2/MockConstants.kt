@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.TimeRequired
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsQuestion
 import org.apache.commons.lang3.time.DateUtils
 
 object MockConstants {
@@ -20,6 +21,9 @@ object MockConstants {
     const val TIMESTAMP = DateUtils.MILLIS_PER_DAY * 30
     const val TIMESTAMP_1_WEEKS_LATER = TIMESTAMP + DateUtils.MILLIS_PER_DAY * 7
     const val TIMESTAMP_MORE_THAN_2_LATER = TIMESTAMP + DateUtils.MILLIS_PER_DAY * 14 + 1
+    private const val MOCK_DATE_WITH_PLACEHOLDER = "202%s-12-12"
+
+    fun getFormattedDate(value: Int) = MOCK_DATE_WITH_PLACEHOLDER.format(value)
 
     object Diary {
         const val PRODUCT_NAME_1 = "Rice"
@@ -73,5 +77,11 @@ object MockConstants {
             userId = USER_ID_1,
             productPrice = null
         )
+    }
+
+    object Weight {
+        fun getWeightDialogsQuestions(count: Int = 3) = (1..count).map {
+            WeightDialogsQuestion(date = getFormattedDate(it), userId = USER_ID_1)
+        }
     }
 }

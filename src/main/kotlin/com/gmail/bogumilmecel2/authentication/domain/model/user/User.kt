@@ -2,7 +2,6 @@ package com.gmail.bogumilmecel2.authentication.domain.model.user
 
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
-import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogs
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
@@ -17,7 +16,7 @@ data class User(
     val logStreak: Int = 1,
     val latestWeightEntry: WeightEntry? = null,
     val weightProgress: Double? = null,
-    val weightDialogs: WeightDialogs? = null
+    val askForWeightDaily: Boolean? = null,
 )
 
 data class UserDto(
@@ -29,7 +28,7 @@ data class UserDto(
     val logStreak: Int = 1,
     val nutritionValues: NutritionValues? = null,
     val userInformation: UserInformation? = null,
-    val weightDialogs: WeightDialogs? = null,
+    val askForWeightDaily: Boolean? = null,
     val weightProgress: Double? = null,
 )
 
@@ -40,6 +39,6 @@ fun UserDto.toUser():User = User(
     nutritionValues = nutritionValues,
     userInformation = userInformation,
     logStreak = logStreak,
-    weightDialogs = weightDialogs,
+    askForWeightDaily = askForWeightDaily,
     weightProgress = weightProgress
 )

@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntr
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDto
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.PriceDto
 import com.gmail.bogumilmecel2.user.log.domain.model.LogEntryDto
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsQuestion
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.coroutine.coroutine
@@ -35,6 +36,7 @@ class DatabaseManager {
     fun getWeightCollection(): CoroutineCollection<WeightEntryDto> = client.getCollection("weight_collection")
     fun getLogEntryCollection(): CoroutineCollection<LogEntryDto> = client.getCollection("log_entry_collection")
     fun getPriceCollection(): CoroutineCollection<PriceDto> = client.getCollection("price_collection")
+    fun getWeightDialogsQuestionCol(): CoroutineCollection<WeightDialogsQuestion> = client.getCollection("weight_dialogs_question_collection")
 
     suspend fun listAllIndexes() {
         listIndexes(getProductDiaryCollection())
