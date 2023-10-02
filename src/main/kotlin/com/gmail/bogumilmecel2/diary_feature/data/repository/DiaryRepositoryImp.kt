@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.data.repository
 
+import com.gmail.bogumilmecel2.common.domain.constants.Constants.DEFAULT_PAGE_SIZE
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
@@ -129,9 +130,11 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getProducts(text: String): Resource<List<Product>> {
+    override suspend fun getProducts(text: String, skip: Int): Resource<List<Product>> {
         return handleRequest {
             productCol.find("{'name': {'${MongoOperator.regex}': '$text', '${MongoOperator.options}': 'i'}}")
+                .limit(limit = DEFAULT_PAGE_SIZE)
+                .skip(skip = skip)
                 .toList()
                 .map {
                     it.toProduct()

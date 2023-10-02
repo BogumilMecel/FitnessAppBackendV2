@@ -31,7 +31,5 @@ object Constants {
         const val CURRENCY = "currency"
         const val COUNTRY = "country"
         const val DEVICE_ID = "device_id"
-        const val LATEST_PRODUCT_DIARY_ENTRY_UTC_TIMESTAMP = "product_diary_timestamp"
-        const val LATEST_RECIPE_DIARY_ENTRY_UTC_TIMESTAMP = "recipe_diary_timestamp"
     }
 }
