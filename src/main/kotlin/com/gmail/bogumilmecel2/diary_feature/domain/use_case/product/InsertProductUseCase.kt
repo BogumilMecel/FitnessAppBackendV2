@@ -46,7 +46,12 @@ class InsertProductUseCase(
             )
 
             if (barcode != null) {
-                if (!barcode.isLengthInRange(maximum = Constants.Diary.BARCODE_MAX_LENGTH)) return Resource.Error.create(
+                if (
+                    !barcode.isLengthInRange(
+                        maximum = Constants.Diary.BARCODE_MAX_LENGTH,
+                        minimum = Constants.Diary.BARCODE_MIN_LENGTH
+                    )
+                ) return Resource.Error.create(
                     message = R("insert_product_invalid_barcode_length")
                 )
             }

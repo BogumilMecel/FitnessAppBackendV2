@@ -17,6 +17,7 @@ object Constants {
         const val DIARY_NAME_MIN_LENGTH = 4
 
         const val BARCODE_MAX_LENGTH = 128
+        const val BARCODE_MIN_LENGTH = 1
         const val MAXIMUM_MODIFY_DATE = 14
     }
 
