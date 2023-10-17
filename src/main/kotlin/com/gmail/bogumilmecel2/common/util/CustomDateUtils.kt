@@ -27,7 +27,5 @@ object CustomDateUtils {
 
     fun String.isValidDate(): Boolean = this.matches(regex = ("""^\d{4}-\d{2}-\d{2}$""").toRegex())
 
-    fun String.toDate() = LocalDate.parse(this)
-
     private fun getClockNow() = Clock.System.now()
 }
