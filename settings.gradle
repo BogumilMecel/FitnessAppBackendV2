@@ -1,1 +1,10 @@
 rootProject.name = "com.gmail.bogumilmecel2.fitnessapp"
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
+}
