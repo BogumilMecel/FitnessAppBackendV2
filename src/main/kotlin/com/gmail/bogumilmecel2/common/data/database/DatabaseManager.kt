@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.common.data.database
 
 import com.gmail.bogumilmecel2.authentication.domain.model.user.UserDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDto
@@ -13,6 +14,7 @@ import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
 
+@Suppress("unused")
 class DatabaseManager {
 
     // config
@@ -62,5 +64,7 @@ class DatabaseManager {
     suspend fun <T: Any> createIndex(
         collection: CoroutineCollection<T>,
         key: String
-    ) = collection.createIndex(key = key)
+    ) = collection.createIndex(key = key).also {
+        listAllIndexes()
+    }
 }
