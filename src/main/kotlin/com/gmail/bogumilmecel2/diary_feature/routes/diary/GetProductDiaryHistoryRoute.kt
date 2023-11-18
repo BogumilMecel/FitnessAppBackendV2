@@ -15,8 +15,8 @@ fun Route.configureGetProductDiaryHistoryRoute(getProductDiaryHistoryUseCase: Ge
         get("/history/product") {
             call.run {
                 getUserId()?.let { userId ->
-                    getParameter(Constants.ApiConstants.PAGE)?.let { page ->
-                        getNullableParameter(Constants.ApiConstants.SEARCH_TEXT).let { searchText ->
+                    getParameter(Constants.Api.PAGE)?.let { page ->
+                        getNullableParameter(Constants.Api.SEARCH_TEXT).let { searchText ->
                             call.handleResource(
                                 resource = getProductDiaryHistoryUseCase(
                                     userId = userId,

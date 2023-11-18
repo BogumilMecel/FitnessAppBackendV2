@@ -217,11 +217,15 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getUserProducts(userId: String): Resource<List<Product>> {
+    override suspend fun getUserProducts(
+        userId: String,
+        latestTimestamp: Long
+    ): Resource<List<Product>> {
         return handleRequest {
             productCol
                 .find(ProductDto::userId eq userId)
-                .limit(50).descendingSort(ProductDto::utcTimestamp)
+                .filter(ProductDto::utcTimestamp gt latestTimestamp)
+                .descendingSort(ProductDto::utcTimestamp)
                 .toList()
                 .map { it.toProduct() }
         }
