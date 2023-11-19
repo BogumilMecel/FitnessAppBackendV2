@@ -11,7 +11,7 @@ import io.ktor.server.routing.*
 
 fun Route.configureGetUserRecipesRoute(getUserRecipesUseCase: GetUserRecipesUseCase) {
     authenticate {
-        get("/recipe") {
+        get("/recipes") {
             call.run {
                 getUserId()?.let { userId ->
                     call.handleResource(
