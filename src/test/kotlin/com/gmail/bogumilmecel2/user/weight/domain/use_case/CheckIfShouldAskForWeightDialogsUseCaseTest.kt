@@ -41,7 +41,7 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest {
     @Test
     fun `check if get user returns resource success with user that has already been asked for weight dialogs, resource error is returned`() =
         runTest {
-            mockClasses(userResource = Resource.Success(data = User(askedForWeightDialogs = true)))
+            mockClasses(userResource = Resource.Success(data = User(weightDialogsAccepted = true)))
             assertIs<Resource.Error<User?>>(callTestesUseCase())
         }
 

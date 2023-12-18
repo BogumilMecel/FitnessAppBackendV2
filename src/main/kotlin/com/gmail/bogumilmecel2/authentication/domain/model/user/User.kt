@@ -16,7 +16,8 @@ data class User(
     val logStreak: Int = 1,
     val latestWeightEntry: WeightEntry? = null,
     val weightProgress: String? = null,
-    val askedForWeightDialogs: Boolean = false
+    val weightDialogsAccepted: Boolean? = null,
+    val lastTimeAskedAboutWeightDialogs: String? = null
 )
 
 data class UserDto(
@@ -28,7 +29,8 @@ data class UserDto(
     val logStreak: Int = 1,
     val nutritionValues: NutritionValues? = null,
     val userInformation: UserInformation? = null,
-    val askedForWeightDialogs: Boolean = false
+    val weightDialogsAccepted: Boolean? = null,
+    val lastTimeAskedAboutWeightDialogs: String? = null,
 )
 
 fun UserDto.toUser():User = User(
@@ -38,5 +40,6 @@ fun UserDto.toUser():User = User(
     nutritionValues = nutritionValues,
     userInformation = userInformation,
     logStreak = logStreak,
-    askedForWeightDialogs = askedForWeightDialogs
+    weightDialogsAccepted = weightDialogsAccepted,
+    lastTimeAskedAboutWeightDialogs = lastTimeAskedAboutWeightDialogs,
 )
