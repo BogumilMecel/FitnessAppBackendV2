@@ -13,10 +13,7 @@ import com.gmail.bogumilmecel2.user.log.domain.model.toDto
 import com.gmail.bogumilmecel2.user.log.domain.model.toLogEntry
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
-import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
-import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
-import com.gmail.bogumilmecel2.user.weight.domain.model.toDto
-import com.gmail.bogumilmecel2.user.weight.domain.model.toObject
+import com.gmail.bogumilmecel2.user.weight.domain.model.*
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.descending
 import org.litote.kmongo.eq
@@ -127,6 +124,29 @@ class UserRepositoryImp(
                 )
                 .toList()
                 .map { it.toObject() }
+        }
+    }
+
+    override suspend fun updateWeightDialogsQuestion(userId: String, accepted: Boolean): Resource<Unit> {
+        return handleRequest {
+            userCol
+                .updateOneById(
+                    userId.toObjectId(),
+                    setValue(UserDto::weightDialogsAccepted, accepted)
+                )
+        }
+    }
+
+    override suspend fun updateLastTimeAskedForWeightDialogs(
+        userId: String,
+        lastTimeAsked: WeightDialogsLastTimeAsked
+    ): Resource<WeightDialogsLastTimeAsked> {
+        return handleRequest {
+            userCol
+                .updateOneById(
+                    userId.toObjectId(),
+                    setValue()
+                )
         }
     }
 }
