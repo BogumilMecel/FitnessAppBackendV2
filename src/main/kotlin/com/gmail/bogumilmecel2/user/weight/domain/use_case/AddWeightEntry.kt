@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.user.weight.domain.use_case
 
+import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.weight.domain.model.NewWeightEntryResponse
@@ -21,15 +22,17 @@ class AddWeightEntry(
         if (latestWeightEntryResource is Resource.Success) {
             val hasWeightEntryBeenEnteredToday: Boolean = latestWeightEntryResource.data.getOrNull(0)?.let { latestWeightEntry ->
                 DateUtils.isSameDay(
-                    Date(latestWeightEntry.timestamp),
-                    Date(weightEntry.timestamp)
+                    Date(latestWeightEntry.utcTimestamp),
+                    Date(weightEntry.utcTimestamp)
                 )
             } ?: false
 
             if (!hasWeightEntryBeenEnteredToday) {
                 val weightEntryResource = userRepository.addWeightEntry(
                     userId = userId,
-                    weightEntry = weightEntry
+                    weightEntry = weightEntry.copy(
+                        utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
+                    )
                 )
 
                 if (weightEntryResource.data == true) {

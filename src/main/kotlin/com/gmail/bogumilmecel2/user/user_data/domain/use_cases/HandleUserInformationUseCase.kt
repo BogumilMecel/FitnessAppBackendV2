@@ -1,26 +1,31 @@
 package com.gmail.bogumilmecel2.user.user_data.domain.use_cases
 
 import com.gmail.bogumilmecel2.authentication.domain.model.user.User
+import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.user_data.domain.model.IntroductionRequest
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
+import com.gmail.bogumilmecel2.user.weight.domain.use_case.AddWeightEntry
 
 class HandleUserInformationUseCase(
     private val userRepository: UserRepository,
     private val calculateNutritionValuesUseCase: CalculateNutritionValuesUseCase,
-    private val saveNutritionValuesUseCase: SaveNutritionValuesUseCase
+    private val saveNutritionValuesUseCase: SaveNutritionValuesUseCase,
+    private val addWeightEntry: AddWeightEntry,
+    private val checkIfWeightIsValid: CheckIfWeightIsValid
 ) {
 
     suspend operator fun invoke(
         introductionRequest: IntroductionRequest,
         userId: String
-    ): Resource<User> = with(introductionRequest){
+    ): Resource<User> = with(introductionRequest) {
         return@with if (age < 0 || age > 100) {
             Resource.Error()
         } else if (height < 0 || height > 250) {
             Resource.Error()
-        } else if (weight < 0 || weight > 500) {
+        } else if (checkIfWeightIsValid(weight)) {
             Resource.Error()
         } else {
             val nutritionValues = calculateNutritionValuesUseCase(
@@ -33,10 +38,20 @@ class HandleUserInformationUseCase(
                 desiredWeight = desiredWeight,
                 age = age
             )
+
             val nutritionValuesResource = saveNutritionValuesUseCase(
                 nutritionValues = nutritionValues,
                 userId = userId
             )
+
+            addWeightEntry(
+                weightEntry = WeightEntry(
+                    value = weight,
+                    utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
+                ),
+                userId = userId
+            )
+
             userRepository.saveUserInformation(
                 userInformation = UserInformation(
                     activityLevel = activityLevel,

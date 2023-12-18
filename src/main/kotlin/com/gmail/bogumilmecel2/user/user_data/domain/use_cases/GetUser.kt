@@ -24,7 +24,7 @@ class GetUser(
 
         val weightEntriesResource = getWeightEntriesUseCase(
             userId = userId,
-            limit = 1
+            limit = 14
         )
 
         val weightProgress: String? = weightEntriesResource.data?.let {
