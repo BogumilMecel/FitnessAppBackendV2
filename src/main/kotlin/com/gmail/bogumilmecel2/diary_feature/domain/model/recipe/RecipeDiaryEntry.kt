@@ -19,9 +19,6 @@ data class RecipeDiaryEntry(
     @SerialName("nutrition_values")
     override val nutritionValues: NutritionValues = NutritionValues(),
 
-    @SerialName("utc_timestamp")
-    override val utcTimestamp: Long = 0,
-
     @SerialName("date")
     override val date: LocalDate? = null,
 
@@ -30,9 +27,6 @@ data class RecipeDiaryEntry(
 
     @SerialName("meal_name")
     override val mealName: MealName = MealName.BREAKFAST,
-
-    @SerialName("edited_utc_timestamp")
-    val editedUtcTimestamp: Long = 0,
 
     @SerialName("recipe_name")
     val recipeName: String = "",
@@ -48,25 +42,23 @@ data class RecipeDiaryEntry(
     val deleted: Boolean = false,
 
     @SerialName("creation_date")
-    override val creationDate: LocalDateTime? = null,
+    override val creationDateTime: LocalDateTime? = null,
 
     @SerialName("change_date")
-    override val changeDate: LocalDateTime? = null
+    override val changeDateTime: LocalDateTime? = null
 ) : DiaryItem
 
 data class RecipeDiaryEntryDto(
     @BsonId val _id: ObjectId,
     val nutritionValues: NutritionValues,
-    val utcTimestamp: Long,
-    val editedUtcTimestamp: Long,
     val recipeName: String,
     val recipeId: String,
     val servings: Int,
     val userId: String,
     val date: String,
     val mealName: MealName,
-    val creationDate: LocalDateTime? = null,
-    val changeDate: LocalDateTime? = null
+    val creationDateTime: LocalDateTime? = null,
+    val changeDateTime: LocalDateTime? = null
 )
 
 fun RecipeDiaryEntry.toDto(userId: String): RecipeDiaryEntryDto = RecipeDiaryEntryDto(
@@ -74,14 +66,12 @@ fun RecipeDiaryEntry.toDto(userId: String): RecipeDiaryEntryDto = RecipeDiaryEnt
     servings = servings,
     date = date.toString(),
     userId = userId,
-    utcTimestamp = utcTimestamp,
     nutritionValues = nutritionValues,
     mealName = mealName,
     recipeId = recipeId,
     recipeName = recipeName,
-    editedUtcTimestamp = editedUtcTimestamp,
-    creationDate = creationDate,
-    changeDate = changeDate
+    creationDateTime = creationDateTime,
+    changeDateTime = changeDateTime
 )
 
 fun RecipeDiaryEntryDto.toObject(): RecipeDiaryEntry = RecipeDiaryEntry(
@@ -89,12 +79,10 @@ fun RecipeDiaryEntryDto.toObject(): RecipeDiaryEntry = RecipeDiaryEntry(
     servings = servings,
     userId = userId,
     date = LocalDate.parse(date),
-    utcTimestamp = utcTimestamp,
     nutritionValues = nutritionValues,
     mealName = mealName,
     recipeName = recipeName,
     recipeId = recipeId,
-    editedUtcTimestamp = editedUtcTimestamp,
-    creationDate = creationDate,
-    changeDate = changeDate
+    creationDateTime = creationDateTime,
+    changeDateTime = changeDateTime
 )

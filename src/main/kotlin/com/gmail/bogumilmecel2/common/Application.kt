@@ -113,27 +113,28 @@ fun Application.module() {
     val getProductDiaryEntryUseCase = GetProductDiaryEntryUseCase(diaryRepository = diaryRepository)
     val getRecipeUseCase = GetRecipeUseCase(diaryRepository)
     val getProductDiaryHistoryUseCase = GetProductDiaryHistoryUseCase(diaryRepository = diaryRepository)
-    val isTimestampInTwoWeeksUseCase = IsTimestampInTwoWeeksUseCase()
+    val isDateInValidRangeUseCaseUseCase = IsDateInValidRangeUseCaseUseCase()
 
     val diaryUseCases = DiaryUseCases(
         getDiaryEntries = GetDiaryEntries(diaryRepository),
         insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getProductUseCase = getProductUseCase,
+            isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase
         ),
         deleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(
             diaryRepository = diaryRepository,
-            isTimestampInTwoWeeksUseCase = isTimestampInTwoWeeksUseCase
+            isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase
         ),
         editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getProductDiaryEntryUseCase = getProductDiaryEntryUseCase,
-            isTimestampInTwoWeeksUseCase = isTimestampInTwoWeeksUseCase
+            isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase
         ),
         editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getRecipeDiaryEntryUseCase = getRecipeDiaryEntryUseCase,
-            isTimestampInTwoWeeksUseCase = isTimestampInTwoWeeksUseCase
+            isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase
         ),
         getProductDiaryHistoryUseCase = getProductDiaryHistoryUseCase
     )
@@ -145,7 +146,8 @@ fun Application.module() {
         userRepository = userRepository,
         calculateWeightProgressUseCase = calculateWeightEntriesUseCase,
         getWeightEntriesUseCase = getWeightEntriesUseCase,
-        checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase
+        checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
+        getLatestWeightEntryUseCase = GetLatestWeightEntryUseCase(userRepository)
     )
 
     val checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(
@@ -186,6 +188,7 @@ fun Application.module() {
         insertRecipeDiaryEntryUseCase = InsertRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getRecipeUseCase = getRecipeUseCase,
+            isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase
         ),
         getRecipePriceUseCase = GetRecipePriceUseCase(priceRepository = priceRepository),
         getRecipeUseCase = getRecipeUseCase

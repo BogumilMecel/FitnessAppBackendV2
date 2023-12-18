@@ -24,20 +24,20 @@ class GetUserUseCase(
 
         val device = deviceRepository.getDevice(userId = userId, deviceId = deviceId).data
 
-        val currentUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()
+        val currentDate = CustomDateUtils.getUtcDateTime()
 
         if (device != null) {
-            deviceRepository.updateLastLoggedInTimestamp(
+            deviceRepository.updateLastLoggedInDateTime(
                 deviceId = deviceId,
                 userId = userId,
-                timestamp = currentUtcTimestamp
+                date = currentDate
             )
         } else {
             deviceRepository.insertDevice(
                 userId = userId,
                 device = Device(
-                    createdUtcTimestamp = currentUtcTimestamp,
-                    lastLoggedInUtcTimestamp = currentUtcTimestamp,
+                    creationDate = currentDate,
+                    lastLoggedDate = currentDate,
                 )
             )
         }

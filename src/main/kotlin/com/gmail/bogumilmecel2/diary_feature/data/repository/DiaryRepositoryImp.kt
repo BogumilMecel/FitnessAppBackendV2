@@ -17,6 +17,7 @@ import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Sorts
+import kotlinx.datetime.LocalDateTime
 import org.litote.kmongo.MongoOperator
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
@@ -219,13 +220,13 @@ class DiaryRepositoryImp(
 
     override suspend fun getUserProducts(
         userId: String,
-        latestTimestamp: Long
+        latestDateTime: LocalDateTime,
     ): Resource<List<Product>> {
         return handleRequest {
             productCol
                 .find(ProductDto::userId eq userId)
-                .filter(ProductDto::utcTimestamp gt latestTimestamp)
-                .descendingSort(ProductDto::utcTimestamp)
+                .filter(ProductDto::creationDateTime gt latestDateTime)
+                .descendingSort(ProductDto::creationDateTime)
                 .toList()
                 .map { it.toProduct() }
         }
@@ -233,13 +234,13 @@ class DiaryRepositoryImp(
 
     override suspend fun getUserRecipes(
         userId: String,
-        latestTimestamp: Long
+        latestDateTime: LocalDateTime,
     ): Resource<List<Recipe>> {
         return handleRequest {
             recipeCol
                 .find(RecipeDto::userId eq userId)
-                .filter(RecipeDto::utcTimestamp gt latestTimestamp)
-                .descendingSort(RecipeDto::utcTimestamp)
+                .filter(RecipeDto::creationDateTime gt latestDateTime)
+                .descendingSort(RecipeDto::creationDateTime)
                 .toList()
                 .map { it.toObject() }
         }
@@ -263,21 +264,23 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getProductDiaryEntries(latestTimestamp: Long, userId: String): Resource<List<ProductDiaryEntry>> {
+    override suspend fun getProductDiaryEntries(latestDateTime: LocalDateTime, userId: String): Resource<List<ProductDiaryEntry>> {
         return handleRequest {
             productDiaryCol
                 .find(ProductDiaryEntryDto::userId eq userId)
-                .filter(ProductDiaryEntryDto::utcTimestamp gt latestTimestamp)
+                .filter(ProductDiaryEntryDto::changeDate gt latestDateTime)
+                .descendingSort(ProductDiaryEntryDto::changeDate)
                 .toList()
                 .map { it.toDiaryEntry() }
         }
     }
 
-    override suspend fun getRecipeDiaryEntries(latestTimestamp: Long, userId: String): Resource<List<RecipeDiaryEntry>> {
+    override suspend fun getRecipeDiaryEntries(latestDateTime: LocalDateTime, userId: String): Resource<List<RecipeDiaryEntry>> {
         return handleRequest {
             recipeDiaryCol
                 .find(RecipeDiaryEntryDto::userId eq userId)
-                .filter(RecipeDiaryEntryDto::utcTimestamp gt latestTimestamp)
+                .filter(RecipeDiaryEntryDto::changeDateTime gt latestDateTime)
+                .descendingSort(RecipeDiaryEntryDto::changeDateTime)
                 .toList()
                 .map { it.toObject() }
         }

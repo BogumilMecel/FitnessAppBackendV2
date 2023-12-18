@@ -33,7 +33,7 @@ class InsertRecipeUseCase(
                 val recipe = Recipe(
                     name = recipeName,
                     ingredients = ingredients,
-                    utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
+                    creationDateTime = CustomDateUtils.getUtcDateTime(),
                     nutritionValues = NutritionValues(
                         calories = newRecipeRequest.ingredients.sumOf { it.nutritionValues.calories },
                         carbohydrates = newRecipeRequest.ingredients.sumOf { it.nutritionValues.carbohydrates },

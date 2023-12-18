@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.common.util.extensions
 
 import com.github.aymanizz.ktori18n.t
 import com.gmail.bogumilmecel2.common.domain.constants.Constants
+import com.gmail.bogumilmecel2.common.domain.constants.Constants.Api.LATEST_DATE_TIME
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.common.util.Resource
@@ -11,6 +12,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -61,6 +63,10 @@ suspend inline fun ApplicationCall.getParameter(name: String): String? {
 
 fun ApplicationCall.getNullableParameter(name: String): String? {
     return this.parameters[name]
+}
+
+fun ApplicationCall.getDateParameter(name: String? = null): LocalDateTime? {
+    return this.parameters[name ?: LATEST_DATE_TIME]?.toLocalDateTime()
 }
 
 suspend inline fun ApplicationCall.getCountryHeader(): Country? {

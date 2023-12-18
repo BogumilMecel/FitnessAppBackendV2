@@ -7,6 +7,7 @@ import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.util.Resource
+import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NewProductRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
@@ -213,10 +214,9 @@ class InsertProductUseCaseTest : BaseTest() {
     @Test
     fun `Check if request is correct, and repository return resource success, resource success is returned`() = runTest {
         mockClasses()
-        val timestamp = MockConstants.TIMESTAMP
         val nutritionValuesIn = NutritionValuesIn.CONTAINER
         val containerWeight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
-        mockLocalDate(utcTimestamp = timestamp)
+        mockDateTime(dateTime = MockConstants.DATE_TIME.toLocalDateTime()!!)
         val resource = callTestedUseCase(
             request = mockNewProductRequest(
                 nutritionValuesIn = nutritionValuesIn,
@@ -238,7 +238,7 @@ class InsertProductUseCaseTest : BaseTest() {
                     name = MockConstants.Diary.PRODUCT_NAME_1,
                     barcode = MockConstants.Diary.BARCODE,
                     containerWeight = containerWeight,
-                    utcTimestamp = timestamp,
+                    creationDateTime = MockConstants.DATE_TIME.toLocalDateTime(),
                     nutritionValuesIn = nutritionValuesIn,
                     measurementUnit = MeasurementUnit.GRAMS,
                     nutritionValues = MockConstants.Diary.getSampleNutritionValues2(),

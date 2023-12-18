@@ -21,9 +21,9 @@ class InsertProductDiaryEntryUseCase(
         val product = getProductUseCase(productId = productDiaryEntryPostRequest.productId).data ?: return Resource.Error()
 
         if (weight <= 0) return Resource.Error()
-        if (isDateInValidRangeUseCaseUseCase(date)) return Resource.Error()
+        if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error()
 
-        val currentDate = CustomDateUtils.getCurrentUtcLocalDateTime()
+        val currentDate = CustomDateUtils.getUtcDateTime()
 
         diaryRepository.insertProductDiaryEntry(
             productDiaryEntry = ProductDiaryEntry(
@@ -35,8 +35,8 @@ class InsertProductDiaryEntryUseCase(
                 productId = product.id,
                 productName = product.name,
                 productMeasurementUnit = product.measurementUnit,
-                creationDate = currentDate,
-                changeDate = currentDate
+                creationDateTime = currentDate,
+                changeDateTime = currentDate
             ),
             userId = userId
         )

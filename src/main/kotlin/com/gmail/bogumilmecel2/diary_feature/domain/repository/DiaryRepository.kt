@@ -7,12 +7,13 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDia
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
+import kotlinx.datetime.LocalDateTime
 
 interface DiaryRepository {
     suspend fun getProductDiaryEntries(date: String, userId: String): Resource<List<ProductDiaryEntry>>
     suspend fun getRecipeDiaryEntries(date: String, userId: String): Resource<List<RecipeDiaryEntry>>
-    suspend fun getProductDiaryEntries(latestTimestamp: Long, userId: String): Resource<List<ProductDiaryEntry>>
-    suspend fun getRecipeDiaryEntries(latestTimestamp: Long, userId: String): Resource<List<RecipeDiaryEntry>>
+    suspend fun getProductDiaryEntries(latestDateTime: LocalDateTime, userId: String): Resource<List<ProductDiaryEntry>>
+    suspend fun getRecipeDiaryEntries(latestDateTime: LocalDateTime, userId: String): Resource<List<RecipeDiaryEntry>>
     suspend fun getProductDiaryEntries(userId: String): Resource<List<ProductDiaryEntry>>
     suspend fun getRecipeDiaryEntries(userId: String): Resource<List<RecipeDiaryEntry>>
     suspend fun getProductDiaryEntry(id: String): Resource<ProductDiaryEntry?>
@@ -41,10 +42,10 @@ interface DiaryRepository {
     ): Resource<List<ProductDiaryHistoryItem>>
     suspend fun getUserProducts(
         userId: String,
-        latestTimestamp: Long
+        latestDateTime: LocalDateTime,
     ): Resource<List<Product>>
     suspend fun getUserRecipes(
         userId: String,
-        latestTimestamp: Long
+        latestDateTime: LocalDateTime,
     ): Resource<List<Recipe>>
 }

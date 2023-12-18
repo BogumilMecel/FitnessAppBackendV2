@@ -3,15 +3,18 @@ package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 import com.gmail.bogumilmecel2.BaseDiaryTest
 import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.util.Resource
+import com.gmail.bogumilmecel2.common.util.extensions.toLocalDate
+import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateNutritionValuesUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDateInValidRangeUseCaseUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockkClass
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -20,10 +23,11 @@ import kotlin.test.assertIs
 class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private val getProductUseCase = mockkClass(GetProductUseCase::class)
-    private val calculateNutritionValuesUseCase = mockkClass(CalculateNutritionValuesUseCase::class)
+    private val isDateInValidRangeUseCaseUseCase = mockkClass(IsDateInValidRangeUseCaseUseCase::class)
     private val insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
         diaryRepository = diaryRepository,
         getProductUseCase = getProductUseCase,
+        isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase
     )
 
     @Test
@@ -39,36 +43,9 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     }
 
     @Test
-    fun `Check if request date is empty, resource error is returned`() = runTest {
-        mockData()
-        assertIs<Resource.Error<Unit>>(
-            callTestedMethod(
-                productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(date = "")
-            )
-        )
-    }
-
-    @Test
-    fun `Check if request date is invalid, resource error is returned`() = runTest {
-        mockData()
-        assertIs<Resource.Error<Unit>>(
-            callTestedMethod(
-                productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(date = "abc")
-            )
-        )
-    }
-
-    @Test
-    fun `Check if date is 2 weeks ago, resource error is returned`() = runTest {
-        mockLocalDate(value = MockConstants.MOCK_DATE_2022)
-        mockData()
-        assertIs<Resource.Error<Unit>>(
-            callTestedMethod(
-                productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(
-                    date = MockConstants.MOCK_DATE_2022_11_27
-                )
-            )
-        )
+    fun `Check if date is not in valid range, resource error is returned`() = runTest {
+        mockData(isDateInValidRange = false)
+        assertIs<Resource.Error<Unit>>(callTestedMethod())
     }
 
     @Test
@@ -96,12 +73,6 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     }
 
     @Test
-    fun `Check if calculateProductNutritionValues returns resource error, resource error is returned`() = runTest {
-        mockData(calculateProductNutritionValuesResource = Resource.Error())
-        assertIs<Resource.Error<Unit>>(callTestedMethod())
-    }
-
-    @Test
     fun `Check if repository returns resource error, resource error is returned`() = runTest {
         mockData()
         mockRepositoryResponse()
@@ -112,19 +83,19 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     fun `Check if repository returns success, resource success is returned and correct data is used`() = runTest {
         val product = MockConstants.Diary.getSampleProduct()
         val productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest()
-        mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP)
+        mockDateTime(dateTime = MockConstants.DATE_TIME.toLocalDateTime()!!)
         mockData()
         val expectedProductDiaryEntry = ProductDiaryEntry(
             weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
             mealName = productDiaryEntryPostRequest.mealName,
-            utcTimestamp = MockConstants.TIMESTAMP,
+            creationDateTime = MockConstants.DATE_TIME.toLocalDateTime(),
             date = productDiaryEntryPostRequest.date,
             userId = MockConstants.USER_ID_1,
             nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
             productId = productDiaryEntryPostRequest.productId,
             productName = product.name,
             productMeasurementUnit = product.measurementUnit,
-            editedUtcTimestamp = MockConstants.TIMESTAMP
+            changeDateTime = MockConstants.DATE_TIME.toLocalDateTime()
         )
         mockRepositoryResponse(Resource.Success(expectedProductDiaryEntry))
         assertIs<Resource.Success<Unit>>(callTestedMethod(productDiaryEntryPostRequest = productDiaryEntryPostRequest))
@@ -138,15 +109,10 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private fun mockData(
         productResource: Resource<Product?> = Resource.Success(MockConstants.Diary.getSampleProduct()),
-        calculateProductNutritionValuesResource: Resource<NutritionValues> = Resource.Success(MockConstants.Diary.getSampleNutritionValues())
+        isDateInValidRange: Boolean = true
     ) {
         coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_11) } returns productResource
-        coEvery {
-            calculateNutritionValuesUseCase(
-                nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
-                weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
-            )
-        } returns calculateProductNutritionValuesResource
+        every { isDateInValidRangeUseCaseUseCase(date = MockConstants.DATE.toLocalDate()!!) } returns isDateInValidRange
     }
 
     private fun mockRepositoryResponse(resource: Resource<ProductDiaryEntry> = Resource.Error()) {
@@ -167,13 +133,12 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private fun mockProductDiaryEntryPostRequest(
         weight: Int = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
-        date: String = MockConstants.MOCK_DATE_2021,
         nutritionValues: NutritionValues = MockConstants.Diary.getSampleNutritionValues()
     ) = ProductDiaryEntryPostRequest(
         productId = MockConstants.Diary.PRODUCT_ID_11,
         weight = weight,
         mealName = MealName.BREAKFAST,
-        date = date,
+        date = MockConstants.DATE.toLocalDate()!!,
         nutritionValues = nutritionValues
     )
 }

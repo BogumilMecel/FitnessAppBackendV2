@@ -9,6 +9,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.toDevice
 import com.gmail.bogumilmecel2.diary_feature.domain.model.toDto
 import com.gmail.bogumilmecel2.user.device.domain.repository.DeviceRepository
 import com.mongodb.client.model.UpdateOptions
+import kotlinx.datetime.LocalDateTime
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.eq
@@ -42,14 +43,14 @@ class DeviceRepositoryImp(private val deviceCollection: CoroutineCollection<Devi
         }
     }
 
-    override suspend fun updateLastLoggedInTimestamp(userId: String, deviceId: String, timestamp: Long): Resource<Unit> {
+    override suspend fun updateLastLoggedInDateTime(userId: String, deviceId: String, date: LocalDateTime): Resource<Unit> {
         return handleRequest {
             deviceCollection.updateOne(
                 filter = and(
                     DeviceDto::_id eq deviceId.toObjectId(),
                     DeviceDto::userId eq userId
                 ),
-                update = setValue(DeviceDto::lastLoggedInUtcTimestamp, timestamp),
+                update = setValue(DeviceDto::lastLoggedInDate, date),
                 options = UpdateOptions()
             )
         }

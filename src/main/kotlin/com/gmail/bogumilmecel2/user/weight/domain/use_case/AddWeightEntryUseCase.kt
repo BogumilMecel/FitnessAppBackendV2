@@ -13,6 +13,7 @@ import kotlinx.datetime.TimeZone
 class AddWeightEntryUseCase(
     private val userRepository: UserRepository,
     private val calculateWeightProgressUseCase: CalculateWeightProgressUseCase,
+    private val getLatestWeightEntryUseCase: GetLatestWeightEntryUseCase,
     private val getWeightEntriesUseCase: GetWeightEntriesUseCase,
     private val checkIfWeightIsValidUseCase: CheckIfWeightIsValidUseCase
 ) {
@@ -24,15 +25,14 @@ class AddWeightEntryUseCase(
     ): Resource<NewWeightEntryResponse> {
         if (!checkIfWeightIsValidUseCase(newWeightEntryRequest.value)) return Resource.Error()
 
-        val latestWeightEntryResource = getWeightEntriesUseCase(limit = 1, userId = userId)
-        val userDate = CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone = timeZone).toString()
+        val latestWeightEntryResource = getLatestWeightEntryUseCase(userId = userId)
+        val userDate = CustomDateUtils.getTimeZoneDate(timeZone = timeZone) ?: return Resource.Error()
         if (latestWeightEntryResource is Resource.Success) {
-            val hasWeightEntryBeenEnteredToday: Boolean =
-                latestWeightEntryResource.data.getOrNull(0)?.date == userDate
+            val hasWeightEntryBeenEnteredToday: Boolean = latestWeightEntryResource.data?.date == userDate
 
             if (!hasWeightEntryBeenEnteredToday) {
                 val weightEntry = WeightEntry(
-                    utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
+                    creationDateTime = CustomDateUtils.getUtcDateTime(),
                     value = newWeightEntryRequest.value.round(2),
                     date = userDate
                 )

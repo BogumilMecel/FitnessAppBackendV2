@@ -20,8 +20,8 @@ class CheckIfShouldAskForWeightDialogsUseCase(
         if (user.askForWeightDaily != null) return Resource.Error()
         val weightDialogsQuestions = userRepository.getWeightDialogsQuestions(userId = userId).data ?: return Resource.Error()
         if (weightDialogsQuestions.size > 3) return Resource.Error()
-        val currentDate = CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone = timeZone)
-        if (weightDialogsQuestions.lastOrNull()?.date == currentDate.toString()) return Resource.Error()
+        val currentDate = CustomDateUtils.getTimeZoneDate(timeZone = timeZone)
+        if (weightDialogsQuestions.lastOrNull()?.date == currentDate) return Resource.Error()
         if (!checkIfWeightAndLogEntriesAreValid(userId)) return Resource.Error()
 
         return Resource.Success(Unit)

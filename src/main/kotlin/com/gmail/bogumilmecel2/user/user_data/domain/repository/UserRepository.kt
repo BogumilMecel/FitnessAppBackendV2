@@ -22,6 +22,7 @@ interface UserRepository {
     suspend fun getUser(userId: String): Resource<User?>
     suspend fun getUsername(userId: String): Resource<String?>
     suspend fun getWeightEntries(userId: String, limit: Int): Resource<List<WeightEntry>>
+    suspend fun getLatestWeightEntry(userId: String): Resource<WeightEntry?>
     suspend fun updateAskForWeightDaily(accepted: Boolean, userId: String): Resource<Unit>
     suspend fun updateWeightProgress(userId: String, weightProgress: Double): Resource<Unit>
     suspend fun insertWeightDialogsQuestion(weightDialogsQuestion: WeightDialogsQuestion): Resource<Unit>

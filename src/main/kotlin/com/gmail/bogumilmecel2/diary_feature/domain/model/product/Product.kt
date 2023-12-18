@@ -21,9 +21,6 @@ data class Product(
     @SerialName("container_weight")
     val containerWeight: Int? = null,
 
-    @SerialName("utc_timestamp")
-    val utcTimestamp: Long = 0,
-
     @SerialName("nutrition_values_in")
     val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
 
@@ -43,7 +40,7 @@ data class Product(
     val userId: String = "",
 
     @SerialName("creation_date")
-    val creationDate: LocalDateTime? = null
+    val creationDateTime: LocalDateTime? = null
 )
 
 data class ProductDto(
@@ -53,8 +50,6 @@ data class ProductDto(
     val name: String = "",
 
     val containerWeight: Int? = null,
-
-    val utcTimestamp: Long = 0,
 
     val nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
 
@@ -70,7 +65,7 @@ data class ProductDto(
 
     val country: Country = Country.POLAND,
 
-    val creationDate: LocalDateTime? = null
+    val creationDateTime: LocalDateTime? = null
 )
 
 fun Product.toDto(userId: String, country: Country): ProductDto = ProductDto(
@@ -83,9 +78,8 @@ fun Product.toDto(userId: String, country: Country): ProductDto = ProductDto(
     barcode = barcode,
     userId = userId,
     username = username,
-    utcTimestamp = utcTimestamp,
     country = country,
-    creationDate = creationDate
+    creationDateTime = creationDateTime
 )
 
 fun ProductDto.toProduct(): Product = Product(
@@ -98,6 +92,5 @@ fun ProductDto.toProduct(): Product = Product(
     barcode = barcode,
     userId = userId,
     username = username,
-    utcTimestamp = utcTimestamp,
-    creationDate = creationDate
+    creationDateTime = creationDateTime
 )

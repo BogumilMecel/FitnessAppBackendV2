@@ -8,6 +8,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.InsertProductUseCase
 import kotlin.random.Random
 
+@Suppress("unused")
 object MockedData {
     suspend fun insertSampleProducts(insertProductUseCase: InsertProductUseCase) {
         getSampleProducts().forEach {
@@ -97,9 +98,11 @@ object MockedData {
                 val randomProtein = Random.nextDouble(5.0, 20.0).round(2)
                 val randomFat = Random.nextDouble(1.0, 15.0).round(2)
 
+                val currentDateTime = CustomDateUtils.getUtcDateTime()
+
                 val product = Product(
                     name = randomProductName,
-                    utcTimestamp = System.currentTimeMillis(),
+                    creationDateTime = currentDateTime,
                     nutritionValues = NutritionValues(
                         calories = randomCalories,
                         carbohydrates = randomCarbohydrates,

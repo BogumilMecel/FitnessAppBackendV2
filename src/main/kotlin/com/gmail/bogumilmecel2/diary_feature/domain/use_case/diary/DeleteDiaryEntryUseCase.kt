@@ -5,11 +5,11 @@ import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.DeleteDiaryEntryRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryEntryType
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsTimestampInTwoWeeksUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDateInValidRangeUseCaseUseCase
 
 class DeleteDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
-    private val isTimestampInTwoWeeksUseCase: IsTimestampInTwoWeeksUseCase
+    private val isDateInValidRangeUseCaseUseCase: IsDateInValidRangeUseCaseUseCase
 ) {
 
     suspend operator fun invoke(
@@ -20,7 +20,8 @@ class DeleteDiaryEntryUseCase(
             DiaryEntryType.PRODUCT -> {
                 val productDiaryEntry = diaryRepository.getProductDiaryEntry(id = deleteDiaryEntryRequest.diaryEntryId).data ?: return Resource.Error()
 
-                if (!isTimestampInTwoWeeksUseCase(productDiaryEntry.utcTimestamp)) return Resource.Error()
+                val date = productDiaryEntry.creationDateTime?.date ?: return Resource.Error()
+                if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error()
 
                 // TODO: Revert changes when deleting is handled with device id
 //                diaryRepository.deleteProductDiaryEntry(
@@ -29,7 +30,7 @@ class DeleteDiaryEntryUseCase(
 //                )
                 diaryRepository.editProductDiaryEntry(
                     productDiaryEntry = productDiaryEntry.copy(
-                        editedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
+                        changeDateTime = CustomDateUtils.getUtcDateTime(),
                         deleted = true
                     ),
                     userId = userId
@@ -38,7 +39,8 @@ class DeleteDiaryEntryUseCase(
             DiaryEntryType.RECIPE -> {
                 val recipeDiaryEntry = diaryRepository.getRecipeDiaryEntry(id = deleteDiaryEntryRequest.diaryEntryId).data ?: return Resource.Error()
 
-                if (!isTimestampInTwoWeeksUseCase(recipeDiaryEntry.utcTimestamp)) return Resource.Error()
+                val date = recipeDiaryEntry.creationDateTime?.date ?: return Resource.Error()
+                if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error()
 
                 // TODO: Revert changes when deleting is handled with device id
 //                diaryRepository.deleteRecipeDiaryEntry(
@@ -47,7 +49,7 @@ class DeleteDiaryEntryUseCase(
 //                )
                 diaryRepository.editRecipeDiaryEntry(
                     recipeDiaryEntry = recipeDiaryEntry.copy(
-                        editedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
+                        changeDateTime = CustomDateUtils.getUtcDateTime(),
                         deleted = true
                     ),
                     userId = userId

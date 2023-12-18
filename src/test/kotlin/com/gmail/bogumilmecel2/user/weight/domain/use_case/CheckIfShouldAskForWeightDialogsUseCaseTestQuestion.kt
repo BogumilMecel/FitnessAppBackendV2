@@ -68,7 +68,7 @@ class CheckIfShouldAskForWeightDialogsUseCaseTestQuestion: BaseTest() {
     fun `check if user has already been asked today, resource error is returned`() =
         runTest {
             mockClasses()
-            mockLocalDate(value = MockConstants.getFormattedDate(3))
+            mockTimeZoneDate(date = MockConstants.getFormattedDate(3))
             callTestesUseCase().assertIsError()
         }
 
@@ -98,7 +98,7 @@ class CheckIfShouldAskForWeightDialogsUseCaseTestQuestion: BaseTest() {
 
     @Test
     fun `check if other use cases return correct data, resource success is returned`() = runTest {
-        mockLocalDate(value = MockConstants.getFormattedDate(value = 1))
+        mockDate(date = MockConstants.getFormattedDate(value = 1))
         mockClasses()
         assertIs<Resource.Success<Unit>>(callTestesUseCase())
     }

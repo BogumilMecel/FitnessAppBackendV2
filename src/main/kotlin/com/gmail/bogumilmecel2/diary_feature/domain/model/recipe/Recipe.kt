@@ -21,9 +21,6 @@ data class Recipe(
     @SerialName("ingredients")
     val ingredients: List<Ingredient> = emptyList(),
 
-    @SerialName("utc_timestamp")
-    val utcTimestamp: Long = System.currentTimeMillis(),
-
     @SerialName("image_url")
     val imageUrl: String? = null,
 
@@ -49,14 +46,13 @@ data class Recipe(
     val userId: String = "",
 
     @SerialName("creation_date")
-    val creationDate: LocalDateTime? = null
+    val creationDateTime: LocalDateTime? = null
 )
 
 data class RecipeDto(
     val _id: ObjectId,
     val name: String,
     val ingredients: List<Ingredient>,
-    val utcTimestamp: Long,
     val imageUrl: String?,
     val nutritionValues: NutritionValues,
     val timeNeeded: TimeRequired,
@@ -65,14 +61,13 @@ data class RecipeDto(
     var isPublic: Boolean,
     val userId: String,
     val username: String,
-    val creationDate: LocalDateTime? = null
+    val creationDateTime: LocalDateTime? = null
 )
 
 fun Recipe.toDto(): RecipeDto = RecipeDto(
     _id = id.toObjectId(),
     name = name,
     ingredients = ingredients,
-    utcTimestamp = utcTimestamp,
     imageUrl = imageUrl,
     timeNeeded = timeRequired,
     difficulty = difficulty,
@@ -81,14 +76,13 @@ fun Recipe.toDto(): RecipeDto = RecipeDto(
     username = username,
     isPublic = isPublic,
     nutritionValues = nutritionValues,
-    creationDate = creationDate
+    creationDateTime = creationDateTime
 )
 
 fun RecipeDto.toObject(): Recipe = Recipe(
     id = _id.toString(),
     name = name,
     ingredients = ingredients,
-    utcTimestamp = utcTimestamp,
     imageUrl = imageUrl,
     nutritionValues = nutritionValues,
     timeRequired = timeNeeded,
@@ -97,5 +91,5 @@ fun RecipeDto.toObject(): Recipe = Recipe(
     username = username,
     userId = userId,
     isPublic = isPublic,
-    creationDate = creationDate
+    creationDateTime = creationDateTime
 )

@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2
 
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
+import com.gmail.bogumilmecel2.common.util.extensions.toLocalDate
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
@@ -8,22 +9,19 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.TimeRequired
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsQuestion
-import org.apache.commons.lang3.time.DateUtils
+import kotlinx.datetime.toLocalDateTime
 
 object MockConstants {
     const val USER_ID_1 = "user_id_1"
     const val USER_ID_2 = "user_id_2"
     const val USERNAME = "username"
-    const val MOCK_DATE_2022 = "2022-12-12"
-    const val MOCK_DATE_2021 = "2021-12-12"
-    const val MOCK_DATE_2022_11_27 = "2022-11-27"
-    const val INVALID_DATE_2021 = "12-2021-12"
-    const val TIMESTAMP = DateUtils.MILLIS_PER_DAY * 30
-    const val TIMESTAMP_1_WEEKS_LATER = TIMESTAMP + DateUtils.MILLIS_PER_DAY * 7
-    const val TIMESTAMP_MORE_THAN_2_LATER = TIMESTAMP + DateUtils.MILLIS_PER_DAY * 14 + 1
+    const val DATE = "2021-12-12"
+    const val DATE_TIME = "2023-12-07T00:00:00.000"
+    const val DATE_TIME_ONE_WEEK_LATER = "2023-12-14T00:00:00.000"
+    const val DATE_TIME_TWO_WEEKS_LATER = "2023-12-21T00:00:00.000"
     private const val MOCK_DATE_WITH_PLACEHOLDER = "202%s-12-12"
 
-    fun getFormattedDate(value: Int) = MOCK_DATE_WITH_PLACEHOLDER.format(value)
+    fun getFormattedDate(value: Int) = MOCK_DATE_WITH_PLACEHOLDER.format(value).toLocalDate()!!
 
     object Diary {
         const val PRODUCT_NAME_1 = "Rice"
@@ -52,20 +50,19 @@ object MockConstants {
             id = PRODUCT_ID_11,
             name = PRODUCT_NAME_1,
             containerWeight = null,
-            utcTimestamp = 1,
             nutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
             measurementUnit = MeasurementUnit.GRAMS,
             nutritionValues = getSampleNutritionValues(),
             barcode = null,
             username = "abc",
-            userId = USER_ID_1
+            userId = USER_ID_1,
+            creationDateTime = DATE_TIME.toLocalDateTime()
         )
 
         fun getSampleRecipe() = Recipe(
             id = RECIPE_ID_31,
             name = RECIPE_NAME,
             ingredients = emptyList(),
-            utcTimestamp = TIMESTAMP,
             imageUrl = null,
             nutritionValues = getSampleNutritionValues(),
             timeRequired = TimeRequired.AVERAGE,
@@ -74,7 +71,7 @@ object MockConstants {
             isPublic = true,
             username = USERNAME,
             userId = USER_ID_1,
-            productPrice = null
+            creationDateTime = DATE_TIME.toLocalDateTime(),
         )
     }
 

@@ -13,7 +13,7 @@ class HandleWeightDialogsAnswerUseCase(private val userRepository: UserRepositor
         weightDialogsRequest: WeightDialogsRequest,
         timeZone: TimeZone
     ): Resource<Unit> = with(weightDialogsRequest) {
-        val currentDate = CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone).toString()
+        val currentDate = CustomDateUtils.getTimeZoneDate(timeZone) ?: return Resource.Error()
         val weightDialogsQuestions = userRepository.getWeightDialogsQuestions(userId = userId).data ?: return Resource.Error()
 
         if (accepted == null) {

@@ -5,19 +5,26 @@ import com.gmail.bogumilmecel2.common.util.Resource
 import io.mockk.every
 import io.mockk.mockkObject
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlin.test.assertIs
 
 open class BaseTest {
     val timeZone = TimeZone.UTC
-    fun mockLocalDate(
-        value: String = MockConstants.MOCK_DATE_2021,
-        utcTimestamp: Long = 0,
-    ) {
+
+    fun mockDateTime(dateTime: LocalDateTime) {
         mockkObject(CustomDateUtils)
-        every { CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone).toString() } returns value
-        every { CustomDateUtils.getCurrentUtcLocalDate() } returns LocalDate.parse(value)
-        every { CustomDateUtils.getCurrentUtcTimestamp() } returns utcTimestamp
+        every { CustomDateUtils.getUtcDateTime() } returns dateTime
+    }
+
+    fun mockDate(date: LocalDate) {
+        mockkObject(CustomDateUtils)
+        every { CustomDateUtils.getUtcDate() } returns date
+    }
+
+    fun mockTimeZoneDate(date: LocalDate) {
+        mockkObject(CustomDateUtils)
+        every { CustomDateUtils.getTimeZoneDate(timeZone = timeZone) } returns date
     }
 
     fun <T> Resource<T>.assertIsError() {

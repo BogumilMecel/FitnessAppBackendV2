@@ -120,7 +120,7 @@ class UserRepositoryImp(
                 .limit(limit)
                 .sort(
                     descending(
-                        WeightEntryDto::utcTimestamp
+                        WeightEntryDto::creationDateTime
                     )
                 )
                 .toList()
@@ -157,6 +157,17 @@ class UserRepositoryImp(
     override suspend fun getWeightDialogsQuestions(userId: String): Resource<List<WeightDialogsQuestion>> {
         return handleRequest {
             weightDialogsQuestionCol.find(WeightDialogsQuestion::userId eq userId).toList()
+        }
+    }
+
+    override suspend fun getLatestWeightEntry(userId: String): Resource<WeightEntry?> {
+        return handleRequest {
+            weightCol
+                .find(WeightEntryDto::userId eq userId)
+                .descendingSort(WeightEntryDto::creationDateTime)
+                .limit(1)
+                .first()
+                ?.toObject()
         }
     }
 }

@@ -7,6 +7,6 @@ import kotlinx.datetime.LocalDate
 
 class IsDateInValidRangeUseCaseUseCase {
     operator fun invoke(date: LocalDate): Boolean {
-        return date > CustomDateUtils.getCurrentUtcLocalDate().minusDays(days = MAXIMUM_MODIFY_DATE)
+        return date > CustomDateUtils.getUtcDate().minusDays(days = MAXIMUM_MODIFY_DATE)
     }
 }

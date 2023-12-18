@@ -32,6 +32,6 @@ object Constants {
         const val CURRENCY = "currency"
         const val COUNTRY = "country"
         const val DEVICE_ID = "device_id"
-        const val LATEST_TIMESTAMP = "latest_timestamp"
+        const val LATEST_DATE_TIME = "latest_date_time"
     }
 }

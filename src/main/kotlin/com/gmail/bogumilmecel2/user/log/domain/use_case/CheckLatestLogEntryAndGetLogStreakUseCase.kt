@@ -26,7 +26,7 @@ class CheckLatestLogEntryAndGetLogStreakUseCase(
 
         when (latestLogEntryResource) {
             is Resource.Success -> {
-                val currentDate = CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone = timeZone)
+                val currentDate = CustomDateUtils.getTimeZoneDate(timeZone = timeZone) ?: return Resource.Error()
                 val streak = latestLogEntryResource.data.firstOrNull()?.let { latestLogEntry ->
                     val latestEntryDate = LocalDate.parse(latestLogEntry.date)
                     when {

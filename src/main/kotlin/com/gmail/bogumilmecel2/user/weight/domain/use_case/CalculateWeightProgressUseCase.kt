@@ -11,7 +11,7 @@ class CalculateWeightProgressUseCase(private val userRepository: UserRepository)
     ): Double? {
         if (weightEntries.size < 2) return null
 
-        val mutableWeightEntries = weightEntries.toMutableList().apply { sortByDescending { it.utcTimestamp } }
+        val mutableWeightEntries = weightEntries.toMutableList().apply { sortByDescending { it.creationDateTime } }
 
         var (size, midPoint) = with(mutableWeightEntries.size) { this to this / 2 }
 

@@ -79,7 +79,7 @@ class InsertProductUseCase(
                     name = name,
                     barcode = barcode,
                     containerWeight = containerWeight,
-                    utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
+                    creationDateTime = CustomDateUtils.getUtcDateTime(),
                     nutritionValuesIn = nutritionValuesIn,
                     measurementUnit = measurementUnit,
                     nutritionValues = nutritionValues,

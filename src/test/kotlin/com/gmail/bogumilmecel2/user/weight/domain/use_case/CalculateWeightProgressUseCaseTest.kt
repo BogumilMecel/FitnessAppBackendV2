@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.user.weight.domain.use_case
 import com.gmail.bogumilmecel2.BaseTest
 import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.util.Resource
+import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
 import io.mockk.coEvery
@@ -42,8 +43,14 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
             expected = 50.0,
             actual = callTestedMethod(
                 weightEntries = listOf(
-                    WeightEntry(value = 100.0, utcTimestamp = 1),
-                    WeightEntry(value = 150.0, utcTimestamp = 2)
+                    WeightEntry(
+                        value = 100.0,
+                        creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
+                    ),
+                    WeightEntry(
+                        value = 150.0,
+                        creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+                    )
                 )
             ).also {
                 verifyUpdateWeightData(expectedWeightProgress = it!!)
@@ -57,8 +64,14 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
             expected = -50.0,
             actual = callTestedMethod(
                 weightEntries = listOf(
-                    WeightEntry(value = 150.0, utcTimestamp = 1),
-                    WeightEntry(value = 100.0, utcTimestamp = 2),
+                    WeightEntry(
+                        value = 150.0,
+                        creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
+                    ),
+                    WeightEntry(
+                        value = 100.0,
+                        creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+                    ),
                 )
             ).also {
                 verifyUpdateWeightData(expectedWeightProgress = it!!)
@@ -72,9 +85,18 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
             expected = 100.0,
             actual = callTestedMethod(
                 weightEntries = listOf(
-                    WeightEntry(value = 100.0, utcTimestamp = 1),
-                    WeightEntry(value = 150.0, utcTimestamp = 2),
-                    WeightEntry(value = 200.0, utcTimestamp = 3)
+                    WeightEntry(
+                        value = 100.0,
+                        creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
+                    ),
+                    WeightEntry(
+                        value = 150.0,
+                        creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+                    ),
+                    WeightEntry(
+                        value = 200.0,
+                        creationDateTime = MockConstants.DATE_TIME_TWO_WEEKS_LATER.toLocalDateTime()!!
+                    )
                 )
             ).also {
                 verifyUpdateWeightData(expectedWeightProgress = it!!)
@@ -88,9 +110,18 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
             expected = -100.0,
             actual = callTestedMethod(
                 weightEntries = listOf(
-                    WeightEntry(value = 100.0, utcTimestamp = 3),
-                    WeightEntry(value = 150.0, utcTimestamp = 2),
-                    WeightEntry(value = 200.0, utcTimestamp = 1)
+                    WeightEntry(
+                        value = 100.0,
+                        creationDateTime = MockConstants.DATE_TIME_TWO_WEEKS_LATER.toLocalDateTime()!!
+                    ),
+                    WeightEntry(
+                        value = 150.0,
+                        creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+                    ),
+                    WeightEntry(
+                        value = 200.0,
+                        creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
+                    )
                 )
             ).also {
                 verifyUpdateWeightData(expectedWeightProgress = it!!)
@@ -104,8 +135,14 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
             expected = 0.0,
             actual = callTestedMethod(
                 weightEntries = listOf(
-                    WeightEntry(value = 100.0, utcTimestamp = 3),
-                    WeightEntry(value = 100.0, utcTimestamp = 2),
+                    WeightEntry(
+                        value = 100.0,
+                        creationDateTime = MockConstants.DATE_TIME_TWO_WEEKS_LATER.toLocalDateTime()!!
+                    ),
+                    WeightEntry(
+                        value = 100.0,
+                        creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+                    ),
                 )
             ).also {
                 verifyUpdateWeightData(expectedWeightProgress = it!!)

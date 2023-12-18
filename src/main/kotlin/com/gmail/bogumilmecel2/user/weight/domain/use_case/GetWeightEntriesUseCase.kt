@@ -4,9 +4,7 @@ import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
 
-class GetWeightEntriesUseCase(
-    private val userRepository: UserRepository
-) {
+class GetWeightEntriesUseCase(private val userRepository: UserRepository) {
     suspend operator fun invoke(
         userId: String,
         limit: Int
