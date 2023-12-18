@@ -16,7 +16,7 @@ class CheckLatestLogEntry(
         when (val latestLogEntryResource = getLatestLogEntry(userId = userId)) {
             is Resource.Success -> {
                 val timestamp =
-                    CustomDateUtils.getCurrentTimezoneTimestamp(timezone = timezone) ?: return Resource.Error()
+                    CustomDateUtils.getCurrentTimezoneTimestamp(timeZone = timezone) ?: return Resource.Error()
                 latestLogEntryResource.data?.let { latestLogEntry ->
                     val latestTimestamp = latestLogEntry.utcTimestamp.toTimezone(timezone = timezone)
                     return when {

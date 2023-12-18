@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.user.user_data.routes
 
+import com.gmail.bogumilmecel2.common.util.extensions.getTimezoneHeader
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
 import com.gmail.bogumilmecel2.common.util.extensions.receiveOrRespond
@@ -14,13 +15,16 @@ fun Route.configureHandleUserInformationRoute(handleUserInformationUseCase: Hand
         post("/userInformation/") {
             call.run {
                 receiveOrRespond<IntroductionRequest>()?.let { request ->
-                    getUserId()?.let { userId ->
-                        call.handleResource(
-                            resource = handleUserInformationUseCase(
-                                introductionRequest = request,
-                                userId = userId
+                    getTimezoneHeader()?.let { timezone ->
+                        getUserId()?.let { userId ->
+                            call.handleResource(
+                                resource = handleUserInformationUseCase(
+                                    introductionRequest = request,
+                                    userId = userId,
+                                    timezone = timezone
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

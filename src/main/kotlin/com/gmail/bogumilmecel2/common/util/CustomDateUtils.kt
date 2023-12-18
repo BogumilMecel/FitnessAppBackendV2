@@ -8,20 +8,31 @@ import java.util.*
 object CustomDateUtils {
 
     fun getCurrentUtcTimestamp() =
-        Clock.System
-            .now()
+        getClockNow()
             .toLocalDateTime(TimeZone.UTC)
             .toInstant(UtcOffset.ZERO)
             .toEpochMilliseconds()
 
-    fun getCurrentTimezoneTimestamp(timezone: TimeZone) = try {
-        Clock.System
-            .now()
-            .toLocalDateTime(timeZone = timezone)
+    fun getCurrentTimezoneTimestamp(timeZone: TimeZone) = try {
+        getClockNow()
+            .toLocalDateTime(timeZone = timeZone)
             .toInstant(UtcOffset.ZERO)
             .toEpochMilliseconds()
     } catch (e: Exception) {
-        null
+        getCurrentUtcTimestamp()
+    }
+
+    fun getCurrentUtcLocalDateString() = getClockNow()
+        .toLocalDateTime(timeZone = TimeZone.UTC)
+        .date.toString()
+
+    fun getCurrentTimezoneLocalDateString(timeZone: TimeZone) = try {
+        getClockNow()
+            .toLocalDateTime(timeZone)
+            .date
+            .toString()
+    } catch (e: Exception) {
+        getCurrentUtcLocalDateString()
     }
 
     fun isSameDate(first: Long, second: Long) = DateUtils.isSameDay(Date(first), Date(second))
@@ -33,4 +44,6 @@ object CustomDateUtils {
         .toLocalDateTime(timezone)
         .toInstant(UtcOffset.ZERO)
         .toEpochMilliseconds()
+
+    private fun getClockNow() = Clock.System.now()
 }

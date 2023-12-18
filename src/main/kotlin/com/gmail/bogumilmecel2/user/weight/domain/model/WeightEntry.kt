@@ -7,24 +7,28 @@ import org.bson.types.ObjectId
 @Serializable
 data class WeightEntry(
     val value: Double,
-    val utcTimestamp: Long
+    val utcTimestamp: Long,
+    val date: String
 )
 
 data class WeightEntryDto(
     @BsonId val _id: ObjectId = ObjectId(),
     val userId: String,
     val value: Double,
-    val utcTimestamp: Long
+    val utcTimestamp: Long,
+    val date: String
 )
 
 fun WeightEntry.toDto(userId: String): WeightEntryDto = WeightEntryDto(
     _id = ObjectId(),
     value = value,
     utcTimestamp = utcTimestamp,
-    userId = userId
+    userId = userId,
+    date = date
 )
 
 fun WeightEntryDto.toObject(): WeightEntry = WeightEntry(
     value = value,
-    utcTimestamp = utcTimestamp
+    utcTimestamp = utcTimestamp,
+    date = date
 )
