@@ -39,7 +39,7 @@ class InsertProductDiaryEntryUseCase(
                 productId = product.id,
                 productName = product.name,
                 productMeasurementUnit = product.measurementUnit,
-                lastEditedUtcTimestamp = currentTimestamp
+                editedUtcTimestamp = currentTimestamp
             ),
             userId = userId
         )

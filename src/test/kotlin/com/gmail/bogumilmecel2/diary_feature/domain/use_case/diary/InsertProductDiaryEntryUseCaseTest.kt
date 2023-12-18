@@ -124,7 +124,7 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
             productId = productDiaryEntryPostRequest.productId,
             productName = product.name,
             productMeasurementUnit = product.measurementUnit,
-            lastEditedUtcTimestamp = MockConstants.TIMESTAMP
+            editedUtcTimestamp = MockConstants.TIMESTAMP
         )
         mockRepositoryResponse(Resource.Success(expectedProductDiaryEntry))
         assertIs<Resource.Success<Unit>>(callTestedMethod(productDiaryEntryPostRequest = productDiaryEntryPostRequest))

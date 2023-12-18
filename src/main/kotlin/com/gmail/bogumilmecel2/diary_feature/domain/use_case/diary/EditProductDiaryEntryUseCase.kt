@@ -15,15 +15,13 @@ class EditProductDiaryEntryUseCase(
         productDiaryEntry: ProductDiaryEntry,
         userId: String
     ): Resource<ProductDiaryEntry> = with(productDiaryEntry) {
-        val originalProductDiaryEntry = getProductDiaryEntryUseCase(
-            productDiaryEntryId = id
-        ).data ?: return Resource.Error()
+        val originalProductDiaryEntry = getProductDiaryEntryUseCase(productDiaryEntryId = id).data ?: return Resource.Error()
 
         if (originalProductDiaryEntry.userId != userId) return Resource.Error()
         if (productDiaryEntry.weight == originalProductDiaryEntry.weight) return Resource.Error()
         if (!isTimestampInTwoWeeksUseCase(originalProductDiaryEntry.utcTimestamp)) return Resource.Error()
 
-        val newProductDiaryEntry = productDiaryEntry.copy(lastEditedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp())
+        val newProductDiaryEntry = productDiaryEntry.copy(editedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp())
 
         val resource = diaryRepository.editProductDiaryEntry(
             productDiaryEntry = newProductDiaryEntry,

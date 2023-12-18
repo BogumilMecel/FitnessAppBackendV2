@@ -76,7 +76,7 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         val expectedProductDiaryEntry = mockProductDiaryEntry().copy(
             weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_2,
             userId = MockConstants.USER_ID_1,
-            lastEditedUtcTimestamp = MockConstants.TIMESTAMP_1_WEEKS_LATER
+            editedUtcTimestamp = MockConstants.TIMESTAMP_1_WEEKS_LATER
         )
         assertEquals(
             actual = resource.data,

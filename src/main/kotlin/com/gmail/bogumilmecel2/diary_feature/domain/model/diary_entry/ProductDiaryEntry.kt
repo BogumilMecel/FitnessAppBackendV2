@@ -6,22 +6,44 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
 @Serializable
 data class ProductDiaryEntry(
+    @SerialName("id")
     override val id: String = "",
+
+    @SerialName("nutrition_values")
     override val nutritionValues: NutritionValues = NutritionValues(),
+
+    @SerialName("utc_timestamp")
     override val utcTimestamp: Long = 0,
+
+    @SerialName("date")
     override val date: String = "",
+
+    @SerialName("user_id")
     override val userId: String = "",
+
+    @SerialName("meal_name")
     override val mealName: MealName = MealName.BREAKFAST,
+
+    @SerialName("product_measurement_unit")
     val productMeasurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
-    val lastEditedUtcTimestamp: Long = 0,
+
+    @SerialName("edited_utc_timestamp")
+    val editedUtcTimestamp: Long = 0,
+
+    @SerialName("product_name")
     val productName: String = "",
+
+    @SerialName("product_id")
     val productId: String = "",
+
+    @SerialName("weight")
     val weight: Int = 0,
 ) : DiaryItem
 
@@ -50,7 +72,7 @@ fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiary
     productName = productName,
     measurementUnit = productMeasurementUnit,
     productId = productId,
-    lastEditedUtcTimestamp = lastEditedUtcTimestamp
+    lastEditedUtcTimestamp = editedUtcTimestamp
 )
 
 fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
@@ -64,7 +86,7 @@ fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
     userId = userId,
     productName = productName,
     productMeasurementUnit = measurementUnit,
-    lastEditedUtcTimestamp = lastEditedUtcTimestamp
+    editedUtcTimestamp = lastEditedUtcTimestamp
 )
 
 fun ProductDiaryEntryDto.toProductDiarySearchItem() = ProductDiaryHistoryItem(
