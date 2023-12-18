@@ -28,6 +28,7 @@ data class ProductDiaryEntryDto(
     @BsonId val _id: ObjectId = ObjectId(),
     val nutritionValues: NutritionValues,
     val utcTimestamp: Long,
+    val lastEditedUtcTimestamp: Long,
     val date: String,
     val mealName: MealName,
     val userId: String,
@@ -37,7 +38,10 @@ data class ProductDiaryEntryDto(
     val weight: Int,
 )
 
-fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiaryEntryDto(
+fun ProductDiaryEntry.toDto(
+    userId: String,
+    currentUtcTimestamp: Long
+): ProductDiaryEntryDto = ProductDiaryEntryDto(
     _id = id.toObjectId(),
     utcTimestamp = utcTimestamp,
     userId = userId,
@@ -47,7 +51,8 @@ fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiary
     mealName = mealName,
     productName = productName,
     measurementUnit = productMeasurementUnit,
-    productId = productId
+    productId = productId,
+    lastEditedUtcTimestamp = currentUtcTimestamp
 )
 
 fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
