@@ -17,15 +17,11 @@ class CheckIfShouldAskForWeightDialogsUseCase(
         timeZone: TimeZone
     ): Resource<Unit> {
         val user = userRepository.getUser(userId = userId).data ?: return Resource.Error()
-
-        val userWeightDialogsData = user.weightDialogs
-
-        if (userWeightDialogsData != null) {
-            if (userWeightDialogsData.accepted == true) return Resource.Error()
-            if (userWeightDialogsData.lastTimeAsked == CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone = timeZone).toString()) return Resource.Error()
-            if (userWeightDialogsData.askedCount >= Constants.Weight.MINIMUM_ENTRIES_COUNT) return Resource.Error()
-        }
-
+        if (user.askForWeightDaily != null) return Resource.Error()
+        val weightDialogsQuestions = userRepository.getWeightDialogsQuestions(userId = userId).data ?: return Resource.Error()
+        if (weightDialogsQuestions.size > 3) return Resource.Error()
+        val currentDate = CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone = timeZone)
+        if (weightDialogsQuestions.lastOrNull()?.date == currentDate.toString()) return Resource.Error()
         if (!checkIfWeightAndLogEntriesAreValid(userId)) return Resource.Error()
 
         return Resource.Success(Unit)

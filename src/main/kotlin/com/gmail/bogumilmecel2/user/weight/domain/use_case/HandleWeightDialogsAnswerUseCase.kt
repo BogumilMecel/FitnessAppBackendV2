@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.user.weight.domain.use_case
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
-import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogs
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsQuestion
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsRequest
 import kotlinx.datetime.TimeZone
 
@@ -12,26 +12,26 @@ class HandleWeightDialogsAnswerUseCase(private val userRepository: UserRepositor
         userId: String,
         weightDialogsRequest: WeightDialogsRequest,
         timeZone: TimeZone
-    ): Resource<WeightDialogs> {
-        val user = userRepository.getUser(userId = userId).data ?: return Resource.Error()
+    ): Resource<Unit> = with(weightDialogsRequest) {
         val currentDate = CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone).toString()
-        val askedCount = user.weightDialogs?.askedCount?.plus(1) ?: 1
+        val weightDialogsQuestions = userRepository.getWeightDialogsQuestions(userId = userId).data ?: return Resource.Error()
 
-        val weightDialogs = WeightDialogs(
-            accepted = weightDialogsRequest.accepted,
-            lastTimeAsked = currentDate,
-            askedCount = askedCount
-        )
+        if (accepted == null) {
+            return if (weightDialogsQuestions.size < 4) {
+                userRepository.insertWeightDialogsQuestion(
+                    weightDialogsQuestion = WeightDialogsQuestion(
+                        date = currentDate,
+                        userId = userId
+                    ),
+                )
+            } else {
+                Resource.Error()
+            }
+        }
 
-        val updateResource = userRepository.updateWeightDialogsData(
-            weightDialogs = weightDialogs,
+        return userRepository.updateAskForWeightDaily(
+            accepted = accepted,
             userId = userId
-        )
-
-        if (updateResource is Resource.Error) return Resource.Error()
-
-        return Resource.Success(
-            data = weightDialogs
         )
     }
 }

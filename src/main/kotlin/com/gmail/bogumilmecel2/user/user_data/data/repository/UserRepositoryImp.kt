@@ -23,6 +23,7 @@ class UserRepositoryImp(
     private val userCol: CoroutineCollection<UserDto>,
     private val weightCol: CoroutineCollection<WeightEntryDto>,
     private val logEntryCol: CoroutineCollection<LogEntryDto>,
+    private val weightDialogsQuestionCol: CoroutineCollection<WeightDialogsQuestion>
 ) : UserRepository, BaseRepository() {
 
     override suspend fun saveUserInformation(userInformation: UserInformation, userId: String): Resource<Boolean> {
@@ -127,12 +128,12 @@ class UserRepositoryImp(
         }
     }
 
-    override suspend fun updateWeightDialogsData(weightDialogs: WeightDialogs, userId: String): Resource<Unit> {
+    override suspend fun updateAskForWeightDaily(accepted: Boolean, userId: String): Resource<Unit> {
         return handleRequest {
             userCol
                 .updateOneById(
                     id = userId.toObjectId(),
-                    update = setValue(UserDto::weightDialogs, weightDialogs)
+                    update = setValue(UserDto::askForWeightDaily, accepted)
                 )
                 .wasAcknowledgedOrThrow()
         }
@@ -144,6 +145,18 @@ class UserRepositoryImp(
                 id = userId.toObjectId(),
                 update = setValue(UserDto::weightProgress, weightProgress)
             )
+        }
+    }
+
+    override suspend fun insertWeightDialogsQuestion(weightDialogsQuestion: WeightDialogsQuestion): Resource<Unit> {
+        return handleRequest {
+            weightDialogsQuestionCol.insertOne(weightDialogsQuestion)
+        }
+    }
+
+    override suspend fun getWeightDialogsQuestions(userId: String): Resource<List<WeightDialogsQuestion>> {
+        return handleRequest {
+            weightDialogsQuestionCol.find(WeightDialogsQuestion::userId eq userId).toList()
         }
     }
 }
