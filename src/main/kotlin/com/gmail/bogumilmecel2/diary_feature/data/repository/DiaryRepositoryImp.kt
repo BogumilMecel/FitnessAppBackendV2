@@ -27,16 +27,12 @@ class DiaryRepositoryImp(
     private val recipeCol: CoroutineCollection<RecipeDto>
 ) : DiaryRepository, BaseRepository() {
 
-    override suspend fun insertDiaryEntry(
+    override suspend fun insertProductDiaryEntry(
         productDiaryEntry: ProductDiaryEntry,
         userId: String
-    ): Resource<ProductDiaryEntry> {
+    ): Resource<Unit> {
         return handleRequest {
-            productDiaryEntry.copy(
-                id = productDiaryEntry.toDto(userId = userId).apply {
-                    productDiaryCol.insertOne(this)
-                }._id.toString()
-            )
+            productDiaryCol.insertOne(productDiaryEntry.toDto(userId = userId)).wasAcknowledgedOrThrow()
         }
     }
 

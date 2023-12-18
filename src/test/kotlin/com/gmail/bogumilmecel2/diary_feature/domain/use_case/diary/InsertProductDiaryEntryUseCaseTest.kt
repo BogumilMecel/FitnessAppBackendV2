@@ -31,19 +31,19 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     @Test
     fun `Check if getProduct returns resource error, resource error is returned`() = runTest {
         mockData(productResource = Resource.Error())
-        assertIs<Resource.Error<ProductDiaryEntry>>(callTestedMethod())
+        assertIs<Resource.Error<Unit>>(callTestedMethod())
     }
 
     @Test
     fun `Check if getProduct returns null, resource error is returned`() = runTest {
         mockData(productResource = Resource.Success(data = null))
-        assertIs<Resource.Error<ProductDiaryEntry>>(callTestedMethod())
+        assertIs<Resource.Error<Unit>>(callTestedMethod())
     }
 
     @Test
     fun `Check if request date is empty, resource error is returned`() = runTest {
         mockData()
-        assertIs<Resource.Error<ProductDiaryEntry>>(
+        assertIs<Resource.Error<Unit>>(
             callTestedMethod(
                 productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(date = "")
             )
@@ -53,7 +53,7 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     @Test
     fun `Check if request date is invalid, resource error is returned`() = runTest {
         mockData()
-        assertIs<Resource.Error<ProductDiaryEntry>>(
+        assertIs<Resource.Error<Unit>>(
             callTestedMethod(
                 productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(date = "abc")
             )
@@ -63,13 +63,13 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     @Test
     fun `Check if calculateProductNutritionValues returns resource error, resource error is returned`() = runTest {
         mockData(calculateProductNutritionValuesResource = Resource.Error())
-        assertIs<Resource.Error<ProductDiaryEntry>>(callTestedMethod())
+        assertIs<Resource.Error<Unit>>(callTestedMethod())
     }
 
     @Test
     fun `Check if repository returns resource error, resource error is returned`() = runTest {
         mockData(repositoryResource = Resource.Error())
-        assertIs<Resource.Error<ProductDiaryEntry>>(callTestedMethod())
+        assertIs<Resource.Error<Unit>>(callTestedMethod())
     }
 
     @Test
@@ -79,9 +79,9 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         val productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest()
         mockLocalDate()
         mockData()
-        assertIs<Resource.Success<ProductDiaryEntry>>(callTestedMethod(productDiaryEntryPostRequest = productDiaryEntryPostRequest))
+        assertIs<Resource.Success<Unit>>(callTestedMethod(productDiaryEntryPostRequest = productDiaryEntryPostRequest))
         coVerify(exactly = 1) {
-            diaryRepository.insertDiaryEntry(
+            diaryRepository.insertProductDiaryEntry(
                 productDiaryEntry = ProductDiaryEntry(
                     weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
                     mealName = productDiaryEntryPostRequest.mealName,
@@ -100,11 +100,11 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private fun mockData(
         productResource: Resource<Product?> = Resource.Success(MockConstants.Diary.getSampleProduct()),
-        repositoryResource: Resource<ProductDiaryEntry> = Resource.Success(ProductDiaryEntry()),
+        repositoryResource: Resource<Unit> = Resource.Success(Unit),
         calculateProductNutritionValuesResource: Resource<NutritionValues> = Resource.Success(MockConstants.Diary.getSampleNutritionValues())
     ) {
         coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_11) } returns productResource
-        coEvery { diaryRepository.insertDiaryEntry(productDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns repositoryResource
+        coEvery { diaryRepository.insertProductDiaryEntry(productDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns repositoryResource
         coEvery {
             calculateProductNutritionValuesUseCase(
                 product = MockConstants.Diary.getSampleProduct(),
