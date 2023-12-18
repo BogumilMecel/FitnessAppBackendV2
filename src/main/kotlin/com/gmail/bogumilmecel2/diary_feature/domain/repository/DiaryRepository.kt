@@ -15,7 +15,6 @@ interface DiaryRepository {
     suspend fun insertDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<ProductDiaryEntry>
     suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Boolean>
     suspend fun getProducts(text: String): Resource<List<Product>>
-    suspend fun getProductHistory(userId: String): Resource<List<Product>>
     suspend fun getProduct(productId: String): Resource<Product?>
     suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Boolean>
     suspend fun editDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Boolean>
