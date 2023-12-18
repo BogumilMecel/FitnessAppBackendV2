@@ -1,5 +1,7 @@
 package com.gmail.bogumilmecel2.diary_feature.routes.product
 
+import com.gmail.bogumilmecel2.common.domain.constants.Constants.ApiConstants.PAGE
+import com.gmail.bogumilmecel2.common.domain.constants.Constants.ApiConstants.SEARCH_TEXT
 import com.gmail.bogumilmecel2.common.util.extensions.getCountryHeader
 import com.gmail.bogumilmecel2.common.util.extensions.getParameter
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
@@ -12,15 +14,16 @@ fun Route.configureSearchForProductWithTextRoute(
     getProductsUseCase: GetProductsUseCase
 ){
     authenticate {
-        get("/{searchText}") {
+        get("/{$SEARCH_TEXT}") {
             call.run {
-                getParameter("searchText")?.let { searchText ->
+                getParameter(SEARCH_TEXT)?.let { searchText ->
                     getCountryHeader()?.let { country ->
                         handleResource(
                             resource = getProductsUseCase(
                                 searchText = searchText,
                                 country = country,
-                                currency = country.getCurrency()
+                                currency = country.getCurrency(),
+                                page = getParameter(PAGE)?.toIntOrNull() ?: 1
                             )
                         )
                     }

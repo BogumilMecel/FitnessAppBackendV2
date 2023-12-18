@@ -14,6 +14,7 @@ import com.gmail.bogumilmecel2.common.data.database.DatabaseManager
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.plugins.*
 import com.gmail.bogumilmecel2.diary_feature.data.repository.DiaryRepositoryImp
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.CalculateSkipUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.*
@@ -84,7 +85,10 @@ fun Application.module() {
 
     val productUseCases = ProductUseCases(
         insertProductUseCase = insertProductUseCase,
-        getProductsUseCase = GetProductsUseCase(repository = diaryRepository),
+        getProductsUseCase = GetProductsUseCase(
+            repository = diaryRepository,
+            calculateSkipUseCase = CalculateSkipUseCase()
+        ),
         searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
         addNewPriceUseCase = AddNewPriceUseCase(
             priceRepository = priceRepository,
