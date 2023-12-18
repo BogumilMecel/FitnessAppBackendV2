@@ -16,15 +16,17 @@ data class RecipeDiaryEntry(
     override val userId: String,
     override val date: String,
     override val mealName: MealName,
-    val recipe: Recipe,
-    val servings: Int,
+    val recipeName: String = "",
+    val recipeId: String = "",
+    val servings: Int = 0,
 ) : DiaryItem
 
 data class RecipeDiaryEntryDto(
     @BsonId val _id: ObjectId,
     val nutritionValues: NutritionValues,
     val utcTimestamp: Long,
-    val recipe: Recipe,
+    val recipeName: String,
+    val recipeId: String,
     val servings: Int,
     val userId: String,
     val date: String,
@@ -33,22 +35,24 @@ data class RecipeDiaryEntryDto(
 
 fun RecipeDiaryEntry.toDto(userId: String): RecipeDiaryEntryDto = RecipeDiaryEntryDto(
     _id = id.toObjectId(),
-    recipe = recipe,
     servings = servings,
     date = date,
     userId = userId,
     utcTimestamp = utcTimestamp,
     nutritionValues = nutritionValues,
-    mealName = mealName
+    mealName = mealName,
+    recipeId = recipeId,
+    recipeName = recipeName
 )
 
 fun RecipeDiaryEntryDto.toObject(): RecipeDiaryEntry = RecipeDiaryEntry(
     id = _id.toString(),
-    recipe = recipe,
     servings = servings,
     userId = userId,
     date = date,
     utcTimestamp = utcTimestamp,
     nutritionValues = nutritionValues,
-    mealName = mealName
+    mealName = mealName,
+    recipeName = recipeName,
+    recipeId = recipeId
 )

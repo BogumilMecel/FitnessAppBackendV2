@@ -25,5 +25,6 @@ interface DiaryRepository {
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun getUserCaloriesSum(date: String, userId: String): Resource<CaloriesSumResponse>
     suspend fun addNewRecipe(recipe: Recipe): Resource<Recipe>
+    suspend fun getRecipe(recipeId: String): Resource<Recipe?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
 }

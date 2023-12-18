@@ -6,5 +6,6 @@ data class RecipeUseCases(
     val insertRecipeUseCase: InsertRecipeUseCase,
     val searchForRecipes: SearchForRecipes,
     val addRecipeDiaryEntryUseCase: AddRecipeDiaryEntryUseCase,
-    val getRecipePriceUseCase: GetRecipePriceUseCase
+    val getRecipePriceUseCase: GetRecipePriceUseCase,
+    val getRecipeUseCase: GetRecipeUseCase
 )

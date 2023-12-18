@@ -7,10 +7,7 @@ import com.gmail.bogumilmecel2.diary_feature.price_feature.routes.configureAddNe
 import com.gmail.bogumilmecel2.diary_feature.price_feature.routes.configureGetRecipePriceRoute
 import com.gmail.bogumilmecel2.diary_feature.routes.diary.*
 import com.gmail.bogumilmecel2.diary_feature.routes.product.*
-import com.gmail.bogumilmecel2.diary_feature.routes.recipe.configureEditRecipeDiaryEntryRoute
-import com.gmail.bogumilmecel2.diary_feature.routes.recipe.configurePostRecipeDiaryEntry
-import com.gmail.bogumilmecel2.diary_feature.routes.recipe.configurePostRecipeRoute
-import com.gmail.bogumilmecel2.diary_feature.routes.recipe.configureSearchForRecipesRoute
+import com.gmail.bogumilmecel2.diary_feature.routes.recipe.*
 import io.ktor.server.routing.*
 
 
@@ -42,5 +39,6 @@ fun Route.configureDiaryRoutes(
         configurePostRecipeRoute(recipeUseCases.insertRecipeUseCase)
         configureSearchForRecipesRoute(recipeUseCases.searchForRecipes)
         configureGetRecipePriceRoute(recipeUseCases.getRecipePriceUseCase)
+        configureGetRecipeRoute(recipeUseCases.getRecipeUseCase)
     }
 }
