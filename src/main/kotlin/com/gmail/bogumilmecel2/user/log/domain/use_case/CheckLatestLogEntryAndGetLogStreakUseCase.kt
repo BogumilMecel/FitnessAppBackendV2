@@ -9,7 +9,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 
 class CheckLatestLogEntryAndGetLogStreakUseCase(
-    private val getLatestLogEntry: GetLatestLogEntry,
+    private val getLogEntriesUseCase: GetLogEntriesUseCase,
     private val insertLogEntryUseCase: InsertLogEntryUseCase,
     private val updateUserLogStreakUseCase: UpdateUserLogStreakUseCase
 ) {
@@ -19,10 +19,15 @@ class CheckLatestLogEntryAndGetLogStreakUseCase(
         timeZone: TimeZone,
         userStreak: Int
     ): Resource<Int> {
-        when (val latestLogEntryResource = getLatestLogEntry(userId = userId)) {
+        val latestLogEntryResource = getLogEntriesUseCase(
+            userId = userId,
+            limit = 1
+        )
+
+        when (latestLogEntryResource) {
             is Resource.Success -> {
                 val currentDate = CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone = timeZone)
-                val streak = latestLogEntryResource.data?.let { latestLogEntry ->
+                val streak = latestLogEntryResource.data.firstOrNull()?.let { latestLogEntry ->
                     val latestEntryDate = LocalDate.parse(latestLogEntry.date)
                     when {
                         currentDate == latestEntryDate -> {

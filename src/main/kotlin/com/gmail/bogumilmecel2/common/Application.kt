@@ -27,16 +27,13 @@ import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetP
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetRecipePriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.routes.configureDiaryRoutes
 import com.gmail.bogumilmecel2.user.log.domain.use_case.CheckLatestLogEntryAndGetLogStreakUseCase
-import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLatestLogEntry
+import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLogEntriesUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.InsertLogEntryUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.UpdateUserLogStreakUseCase
 import com.gmail.bogumilmecel2.user.user_data.data.repository.UserRepositoryImp
 import com.gmail.bogumilmecel2.user.user_data.domain.use_cases.*
 import com.gmail.bogumilmecel2.user.user_data.routes.configureUserDataRoutes
-import com.gmail.bogumilmecel2.user.weight.domain.use_case.AddWeightEntryUseCase
-import com.gmail.bogumilmecel2.user.weight.domain.use_case.CalculateWeightProgressUseCase
-import com.gmail.bogumilmecel2.user.weight.domain.use_case.GetWeightEntriesUseCase
-import com.gmail.bogumilmecel2.user.weight.domain.use_case.WeightUseCases
+import com.gmail.bogumilmecel2.user.weight.domain.use_case.*
 import com.gmail.bogumilmecel2.user.weight.routes.configureWeightRoutes
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
@@ -89,11 +86,11 @@ fun Application.module() {
         )
     )
 
-    val getLatestLogEntry = GetLatestLogEntry(userRepository)
     val insertLogEntryUseCase = InsertLogEntryUseCase(userRepository)
+    val getLogEntriesUseCase = GetLogEntriesUseCase(userRepository = userRepository)
 
     val checkLatestLogEntryAndGetLogStreakUseCase = CheckLatestLogEntryAndGetLogStreakUseCase(
-        getLatestLogEntry = getLatestLogEntry,
+        getLogEntriesUseCase = getLogEntriesUseCase,
         insertLogEntryUseCase = insertLogEntryUseCase,
         updateUserLogStreakUseCase = UpdateUserLogStreakUseCase(userRepository)
     )
@@ -116,6 +113,8 @@ fun Application.module() {
         )
     )
 
+    val getUserObjectUseCase = GetUserObjectUseCase(userRepository = userRepository)
+
     val calculateWeightEntriesUseCase = CalculateWeightProgressUseCase()
     val getWeightEntriesUseCase = GetWeightEntriesUseCase(userRepository = userRepository)
     val checkIfWeightIsValidUseCase = CheckIfWeightIsValidUseCase()
@@ -126,8 +125,15 @@ fun Application.module() {
         checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase
     )
 
+    val checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(
+        getLogEntriesUseCase = getLogEntriesUseCase,
+        getWeightEntriesUseCase = getWeightEntriesUseCase,
+        getUserObjectUseCase = getUserObjectUseCase
+    )
+
     val weightUseCases = WeightUseCases(
-        addWeightEntryUseCase = addWeightEntryUseCase
+        addWeightEntryUseCase = addWeightEntryUseCase,
+        checkIfShouldAskForWeightDialogsUseCase = checkIfShouldAskForWeightDialogsUseCase
     )
     val saveNutritionValuesUseCase = SaveNutritionValuesUseCase(userRepository = userRepository)
 
@@ -193,7 +199,7 @@ fun Application.module() {
                     tokenService = tokenService,
                 ),
                 getUserUseCase = GetUserUseCase(
-                    userRepository = userRepository,
+                    getUserObjectUseCase = getUserObjectUseCase,
                     checkLatestLogEntryAndGetLogStreakUseCase = checkLatestLogEntryAndGetLogStreakUseCase,
                     getWeightEntriesUseCase = getWeightEntriesUseCase,
                     calculateWeightProgressUseCase = calculateWeightEntriesUseCase

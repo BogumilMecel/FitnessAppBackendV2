@@ -6,7 +6,7 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class LogEntry(
-    val date: String
+    val date: String = ""
 )
 
 data class LogEntryDto(

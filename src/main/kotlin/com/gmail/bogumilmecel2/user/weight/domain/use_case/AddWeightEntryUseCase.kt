@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.user.weight.domain.use_case
 
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
+import com.gmail.bogumilmecel2.common.util.extensions.round
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.user_data.domain.use_cases.CheckIfWeightIsValidUseCase
 import com.gmail.bogumilmecel2.user.weight.domain.model.NewWeightEntryRequest
@@ -32,7 +33,7 @@ class AddWeightEntryUseCase(
             if (!hasWeightEntryBeenEnteredToday) {
                 val weightEntry = WeightEntry(
                     utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
-                    value = newWeightEntryRequest.value,
+                    value = newWeightEntryRequest.value.round(2),
                     date = userDate
                 )
 

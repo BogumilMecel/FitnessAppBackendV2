@@ -64,13 +64,19 @@ class UserRepositoryImp(
         }
     }
 
-    override suspend fun getLatestLogEntry(userId: String): Resource<LogEntry?> {
+    override suspend fun getLogEntries(
+        limit: Int,
+        userId: String
+    ): Resource<List<LogEntry>> {
         return handleRequest {
             logEntryCol
                 .find(LogEntryDto::userId eq userId)
+                .limit(limit)
                 .sort(descending(LogEntryDto::date))
-                .first()
-                ?.toLogEntry()
+                .toList()
+                .map {
+                    it.toLogEntry()
+                }
         }
     }
 

@@ -16,4 +16,8 @@ object ValidationConstants {
 
         const val BARCODE_MAX_LENGTH = 128
     }
+
+    object Weight {
+        const val MINIMUM_ENTRIES_COUNT = 2
+    }
 }
