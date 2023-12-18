@@ -35,6 +35,7 @@ fun Route.configureDiaryRoutes(
         configureEditRecipeDiaryEntryRoute(diaryUseCases.editRecipeDiaryEntryUseCase)
         configureGetProductDiaryHistoryRoute(diaryUseCases.getProductDiaryHistoryUseCase)
         configureGetDiaryEntriesExperimentalRoute(diaryUseCases.getDiaryEntries)
+        configureGetDiaryEntriesCompleteRoute(diaryUseCases.getDiaryEntries)
     }
 
     route("/recipes"){
