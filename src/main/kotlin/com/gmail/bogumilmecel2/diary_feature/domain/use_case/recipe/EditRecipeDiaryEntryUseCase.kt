@@ -14,7 +14,7 @@ class EditRecipeDiaryEntryUseCase(
     suspend operator fun invoke(
         recipeDiaryEntry: RecipeDiaryEntry,
         userId: String
-    ): Resource<Unit> = with(recipeDiaryEntry) {
+    ): Resource<RecipeDiaryEntry> = with(recipeDiaryEntry) {
         val originalRecipeDiaryEntry = getRecipeDiaryEntryUseCase(
             recipeDiaryEntryId = id
         ).data ?: return Resource.Error()
@@ -23,9 +23,21 @@ class EditRecipeDiaryEntryUseCase(
         if (servings == originalRecipeDiaryEntry.servings) return Resource.Error()
         if (!isTimestampInTwoWeeksUseCase(originalRecipeDiaryEntry.utcTimestamp)) return Resource.Error()
 
-        return diaryRepository.editRecipeDiaryEntry(
-            recipeDiaryEntry = recipeDiaryEntry.copy(lastEditedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp()),
+        val newRecipeDiaryEntry = recipeDiaryEntry.copy(lastEditedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp())
+
+        val resource = diaryRepository.editRecipeDiaryEntry(
+            recipeDiaryEntry = newRecipeDiaryEntry,
             userId = userId,
         )
+
+        return when(resource) {
+            is Resource.Error -> {
+                Resource.Error()
+            }
+
+            is Resource.Success -> {
+                Resource.Success(newRecipeDiaryEntry)
+            }
+        }
     }
 }

@@ -10,6 +10,7 @@ import io.mockk.coVerify
 import io.mockk.mockkClass
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
@@ -24,19 +25,19 @@ class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     @Test
     fun `Check if getRecipeDiaryEntry returns resource error, resource error is returned`() = runTest {
         mockData(recipeDiaryEntryResource = Resource.Error())
-        assertIs<Resource.Error<Unit>>(callTestedMethod())
+        assertIs<Resource.Error<RecipeDiaryEntry>>(callTestedMethod())
     }
 
     @Test
     fun `Check if getRecipeDiaryEntry returns null, resource error is returned`() = runTest {
         mockData(recipeDiaryEntryResource = Resource.Success(data = null))
-        assertIs<Resource.Error<Unit>>(callTestedMethod())
+        assertIs<Resource.Error<RecipeDiaryEntry>>(callTestedMethod())
     }
 
     @Test
     fun `Check if user id do not match, resource error is returned`() = runTest {
         mockData()
-        assertIs<Resource.Error<Unit>>(
+        assertIs<Resource.Error<RecipeDiaryEntry>>(
             callTestedMethod(
                 userId = MockConstants.USER_ID_2
             )
@@ -46,7 +47,7 @@ class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     @Test
     fun `Check if request servings are the same as entry servings, resource error is returned`() = runTest {
         mockData()
-        assertIs<Resource.Error<Unit>>(
+        assertIs<Resource.Error<RecipeDiaryEntry>>(
             callTestedMethod(
                 servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1
             )
@@ -57,30 +58,34 @@ class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     fun `Check if entry is older than 2 weeks, resource error is returned`() = runTest {
         mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP_MORE_THAN_2_LATER)
         mockData()
-        assertIs<Resource.Error<Unit>>(callTestedMethod())
+        assertIs<Resource.Error<RecipeDiaryEntry>>(callTestedMethod())
     }
 
     @Test
     fun `Check if repository returns resource error, resource error is returned`() = runTest {
         mockData(diaryResource = Resource.Error())
-        assertIs<Resource.Error<Unit>>(callTestedMethod())
+        assertIs<Resource.Error<RecipeDiaryEntry>>(callTestedMethod())
     }
 
     @Test
     fun `Check if repository returns resource success, resource success is returned`() = runTest {
-        val recipeDiaryEntry = mockRecipeDiaryEntry().copy(
+        val expectedRecipeDiaryEntry = mockRecipeDiaryEntry().copy(
             nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
             servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
-            utcTimestamp = MockConstants.TIMESTAMP
+            utcTimestamp = MockConstants.TIMESTAMP,
+            lastEditedUtcTimestamp = MockConstants.TIMESTAMP_1_WEEKS_LATER
         )
         mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP_1_WEEKS_LATER)
         mockData()
-        assertIs<Resource.Success<Unit>>(callTestedMethod())
+        val resource = callTestedMethod()
+        assertIs<Resource.Success<RecipeDiaryEntry>>(resource)
+        assertEquals(
+            actual = resource.data,
+            expected = expectedRecipeDiaryEntry
+        )
         coVerify(exactly = 1) {
             diaryRepository.editRecipeDiaryEntry(
-                recipeDiaryEntry = recipeDiaryEntry.copy(
-                    lastEditedUtcTimestamp = MockConstants.TIMESTAMP_1_WEEKS_LATER
-                ),
+                recipeDiaryEntry = expectedRecipeDiaryEntry,
                 userId = MockConstants.USER_ID_1,
             )
         }
