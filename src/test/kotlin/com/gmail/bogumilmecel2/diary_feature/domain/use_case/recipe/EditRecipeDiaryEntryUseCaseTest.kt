@@ -73,7 +73,7 @@ class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
             nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
             servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
             utcTimestamp = MockConstants.TIMESTAMP,
-            lastEditedUtcTimestamp = MockConstants.TIMESTAMP_1_WEEKS_LATER
+            editedUtcTimestamp = MockConstants.TIMESTAMP_1_WEEKS_LATER
         )
         mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP_1_WEEKS_LATER)
         mockData()

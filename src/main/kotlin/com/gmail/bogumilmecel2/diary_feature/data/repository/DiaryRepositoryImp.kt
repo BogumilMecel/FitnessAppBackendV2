@@ -169,7 +169,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Boolean> {
+    override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Unit> {
         return handleRequest {
             productDiaryCol.deleteOne(
                 ProductDiaryEntryDto::_id eq productDiaryEntryId.toObjectId(),
@@ -178,7 +178,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Boolean> {
+    override suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Unit> {
         return handleRequest {
             recipeDiaryCol.deleteOne(
                 RecipeDiaryEntryDto::_id eq recipeDiaryEntryId.toObjectId(),

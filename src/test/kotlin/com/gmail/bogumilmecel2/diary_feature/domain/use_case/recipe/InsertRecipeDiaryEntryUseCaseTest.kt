@@ -125,7 +125,7 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
             recipeName = MockConstants.Diary.RECIPE_NAME,
             recipeId = MockConstants.Diary.RECIPE_ID_31,
             servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1,
-            lastEditedUtcTimestamp = MockConstants.TIMESTAMP
+            editedUtcTimestamp = MockConstants.TIMESTAMP
         )
         mockRepositoryResponse(Resource.Success(expectedRecipeDiaryEntry))
         assertIs<Resource.Success<Unit>>(callTestedMethod())

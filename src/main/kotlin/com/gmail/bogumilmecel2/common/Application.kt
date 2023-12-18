@@ -121,7 +121,7 @@ fun Application.module() {
             diaryRepository = diaryRepository,
             getProductUseCase = getProductUseCase,
         ),
-        deleteDiaryEntry = DeleteDiaryEntry(
+        deleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             isTimestampInTwoWeeksUseCase = isTimestampInTwoWeeksUseCase
         ),

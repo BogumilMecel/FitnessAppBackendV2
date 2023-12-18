@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.EditRecipeDi
 data class DiaryUseCases(
     val getDiaryEntries: GetDiaryEntries,
     val insertProductDiaryEntryUseCase: InsertProductDiaryEntryUseCase,
-    val deleteDiaryEntry: DeleteDiaryEntry,
+    val deleteDiaryEntryUseCase: DeleteDiaryEntryUseCase,
     val editProductDiaryEntryUseCase: EditProductDiaryEntryUseCase,
     val editRecipeDiaryEntryUseCase: EditRecipeDiaryEntryUseCase,
     val getProductDiaryHistoryUseCase: GetProductDiaryHistoryUseCase,

@@ -45,13 +45,17 @@ data class ProductDiaryEntry(
 
     @SerialName("weight")
     val weight: Int = 0,
+
+    // TODO: remove when deleting is handled with device id
+    @SerialName("deleted")
+    val deleted: Boolean = false
 ) : DiaryItem
 
 data class ProductDiaryEntryDto(
     @BsonId val _id: ObjectId = ObjectId(),
     val nutritionValues: NutritionValues,
     val utcTimestamp: Long,
-    val lastEditedUtcTimestamp: Long,
+    val editedUtcTimestamp: Long,
     val date: String,
     val mealName: MealName,
     val userId: String,
@@ -72,7 +76,7 @@ fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiary
     productName = productName,
     measurementUnit = productMeasurementUnit,
     productId = productId,
-    lastEditedUtcTimestamp = editedUtcTimestamp
+    editedUtcTimestamp = editedUtcTimestamp
 )
 
 fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
@@ -86,7 +90,7 @@ fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
     userId = userId,
     productName = productName,
     productMeasurementUnit = measurementUnit,
-    editedUtcTimestamp = lastEditedUtcTimestamp
+    editedUtcTimestamp = editedUtcTimestamp
 )
 
 fun ProductDiaryEntryDto.toProductDiarySearchItem() = ProductDiaryHistoryItem(

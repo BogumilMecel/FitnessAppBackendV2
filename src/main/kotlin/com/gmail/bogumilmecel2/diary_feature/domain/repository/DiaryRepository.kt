@@ -24,11 +24,11 @@ interface DiaryRepository {
         skip: Int
     ): Resource<List<Product>>
     suspend fun getProduct(productId: String): Resource<Product?>
-    suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Boolean>
+    suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Unit>
     suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Unit>
     suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Unit>
     suspend fun insertProduct(product: Product, userId: String, country: Country): Resource<Product>
-    suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Boolean>
+    suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Unit>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun addNewRecipe(recipe: Recipe): Resource<Recipe>
     suspend fun getRecipe(recipeId: String): Resource<Recipe?>

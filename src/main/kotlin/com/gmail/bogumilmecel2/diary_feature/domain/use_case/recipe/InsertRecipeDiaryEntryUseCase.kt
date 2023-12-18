@@ -35,7 +35,7 @@ class InsertRecipeDiaryEntryUseCase(
                 servings = servings,
                 recipeName = recipe.name,
                 recipeId = recipe.id,
-                lastEditedUtcTimestamp = currentTimestamp
+                editedUtcTimestamp = currentTimestamp
             ),
             userId = userId
         )

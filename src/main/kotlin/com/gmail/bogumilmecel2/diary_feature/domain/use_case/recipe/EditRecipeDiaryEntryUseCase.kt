@@ -23,7 +23,7 @@ class EditRecipeDiaryEntryUseCase(
         if (servings == originalRecipeDiaryEntry.servings) return Resource.Error()
         if (!isTimestampInTwoWeeksUseCase(originalRecipeDiaryEntry.utcTimestamp)) return Resource.Error()
 
-        val newRecipeDiaryEntry = recipeDiaryEntry.copy(lastEditedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp())
+        val newRecipeDiaryEntry = recipeDiaryEntry.copy(editedUtcTimestamp = CustomDateUtils.getCurrentUtcTimestamp())
 
         val resource = diaryRepository.editRecipeDiaryEntry(
             recipeDiaryEntry = newRecipeDiaryEntry,
