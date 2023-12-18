@@ -25,7 +25,7 @@ class AddWeightEntryUseCase(
         if (!checkIfWeightIsValidUseCase(newWeightEntryRequest.value)) return Resource.Error()
 
         val latestWeightEntryResource = getWeightEntriesUseCase(limit = 1, userId = userId)
-        val userDate = CustomDateUtils.getCurrentTimeZoneLocalDateString(timeZone = timeZone)
+        val userDate = CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone = timeZone).toString()
         if (latestWeightEntryResource is Resource.Success) {
             val hasWeightEntryBeenEnteredToday: Boolean =
                 latestWeightEntryResource.data.getOrNull(0)?.date == userDate

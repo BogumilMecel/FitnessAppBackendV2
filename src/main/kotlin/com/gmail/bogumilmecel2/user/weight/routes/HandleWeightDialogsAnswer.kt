@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.user.weight.routes
 
+import com.gmail.bogumilmecel2.common.util.extensions.getTimezoneHeader
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
 import com.gmail.bogumilmecel2.common.util.extensions.receiveOrRespond
@@ -16,13 +17,16 @@ fun Route.configureHandleWeightDialogsAnswerRoute(
         post("/dialogs") {
             call.run {
                 getUserId()?.let { userId ->
-                    receiveOrRespond<WeightDialogsRequest>()?.let { weightDialogsRequest ->
-                        handleResource(
-                            resource = handleWeightDialogsAnswerUseCase(
-                                userId = userId,
-                                weightDialogsRequest = weightDialogsRequest
+                    getTimezoneHeader()?.let { timeZone ->
+                        receiveOrRespond<WeightDialogsRequest>()?.let { weightDialogsRequest ->
+                            handleResource(
+                                resource = handleWeightDialogsAnswerUseCase(
+                                    userId = userId,
+                                    weightDialogsRequest = weightDialogsRequest,
+                                    timeZone = timeZone
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

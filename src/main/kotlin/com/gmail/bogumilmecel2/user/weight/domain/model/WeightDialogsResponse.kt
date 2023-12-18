@@ -5,6 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class WeightDialogsResponse(
     val shouldShowWeightPicker: Boolean,
-    val weightDialogsAccepted: Boolean,
     val weightDialogsLastTimeAsked: WeightDialogsLastTimeAsked?
 )

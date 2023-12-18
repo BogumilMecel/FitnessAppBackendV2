@@ -58,7 +58,8 @@ fun Application.module() {
     val userRepository = UserRepositoryImp(
         userCol = databaseManager.client.getCollection("user_collection"),
         weightCol = databaseManager.client.getCollection("weight_collection"),
-        logEntryCol = databaseManager.client.getCollection("log_entry_collection")
+        logEntryCol = databaseManager.client.getCollection("log_entry_collection"),
+        weightDialogsCol = databaseManager.client.getCollection("weight_dialogs_collection")
     )
 
     val getUsernameUseCase = GetUsernameUseCase(userRepository = userRepository)
@@ -128,12 +129,16 @@ fun Application.module() {
     val checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(
         getLogEntriesUseCase = getLogEntriesUseCase,
         getWeightEntriesUseCase = getWeightEntriesUseCase,
-        getUserObjectUseCase = getUserObjectUseCase
+        userRepository = userRepository
     )
 
     val weightUseCases = WeightUseCases(
         addWeightEntryUseCase = addWeightEntryUseCase,
-        checkIfShouldAskForWeightDialogsUseCase = checkIfShouldAskForWeightDialogsUseCase
+        checkIfShouldAskForWeightDialogsUseCase = checkIfShouldAskForWeightDialogsUseCase,
+        handleWeightDialogsAnswerUseCase = HandleWeightDialogsAnswerUseCase(
+            userRepository = userRepository,
+            getWeightEntriesUseCase = getWeightEntriesUseCase
+        )
     )
     val saveNutritionValuesUseCase = SaveNutritionValuesUseCase(userRepository = userRepository)
 
@@ -202,7 +207,8 @@ fun Application.module() {
                     getUserObjectUseCase = getUserObjectUseCase,
                     checkLatestLogEntryAndGetLogStreakUseCase = checkLatestLogEntryAndGetLogStreakUseCase,
                     getWeightEntriesUseCase = getWeightEntriesUseCase,
-                    calculateWeightProgressUseCase = calculateWeightEntriesUseCase
+                    calculateWeightProgressUseCase = calculateWeightEntriesUseCase,
+                    userRepository = userRepository
                 )
             )
         )
