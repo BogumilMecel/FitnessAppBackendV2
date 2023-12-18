@@ -12,7 +12,7 @@ import org.bson.types.ObjectId
 data class RecipeDiaryEntry(
     override val id: String,
     override val nutritionValues: NutritionValues,
-    override val timestamp: Long,
+    override val utcTimestamp: Long,
     override val userId: String,
     override val date: String,
     override val mealName: MealName,
@@ -23,7 +23,7 @@ data class RecipeDiaryEntry(
 data class RecipeDiaryEntryDto(
     @BsonId val _id: ObjectId,
     val nutritionValues: NutritionValues,
-    val timestamp: Long,
+    val utcTimestamp: Long,
     val recipe: Recipe,
     val servings: Int,
     val userId: String,
@@ -37,7 +37,7 @@ fun RecipeDiaryEntry.toDto(userId: String): RecipeDiaryEntryDto = RecipeDiaryEnt
     servings = servings,
     date = date,
     userId = userId,
-    timestamp = timestamp,
+    utcTimestamp = utcTimestamp,
     nutritionValues = nutritionValues,
     mealName = mealName
 )
@@ -48,7 +48,7 @@ fun RecipeDiaryEntryDto.toObject(): RecipeDiaryEntry = RecipeDiaryEntry(
     servings = servings,
     userId = userId,
     date = date,
-    timestamp = timestamp,
+    utcTimestamp = utcTimestamp,
     nutritionValues = nutritionValues,
     mealName = mealName
 )

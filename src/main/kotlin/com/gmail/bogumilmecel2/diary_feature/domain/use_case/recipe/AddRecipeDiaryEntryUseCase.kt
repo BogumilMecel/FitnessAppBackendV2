@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe
 
+import com.gmail.bogumilmecel2.common.util.DateUtils
 import com.gmail.bogumilmecel2.common.util.DateUtils.isValidDate
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
@@ -12,7 +13,7 @@ class AddRecipeDiaryEntryUseCase(
 ) {
 
     suspend operator fun invoke(request: RecipeDiaryEntryRequest, userId: String): Resource<Boolean> {
-        return if (request.servings <= 0 || request.timestamp <= 0 || request.date.isEmpty()) {
+        return if (request.servings <= 0 || request.date.isEmpty()) {
             Resource.Error()
         } else if (!request.date.isValidDate()) {
             Resource.Error()
@@ -22,7 +23,7 @@ class AddRecipeDiaryEntryUseCase(
                     id = "",
                     nutritionValues = request.recipe.calculateNutritionValues(request.servings),
                     date = request.date,
-                    timestamp = request.timestamp,
+                    utcTimestamp = DateUtils.getCurrentUtcTimestamp(),
                     userId = userId,
                     mealName = request.mealName,
                     servings = request.servings,

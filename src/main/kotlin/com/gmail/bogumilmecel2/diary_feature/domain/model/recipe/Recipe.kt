@@ -3,10 +3,10 @@ package com.gmail.bogumilmecel2.diary_feature.domain.model.recipe
 import com.gmail.bogumilmecel2.common.util.extensions.round
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
-import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Ingredient
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.TimeRequired
+import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.ProductPrice
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
 
@@ -15,7 +15,7 @@ data class Recipe(
     val id: String = "",
     val name: String = "",
     val ingredients: List<Ingredient> = emptyList(),
-    val timestamp: Long = System.currentTimeMillis(),
+    val utcTimestamp: Long = System.currentTimeMillis(),
     val imageUrl: String? = null,
     val nutritionValues: NutritionValues = NutritionValues(),
     val timeRequired: TimeRequired = TimeRequired.LOW,
@@ -31,7 +31,7 @@ data class RecipeDto(
     val _id: ObjectId,
     val name: String,
     val ingredients: List<Ingredient>,
-    val timestamp: Long,
+    val utcTimestamp: Long,
     val imageUrl: String?,
     val nutritionValues: NutritionValues,
     val timeNeeded: TimeRequired,
@@ -46,7 +46,7 @@ fun Recipe.toDto(): RecipeDto = RecipeDto(
     _id = id.toObjectId(),
     name = name,
     ingredients = ingredients,
-    timestamp = timestamp,
+    utcTimestamp = utcTimestamp,
     imageUrl = imageUrl,
     timeNeeded = timeRequired,
     difficulty = difficulty,
@@ -61,7 +61,7 @@ fun RecipeDto.toObject(): Recipe = Recipe(
     id = _id.toString(),
     name = name,
     ingredients = ingredients,
-    timestamp = timestamp,
+    utcTimestamp = utcTimestamp,
     imageUrl = imageUrl,
     nutritionValues = nutritionValues,
     timeRequired = timeNeeded,

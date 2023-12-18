@@ -11,6 +11,5 @@ data class NewProductRequest(
     val containerWeight: Int? = null,
     val barcode: String? = null,
     val nutritionValuesIn: NutritionValuesIn,
-    val nutritionValues: NutritionValues,
-    val timestamp: Long
+    val nutritionValues: NutritionValues
 )
