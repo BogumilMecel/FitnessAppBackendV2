@@ -135,7 +135,8 @@ fun Application.module() {
         ),
         searchForRecipes = SearchForRecipes(diaryRepository = diaryRepository),
         addRecipeDiaryEntryUseCase = AddRecipeDiaryEntryUseCase(diaryRepository = diaryRepository),
-        getRecipePriceUseCase = GetRecipePriceUseCase(priceRepository = priceRepository)
+        getRecipePriceUseCase = GetRecipePriceUseCase(priceRepository = priceRepository),
+        editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(diaryRepository = diaryRepository)
     )
 
     val tokenService = JwtTokenService()
