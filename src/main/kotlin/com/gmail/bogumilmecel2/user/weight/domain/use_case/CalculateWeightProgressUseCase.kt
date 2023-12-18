@@ -1,26 +1,33 @@
 package com.gmail.bogumilmecel2.user.weight.domain.use_case
 
 import com.gmail.bogumilmecel2.common.util.extensions.round
+import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
 
-class CalculateWeightProgressUseCase {
-    operator fun invoke(weightEntries:List<WeightEntry>):String?{
-        if (weightEntries.size > 1) {
-            weightEntries.sortedByDescending { it.utcTimestamp }.also { entries ->
-                val size = entries.size
+class CalculateWeightProgressUseCase(private val userRepository: UserRepository) {
+    suspend operator fun invoke(
+        userId: String,
+        weightEntries: List<WeightEntry>
+    ): Double? {
+        if (weightEntries.size < 2) return null
 
-                val firstHalf = entries.toTypedArray().copyOfRange(0, (size + 1) / 2)
-                val secondHalf = entries.toTypedArray().copyOfRange((size + 1) / 2, size)
+        val mutableWeightEntries = weightEntries.toMutableList().apply { sortByDescending { it.utcTimestamp } }
 
-                val firstAverage = firstHalf.toMutableList().sumOf { it.value } / firstHalf.size.toDouble()
-                val secondAverage = secondHalf.toMutableList().sumOf { it.value } / secondHalf.size.toDouble()
+        var (size, midPoint) = with(mutableWeightEntries.size) { this to this / 2 }
 
-                val difference = (firstAverage - secondAverage).round(2)
-                val sign = if (firstAverage > secondAverage) "+" else ""
-
-                return if (difference != 0.0) ("$sign${difference}") else ""
-            }
+        if (size % 2 != 0) {
+            mutableWeightEntries.removeAt(midPoint)
+            size = mutableWeightEntries.size
+            midPoint = size / 2
         }
-        return null
+
+        val firstAverage = mutableWeightEntries.subList(0, midPoint).map { it.value }.average()
+        val secondAverage = mutableWeightEntries.subList(midPoint, size).map { it.value }.average()
+
+        val difference = (firstAverage - secondAverage).round(2)
+
+        userRepository.updateWeightProgress(userId = userId, weightProgress = difference)
+
+        return difference
     }
 }

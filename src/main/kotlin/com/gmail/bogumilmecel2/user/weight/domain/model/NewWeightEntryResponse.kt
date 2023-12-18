@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NewWeightEntryResponse(
-    val weightProgress: String? = null,
+    val weightProgress: Double? = null,
     val latestWeightEntry: WeightEntry? = null
 )

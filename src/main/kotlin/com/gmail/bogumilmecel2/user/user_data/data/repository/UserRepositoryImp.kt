@@ -137,4 +137,13 @@ class UserRepositoryImp(
                 .wasAcknowledgedOrThrow()
         }
     }
+
+    override suspend fun updateWeightProgress(userId: String, weightProgress: Double): Resource<Unit> {
+        return handleRequest {
+            userCol.updateOneById(
+                id = userId.toObjectId(),
+                update = setValue(UserDto::weightProgress, weightProgress)
+            )
+        }
+    }
 }
