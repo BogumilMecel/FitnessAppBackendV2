@@ -10,6 +10,7 @@ import com.gmail.bogumilmecel2.authentication.domain.use_case.CheckIfUsernameExi
 import com.gmail.bogumilmecel2.authentication.domain.use_case.GetUserByUsername
 import com.gmail.bogumilmecel2.authentication.domain.use_case.RegisterNewUserUseCase
 import com.gmail.bogumilmecel2.authentication.routes.configureAuthRoutes
+import com.gmail.bogumilmecel2.authentication.routes.configureIsReachableRoute
 import com.gmail.bogumilmecel2.common.data.database.DatabaseManager
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.plugins.*
@@ -206,6 +207,8 @@ fun Application.module() {
     configureInternationalization()
 
     routing {
+        configureIsReachableRoute()
+
         configureDiaryRoutes(
             productUseCases = productUseCases,
             diaryUseCases = diaryUseCases,
