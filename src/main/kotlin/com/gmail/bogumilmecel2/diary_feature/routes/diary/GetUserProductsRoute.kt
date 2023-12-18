@@ -11,7 +11,7 @@ import io.ktor.server.routing.*
 
 fun Route.configureGetUserProductsRoute(getUserProductsUseCase: GetUserProductsUseCase) {
     authenticate {
-        get("/product") {
+        get("/products") {
             call.run {
                 getUserId()?.let { userId ->
                     call.handleResource(
