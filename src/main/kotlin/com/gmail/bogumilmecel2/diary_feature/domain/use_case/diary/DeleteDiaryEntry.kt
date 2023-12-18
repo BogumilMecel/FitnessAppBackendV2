@@ -11,9 +11,9 @@ class DeleteDiaryEntry(
 
     suspend operator fun invoke(
         deleteDiaryEntryRequest: DeleteDiaryEntryRequest,
-        userId:String
-    ):Resource<Unit>{
-        return when(deleteDiaryEntryRequest.diaryEntryType) {
+        userId: String
+    ): Resource<Boolean> {
+        return when (deleteDiaryEntryRequest.diaryEntryType) {
             DiaryEntryType.PRODUCT -> {
                 diaryRepository.deleteProductDiaryEntry(
                     productDiaryEntryId = deleteDiaryEntryRequest.diaryEntryId,

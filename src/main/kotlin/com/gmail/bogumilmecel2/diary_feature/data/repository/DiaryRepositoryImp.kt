@@ -31,86 +31,64 @@ class DiaryRepositoryImp(
         productDiaryEntry: ProductDiaryEntry,
         userId: String
     ): Resource<ProductDiaryEntry> {
-        return try {
-            Resource.Success(
-                data = productDiaryEntry.copy(
-                    id = productDiaryEntry.toDto(userId = userId).apply {
-                        productDiaryCol.insertOne(this)
-                    }._id.toString()
-                )
+        return handleRequest {
+            productDiaryEntry.copy(
+                id = productDiaryEntry.toDto(userId = userId).apply {
+                    productDiaryCol.insertOne(this)
+                }._id.toString()
             )
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
         }
     }
 
     override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Boolean> {
-        return try {
-            Resource.Success(
-                data = recipeDiaryCol.insertOne(recipeDiaryEntry.toDto(userId = userId)).wasAcknowledged()
-            )
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+        return handleRequest {
+            recipeDiaryCol.insertOne(recipeDiaryEntry.toDto(userId = userId)).wasAcknowledged()
         }
     }
 
     override suspend fun getProductDiaryEntries(date: String, userId: String): Resource<List<ProductDiaryEntry>> {
-        return try {
-            val productDiaryEntries =
-                productDiaryCol.find(
-                    ProductDiaryEntryDto::userId eq userId,
-                    ProductDiaryEntryDto::date eq date
-                ).toList().map {
-                    it.toDiaryEntry()
-                }
-            Resource.Success(data = productDiaryEntries)
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+        return handleRequest {
+            productDiaryCol.find(
+                ProductDiaryEntryDto::userId eq userId,
+                ProductDiaryEntryDto::date eq date
+            ).toList().map {
+                it.toDiaryEntry()
+            }
         }
     }
 
     override suspend fun getRecipeDiaryEntries(date: String, userId: String): Resource<List<RecipeDiaryEntry>> {
-        return try {
-            Resource.Success(
-                data = recipeDiaryCol.find(
-                    RecipeDiaryEntryDto::userId eq userId,
-                    RecipeDiaryEntryDto::date eq date,
-                ).toList().map {
-                    it.toObject()
-                }
-            )
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+        return handleRequest {
+            recipeDiaryCol.find(
+                RecipeDiaryEntryDto::userId eq userId,
+                RecipeDiaryEntryDto::date eq date,
+            ).toList().map {
+                it.toObject()
+            }
         }
     }
 
     override suspend fun getDiaryEntry(id: String): Resource<ProductDiaryEntry?> {
-        return try {
-            Resource.Success(productDiaryCol.findOne(ProductDiaryEntryDto::_id eq id.toObjectId())?.toDiaryEntry())
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+        return handleRequest {
+            productDiaryCol.findOne(ProductDiaryEntryDto::_id eq id.toObjectId())?.toDiaryEntry()
         }
     }
 
     override suspend fun getProducts(text: String): Resource<List<Product>> {
-        return try {
-            Resource.Success(
-                data = productCol.find("{'name': {'${MongoOperator.regex}': '$text', '${MongoOperator.options}': 'i'}}")
-                    .toList()
-                    .map {
-                        it.toProduct()
-                    }
-            )
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+        return handleRequest {
+            productCol.find("{'name': {'${MongoOperator.regex}': '$text', '${MongoOperator.options}': 'i'}}")
+                .toList()
+                .map {
+                    it.toProduct()
+                }
         }
     }
 
     override suspend fun getProductHistory(userId: String): Resource<List<Product>> {
-        return try {
+        return handleRequest {
             val history = mutableListOf<Product>()
             productDiaryCol
-                .find(ProductDiaryEntryDto::userId eq userId,)
+                .find(ProductDiaryEntryDto::userId eq userId)
                 .descendingSort(ProductDiaryEntryDto::timestamp)
                 .limit(20)
                 .toList()
@@ -120,17 +98,13 @@ class DiaryRepositoryImp(
                         history.add(product)
                     }
                 }
-            Resource.Success(history.distinctBy { it.name })
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+            history.distinctBy { it.id }
         }
     }
 
     override suspend fun getProduct(productId: String): Resource<Product?> {
-        return try {
-            Resource.Success(data = productCol.findOne(ProductDto::_id eq productId.toObjectId())?.toProduct())
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+        return handleRequest {
+            productCol.findOne(ProductDto::_id eq productId.toObjectId())?.toProduct()
         }
     }
 
@@ -139,107 +113,75 @@ class DiaryRepositoryImp(
     }
 
     override suspend fun insertProduct(product: Product, userId: String): Resource<Product> {
-        return try {
-            Resource.Success(
-                data = product.copy(
-                    id = product.toDto(userId).apply { productCol.insertOne(this) }._id.toString()
-                )
+        return handleRequest {
+            product.copy(
+                id = product.toDto(userId).apply { productCol.insertOne(this) }._id.toString()
             )
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
         }
     }
 
-    override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Unit> {
-        return try {
-            val wasAcknowledged = productDiaryCol.deleteOne(
+    override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Boolean> {
+        return handleRequest {
+            productDiaryCol.deleteOne(
                 ProductDiaryEntryDto::_id eq productDiaryEntryId.toObjectId(),
                 ProductDiaryEntryDto::userId eq userId
             ).wasAcknowledged()
-            if (wasAcknowledged) {
-                Resource.Success(data = Unit)
-            } else throw Exception()
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
         }
     }
 
-    override suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Unit> {
-        return try {
-            val wasAcknowledged = recipeDiaryCol.deleteOne(
+    override suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Boolean> {
+        return handleRequest {
+            recipeDiaryCol.deleteOne(
                 RecipeDiaryEntryDto::_id eq recipeDiaryEntryId.toObjectId(),
                 RecipeDiaryEntryDto::userId eq userId
             ).wasAcknowledged()
-            if (wasAcknowledged) {
-                Resource.Success(data = Unit)
-            } else throw Exception()
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
         }
     }
 
     override suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?> {
-        return try {
-            Resource.Success(productCol.findOne(ProductDto::barcode eq barcode)?.toProduct())
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+        return handleRequest {
+            productCol.findOne(ProductDto::barcode eq barcode)?.toProduct()
         }
     }
 
     override suspend fun getUserCaloriesSum(date: String, userId: String): Resource<CaloriesSumResponse> {
-        return try {
-            Resource.Success(
-                CaloriesSumResponse(caloriesSum = productDiaryCol.find(
-                    ProductDiaryEntryDto::date eq date,
-                    ProductDiaryEntryDto::userId eq userId
-                )
-                    .toList()
-                    .sumOf { it.nutritionValues.calories })
+        return handleRequest {
+            CaloriesSumResponse(caloriesSum = productDiaryCol.find(
+                ProductDiaryEntryDto::date eq date,
+                ProductDiaryEntryDto::userId eq userId
             )
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+                .toList()
+                .sumOf { it.nutritionValues.calories })
         }
     }
 
     override suspend fun addNewPrice(productId: String, price: Price): Resource<Price> {
-        return try {
+        return handleRequest {
             if (productCol.updateOneById(
                     id = productId.toObjectId(),
                     update = setValue(ProductDto::price, price)
                 ).wasAcknowledged()
             ) {
-                Resource.Success(
-                    data = price
-                )
-            } else Resource.Error()
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+                price
+            } else throw Exception()
         }
     }
 
     override suspend fun addNewRecipe(recipe: Recipe): Resource<Recipe> {
-        return try {
-            Resource.Success(
-                data = recipe.copy(
-                    id = recipe.toDto().apply { recipeCol.insertOne(this) }._id.toString()
-                )
+        return handleRequest {
+            recipe.copy(
+                id = recipe.toDto().apply { recipeCol.insertOne(this) }._id.toString()
             )
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
         }
     }
 
     override suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>> {
-        return try {
-            Resource.Success(
-                data = recipeCol.find("{'name': {'${MongoOperator.regex}': '$searchText', '${MongoOperator.options}': 'i'}}")
-                    .toList()
-                    .map {
-                        it.toObject()
-                    }
-            )
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
+        return handleRequest {
+            recipeCol.find("{'name': {'${MongoOperator.regex}': '$searchText', '${MongoOperator.options}': 'i'}}")
+                .toList()
+                .map {
+                    it.toObject()
+                }
         }
     }
 }

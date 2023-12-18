@@ -25,15 +25,11 @@ class UserRepositoryImp(
 ) : UserRepository, BaseRepository() {
 
     override suspend fun saveUserInformation(userInformation: UserInformation, userId: String): Resource<Boolean> {
-        return try {
-            Resource.Success(
-                userCol.updateOneById(
-                    userId.toObjectId(),
-                    setValue(User::userInformation, userInformation)
-                ).wasAcknowledged()
-            )
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+        return handleRequest {
+            userCol.updateOneById(
+                userId.toObjectId(),
+                setValue(User::userInformation, userInformation)
+            ).wasAcknowledged()
         }
     }
 
@@ -41,105 +37,81 @@ class UserRepositoryImp(
         nutritionValues: NutritionValues,
         userId: String
     ): Resource<Boolean> {
-        return try {
-            println("$userId $nutritionValues")
-            Resource.Success(
-                userCol.updateOneById(
-                    userId.toObjectId(),
-                    setValue(User::nutritionValues, nutritionValues)
-                ).wasAcknowledged()
-            )
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+        return handleRequest {
+            userCol.updateOneById(
+                userId.toObjectId(),
+                setValue(User::nutritionValues, nutritionValues)
+            ).wasAcknowledged()
         }
     }
 
     override suspend fun saveLogEntry(entry: LogEntry, userId: String): Resource<LogEntry> {
-        return try {
-            userCol.updateOneById(userId.toObjectId(), setValue(UserDto::latestLogEntry, entry))
-            Resource.Success(
-                data = LogEntry(
+        return handleRequest {
+            val wasAcknowledged =
+                userCol.updateOneById(userId.toObjectId(), setValue(UserDto::latestLogEntry, entry)).wasAcknowledged()
+
+            if (wasAcknowledged) {
+                LogEntry(
                     streak = entry.streak,
                     timestamp = entry.timestamp
                 )
-            )
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+            } else throw Exception()
         }
-
     }
 
     override suspend fun getLatestLogEntry(userId: String): Resource<LogEntry?> {
-        return try {
-            Resource.Success(data = userCol.findOneById(userId.toObjectId())?.latestLogEntry)
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+        return handleRequest {
+            userCol.findOneById(userId.toObjectId())?.latestLogEntry
         }
     }
 
     override suspend fun getUserByEmail(email: String): Resource<UserDto?> {
-        return try {
-            Resource.Success(userCol.findOne(User::email eq email))
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+        return handleRequest {
+            userCol.findOne(User::email eq email)
         }
     }
 
     override suspend fun registerNewUser(user: UserDto): Resource<Boolean> {
-        return try {
-            Resource.Success(userCol.insertOne(user).wasAcknowledged())
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+        return handleRequest {
+            userCol.insertOne(user).wasAcknowledged()
         }
     }
 
     override suspend fun addWeightEntry(weightEntry: WeightEntry, userId: String): Resource<Boolean> {
-        return try {
-            Resource.Success(data = weightCol.insertOne(weightEntry.toDto(userId = userId)).wasAcknowledged())
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+        return handleRequest {
+            weightCol.insertOne(weightEntry.toDto(userId = userId)).wasAcknowledged()
         }
-
     }
 
     override suspend fun checkIfUsernameExists(username: String): Resource<Boolean> {
-        return try {
-            Resource.Success(userCol.find(UserDto::username eq username).toList().isEmpty())
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+        return handleRequest {
+            userCol.find(UserDto::username eq username).toList().isEmpty()
         }
     }
 
     override suspend fun getUser(userId: String): Resource<User?> {
-        return try {
-            Resource.Success(userCol.findOneById(userId.toObjectId())?.toUser())
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+        return handleRequest {
+            userCol.findOneById(userId.toObjectId())?.toUser()
         }
     }
 
     override suspend fun getUsername(userId: String): Resource<String?> {
-        return try {
-            Resource.Success(data = getUser(userId = userId).data?.username)
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+        return handleRequest {
+            getUser(userId = userId).data?.username
         }
     }
 
     override suspend fun getWeightEntries(userId: String, limit: Int): Resource<List<WeightEntry>> {
-        return try {
-            Resource.Success(
-                data = weightCol.find(WeightEntryDto::userId eq userId)
-                    .limit(limit)
-                    .sort(
-                        descending(
-                            WeightEntryDto::timestamp
-                        )
+        return handleRequest {
+            weightCol.find(WeightEntryDto::userId eq userId)
+                .limit(limit)
+                .sort(
+                    descending(
+                        WeightEntryDto::timestamp
                     )
-                    .toList()
-                    .map { it.toObject() })
-        } catch (e: Exception) {
-            handleExceptionWithResource(e)
+                )
+                .toList()
+                .map { it.toObject() }
         }
     }
 }
