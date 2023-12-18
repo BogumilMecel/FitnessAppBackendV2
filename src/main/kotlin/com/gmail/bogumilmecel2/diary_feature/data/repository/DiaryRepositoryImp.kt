@@ -83,7 +83,7 @@ class DiaryRepositoryImp(
                 .aggregate<ProductDiaryEntryDto>(
                     pipeline = buildList {
                         if (searchText != null) {
-                            add(Aggregates.match(Filters.regex("yourFieldContainingText", searchText, "i")))
+                            add(Aggregates.match(Filters.regex("productName", searchText, "i")))
                         }
                         addAll(
                             listOf(

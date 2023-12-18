@@ -25,6 +25,6 @@ object Constants {
 
     object ApiConstants {
         const val PAGE = "page"
-        const val SEARCH_TEXT = "searchText"
+        const val SEARCH_TEXT = "search_text"
     }
 }
