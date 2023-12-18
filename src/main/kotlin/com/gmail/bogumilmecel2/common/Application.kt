@@ -49,10 +49,6 @@ fun Application.module() {
 
     val databaseManager = DatabaseManager()
 
-    GlobalScope.launch {
-        databaseManager.listAllIndexes()
-    }
-
     val diaryRepository = DiaryRepositoryImp(
         recipeCol = databaseManager.getRecipeCollection(),
         productCol = databaseManager.getProductCollection(),
@@ -207,6 +203,12 @@ fun Application.module() {
     configureSerialization()
     configureLocations()
     configureInternationalization()
+
+    GlobalScope.launch {
+        databaseManager.listAllIndexes()
+//        MockedData.insertSampleProducts(insertProductUseCase = insertProductUseCase)
+//        databaseManager.createProductNameIndex()
+    }
 
     routing {
         configureIsReachableRoute()
