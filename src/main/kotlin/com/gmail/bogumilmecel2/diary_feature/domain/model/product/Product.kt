@@ -40,7 +40,10 @@ data class Product(
     val username: String = "",
 
     @SerialName("user_id")
-    val userId: String = ""
+    val userId: String = "",
+
+    @SerialName("creation_date")
+    val creationDate: LocalDateTime? = null
 )
 
 data class ProductDto(
@@ -67,7 +70,7 @@ data class ProductDto(
 
     val country: Country = Country.POLAND,
 
-    val date: LocalDateTime? = null
+    val creationDate: LocalDateTime? = null
 )
 
 fun Product.toDto(userId: String, country: Country): ProductDto = ProductDto(
@@ -81,7 +84,8 @@ fun Product.toDto(userId: String, country: Country): ProductDto = ProductDto(
     userId = userId,
     username = username,
     utcTimestamp = utcTimestamp,
-    country = country
+    country = country,
+    creationDate = creationDate
 )
 
 fun ProductDto.toProduct(): Product = Product(
@@ -94,5 +98,6 @@ fun ProductDto.toProduct(): Product = Product(
     barcode = barcode,
     userId = userId,
     username = username,
-    utcTimestamp = utcTimestamp
+    utcTimestamp = utcTimestamp,
+    creationDate = creationDate
 )

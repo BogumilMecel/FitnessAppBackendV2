@@ -6,6 +6,8 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
@@ -23,7 +25,7 @@ data class ProductDiaryEntry(
     override val utcTimestamp: Long = 0,
 
     @SerialName("date")
-    override val date: String = "",
+    override val date: LocalDate? = null,
 
     @SerialName("user_id")
     override val userId: String = "",
@@ -48,7 +50,13 @@ data class ProductDiaryEntry(
 
     // TODO: remove when deleting is handled with device id
     @SerialName("deleted")
-    val deleted: Boolean = false
+    val deleted: Boolean = false,
+
+    @SerialName("creation_date")
+    override val creationDate: LocalDateTime? = null,
+
+    @SerialName("change_date")
+    override val changeDate: LocalDateTime? = null
 ) : DiaryItem
 
 data class ProductDiaryEntryDto(
@@ -63,6 +71,8 @@ data class ProductDiaryEntryDto(
     val productName: String,
     val productId: String,
     val weight: Int,
+    val creationDate: LocalDateTime? = null,
+    val changeDate: LocalDateTime? = null
 )
 
 fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiaryEntryDto(
@@ -70,27 +80,31 @@ fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiary
     utcTimestamp = utcTimestamp,
     userId = userId,
     nutritionValues = nutritionValues,
-    date = date,
+    date = date.toString(),
     weight = weight,
     mealName = mealName,
     productName = productName,
     measurementUnit = productMeasurementUnit,
     productId = productId,
-    editedUtcTimestamp = editedUtcTimestamp
+    editedUtcTimestamp = editedUtcTimestamp,
+    creationDate = creationDate,
+    changeDate = changeDate,
 )
 
 fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
     id = _id.toString(),
     utcTimestamp = utcTimestamp,
     nutritionValues = nutritionValues,
-    date = date,
+    date = LocalDate.parse(date),
     weight = weight,
     mealName = mealName,
     productId = productId,
     userId = userId,
     productName = productName,
     productMeasurementUnit = measurementUnit,
-    editedUtcTimestamp = editedUtcTimestamp
+    editedUtcTimestamp = editedUtcTimestamp,
+    creationDate = creationDate,
+    changeDate = changeDate,
 )
 
 fun ProductDiaryEntryDto.toProductDiarySearchItem() = ProductDiaryHistoryItem(

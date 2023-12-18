@@ -5,6 +5,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.Nutri
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Ingredient
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.TimeRequired
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
@@ -46,6 +47,9 @@ data class Recipe(
 
     @SerialName("user_id")
     val userId: String = "",
+
+    @SerialName("creation_date")
+    val creationDate: LocalDateTime? = null
 )
 
 data class RecipeDto(
@@ -60,7 +64,8 @@ data class RecipeDto(
     val servings: Int,
     var isPublic: Boolean,
     val userId: String,
-    val username: String
+    val username: String,
+    val creationDate: LocalDateTime? = null
 )
 
 fun Recipe.toDto(): RecipeDto = RecipeDto(
@@ -75,7 +80,8 @@ fun Recipe.toDto(): RecipeDto = RecipeDto(
     userId = userId,
     username = username,
     isPublic = isPublic,
-    nutritionValues = nutritionValues
+    nutritionValues = nutritionValues,
+    creationDate = creationDate
 )
 
 fun RecipeDto.toObject(): Recipe = Recipe(
@@ -91,4 +97,5 @@ fun RecipeDto.toObject(): Recipe = Recipe(
     username = username,
     userId = userId,
     isPublic = isPublic,
+    creationDate = creationDate
 )
