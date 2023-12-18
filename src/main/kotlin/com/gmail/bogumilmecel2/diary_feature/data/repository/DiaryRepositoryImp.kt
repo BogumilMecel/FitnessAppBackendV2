@@ -263,29 +263,21 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getProductDiaryEntries(latestProductDiaryEntryTimestamp: Long, userId: String): Resource<List<ProductDiaryEntry>> {
+    override suspend fun getProductDiaryEntries(latestTimestamp: Long, userId: String): Resource<List<ProductDiaryEntry>> {
         return handleRequest {
             productDiaryCol
-                .find(
-                    and(
-                        ProductDiaryEntryDto::userId eq userId,
-                        ProductDiaryEntryDto::lastEditedUtcTimestamp gt latestProductDiaryEntryTimestamp
-                    )
-                )
+                .find(ProductDiaryEntryDto::userId eq userId)
+                .filter(ProductDiaryEntryDto::utcTimestamp gt latestTimestamp)
                 .toList()
                 .map { it.toDiaryEntry() }
         }
     }
 
-    override suspend fun getRecipeDiaryEntries(latestRecipeDiaryEntryTimestamp: Long, userId: String): Resource<List<RecipeDiaryEntry>> {
+    override suspend fun getRecipeDiaryEntries(latestTimestamp: Long, userId: String): Resource<List<RecipeDiaryEntry>> {
         return handleRequest {
             recipeDiaryCol
-                .find(
-                    and(
-                        RecipeDiaryEntryDto::userId eq userId,
-                        RecipeDiaryEntryDto::lastEditedUtcTimestamp gt latestRecipeDiaryEntryTimestamp
-                    )
-                )
+                .find(RecipeDiaryEntryDto::userId eq userId)
+                .filter(RecipeDiaryEntryDto::utcTimestamp gt latestTimestamp)
                 .toList()
                 .map { it.toObject() }
         }

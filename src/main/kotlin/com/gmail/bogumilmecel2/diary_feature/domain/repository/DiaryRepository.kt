@@ -11,8 +11,8 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntr
 interface DiaryRepository {
     suspend fun getProductDiaryEntries(date: String, userId: String): Resource<List<ProductDiaryEntry>>
     suspend fun getRecipeDiaryEntries(date: String, userId: String): Resource<List<RecipeDiaryEntry>>
-    suspend fun getProductDiaryEntries(latestProductDiaryEntryTimestamp: Long, userId: String): Resource<List<ProductDiaryEntry>>
-    suspend fun getRecipeDiaryEntries(latestRecipeDiaryEntryTimestamp: Long, userId: String): Resource<List<RecipeDiaryEntry>>
+    suspend fun getProductDiaryEntries(latestTimestamp: Long, userId: String): Resource<List<ProductDiaryEntry>>
+    suspend fun getRecipeDiaryEntries(latestTimestamp: Long, userId: String): Resource<List<RecipeDiaryEntry>>
     suspend fun getProductDiaryEntries(userId: String): Resource<List<ProductDiaryEntry>>
     suspend fun getRecipeDiaryEntries(userId: String): Resource<List<RecipeDiaryEntry>>
     suspend fun getProductDiaryEntry(id: String): Resource<ProductDiaryEntry?>
