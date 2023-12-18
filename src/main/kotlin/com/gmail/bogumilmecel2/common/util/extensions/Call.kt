@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.common.util.extensions
 
 import com.gmail.bogumilmecel2.common.domain.model.Country
+import com.gmail.bogumilmecel2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.common.util.Resource
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -14,16 +15,10 @@ import kotlin.coroutines.suspendCoroutine
 suspend inline fun <reified T> ApplicationCall.handleResource(resource: Resource<T>) {
     when (resource) {
         is Resource.Success -> {
-            resource.data?.let {
-                this.respond(
-                    status = HttpStatusCode.OK,
-                    message = resource.data
-                )
-            } ?: kotlin.run {
-                this.respond(
-                    HttpStatusCode.Conflict,
-                )
-            }
+            this.respondNullable(
+                status = HttpStatusCode.OK,
+                message = resource.data
+            )
         }
 
         is Resource.Error -> {
@@ -61,9 +56,23 @@ suspend inline fun ApplicationCall.getParameter(name: String): String? {
     }
 }
 
-suspend inline fun ApplicationCall.getCountryParameter(): Country? {
+suspend inline fun ApplicationCall.getCountryHeader(): Country? {
     return this.request.headers["country"]?.let {
         Country.getCountryFromString(it)
+    } ?: kotlin.run {
+        respondBadRequest(this)
+        null
+    }
+}
+
+
+suspend inline fun ApplicationCall.getCurrencyHeader(): Currency? {
+    return try {
+        this.request.headers["currency"]?.let {
+            Currency.valueOf(it)
+        }
+    } catch (e: Exception) {
+        null
     } ?: kotlin.run {
         respondBadRequest(this)
         null
