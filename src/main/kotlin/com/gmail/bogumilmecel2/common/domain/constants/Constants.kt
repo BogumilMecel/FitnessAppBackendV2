@@ -25,12 +25,13 @@ object Constants {
         const val MINIMUM_ENTRIES_COUNT = 2
     }
 
-    object ApiConstants {
+    object Api {
         const val PAGE = "page"
         const val SEARCH_TEXT = "search_text"
         const val TIME_ZONE = "time_zone"
         const val CURRENCY = "currency"
         const val COUNTRY = "country"
         const val DEVICE_ID = "device_id"
+        const val LATEST_TIMESTAMP = "latest_timestamp"
     }
 }

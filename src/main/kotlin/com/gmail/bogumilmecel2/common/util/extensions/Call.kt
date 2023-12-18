@@ -64,7 +64,7 @@ fun ApplicationCall.getNullableParameter(name: String): String? {
 }
 
 suspend inline fun ApplicationCall.getCountryHeader(): Country? {
-    return this.request.headers[Constants.ApiConstants.COUNTRY]?.let {
+    return this.request.headers[Constants.Api.COUNTRY]?.let {
         Country.getCountryFromString(it)
     } ?: kotlin.run {
         respondBadRequest(this)
@@ -75,7 +75,7 @@ suspend inline fun ApplicationCall.getCountryHeader(): Country? {
 
 suspend inline fun ApplicationCall.getCurrencyHeader(): Currency? {
     return try {
-        this.request.headers[Constants.ApiConstants.CURRENCY]?.let {
+        this.request.headers[Constants.Api.CURRENCY]?.let {
             Currency.valueOf(it)
         }
     } catch (e: Exception) {
@@ -88,7 +88,7 @@ suspend inline fun ApplicationCall.getCurrencyHeader(): Currency? {
 
 suspend inline fun ApplicationCall.getTimezoneHeader(): TimeZone? {
     return try {
-        this.request.headers[Constants.ApiConstants.TIME_ZONE]?.let {
+        this.request.headers[Constants.Api.TIME_ZONE]?.let {
             TimeZone.of(zoneId = it)
         }
     } catch (e: Exception) {
@@ -101,7 +101,7 @@ suspend inline fun ApplicationCall.getTimezoneHeader(): TimeZone? {
 
 suspend inline fun ApplicationCall.getDeviceIdHeader(): String? {
     return try {
-        this.request.headers[Constants.ApiConstants.DEVICE_ID]
+        this.request.headers[Constants.Api.DEVICE_ID]
     } catch (e: Exception) {
         null
     } ?: kotlin.run {

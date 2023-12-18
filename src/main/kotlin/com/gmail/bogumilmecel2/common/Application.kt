@@ -35,9 +35,7 @@ import com.gmail.bogumilmecel2.user.weight.domain.use_case.*
 import com.gmail.bogumilmecel2.user.weight.routes.configureWeightRoutes
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.slf4j.LoggerFactory
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -239,12 +237,8 @@ fun Application.module() {
             )
         )
 
-        configureWeightRoutes(
-            weightUseCases = weightUseCases
-        )
+        configureWeightRoutes(weightUseCases = weightUseCases)
 
-        configureUserDataRoutes(
-            userDataUseCases = userDataUseCases
-        )
+        configureUserDataRoutes(userDataUseCases = userDataUseCases)
     }
 }
