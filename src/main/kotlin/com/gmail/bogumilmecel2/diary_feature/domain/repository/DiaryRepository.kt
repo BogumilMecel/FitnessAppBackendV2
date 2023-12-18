@@ -18,8 +18,8 @@ interface DiaryRepository {
     suspend fun getProducts(text: String): Resource<List<Product>>
     suspend fun getProduct(productId: String): Resource<Product?>
     suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Boolean>
-    suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Boolean>
-    suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Boolean>
+    suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Unit>
+    suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Unit>
     suspend fun insertProduct(product: Product, userId: String, country: Country): Resource<Product>
     suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Boolean>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>

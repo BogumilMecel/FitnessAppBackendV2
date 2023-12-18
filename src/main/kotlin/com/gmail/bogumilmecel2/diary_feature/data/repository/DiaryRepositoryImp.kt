@@ -80,7 +80,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Boolean> {
+    override suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Unit> {
         return handleRequest {
             recipeDiaryCol.updateOne(
                 and(
@@ -88,7 +88,7 @@ class DiaryRepositoryImp(
                     RecipeDiaryEntryDto::userId eq userId
                 ),
                 recipeDiaryEntry.toDto(userId = userId)
-            ).wasAcknowledged()
+            ).wasAcknowledgedOrThrow()
         }
     }
 
@@ -108,7 +108,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Boolean> {
+    override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Unit> {
         return handleRequest {
             productDiaryCol.updateOne(
                 and(
@@ -116,7 +116,7 @@ class DiaryRepositoryImp(
                     ProductDiaryEntryDto::userId eq userId
                 ),
                 productDiaryEntry.toDto(userId = userId)
-            ).wasAcknowledged()
+            ).wasAcknowledgedOrThrow()
         }
     }
 

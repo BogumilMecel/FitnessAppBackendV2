@@ -7,17 +7,13 @@ import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 class GetProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository
 ) {
-    suspend operator fun invoke(productDiaryEntryId: String): Resource<ProductDiaryEntry> {
+    suspend operator fun invoke(productDiaryEntryId: String): Resource<ProductDiaryEntry?> {
         if (productDiaryEntryId.isEmpty()) {
             return Resource.Error()
         }
 
-        val productDiaryEntry = diaryRepository.getProductDiaryEntry(
+        return diaryRepository.getProductDiaryEntry(
             id = productDiaryEntryId
-        ).data ?: return Resource.Error()
-
-        return Resource.Success(
-            data = productDiaryEntry
         )
     }
 }
