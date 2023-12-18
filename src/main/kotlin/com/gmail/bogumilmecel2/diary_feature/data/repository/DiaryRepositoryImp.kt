@@ -22,6 +22,7 @@ import org.litote.kmongo.MongoOperator
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.eq
+import org.litote.kmongo.gt
 
 class DiaryRepositoryImp(
     private val productDiaryCol: CoroutineCollection<ProductDiaryEntryDto>,
@@ -251,6 +252,52 @@ class DiaryRepositoryImp(
             recipeCol
                 .find(RecipeDto::userId eq userId)
                 .limit(50).descendingSort(RecipeDto::utcTimestamp)
+                .toList()
+                .map { it.toObject() }
+        }
+    }
+
+    override suspend fun getProductDiaryEntries(userId: String): Resource<List<ProductDiaryEntry>> {
+        return handleRequest {
+            productDiaryCol
+                .find(ProductDiaryEntryDto::userId eq userId)
+                .toList()
+                .map { it.toDiaryEntry() }
+        }
+    }
+
+    override suspend fun getRecipeDiaryEntries(userId: String): Resource<List<RecipeDiaryEntry>> {
+        return handleRequest {
+            recipeDiaryCol
+                .find(RecipeDiaryEntryDto::userId eq userId)
+                .toList()
+                .map { it.toObject() }
+        }
+    }
+
+    override suspend fun getProductDiaryEntries(latestProductDiaryEntryTimestamp: Long, userId: String): Resource<List<ProductDiaryEntry>> {
+        return handleRequest {
+            productDiaryCol
+                .find(
+                    and(
+                        ProductDiaryEntryDto::userId eq userId,
+                        ProductDiaryEntryDto::lastEditedUtcTimestamp gt latestProductDiaryEntryTimestamp
+                    )
+                )
+                .toList()
+                .map { it.toDiaryEntry() }
+        }
+    }
+
+    override suspend fun getRecipeDiaryEntries(latestRecipeDiaryEntryTimestamp: Long, userId: String): Resource<List<RecipeDiaryEntry>> {
+        return handleRequest {
+            recipeDiaryCol
+                .find(
+                    and(
+                        RecipeDiaryEntryDto::userId eq userId,
+                        RecipeDiaryEntryDto::lastEditedUtcTimestamp gt latestRecipeDiaryEntryTimestamp
+                    )
+                )
                 .toList()
                 .map { it.toObject() }
         }
