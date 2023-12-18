@@ -39,7 +39,7 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     @Test
     fun `Check if servings are 0, resource error is returned`() = runTest {
-        mockData(recipeResource = Resource.Success(data = null))
+        mockData()
         assertIs<Resource.Error<Unit>>(
             callTestedMethod(
                 recipeDiaryEntryRequest = mockRecipeDiaryEntryRequest().copy(
@@ -51,7 +51,7 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     @Test
     fun `Check if servings are less than 0, resource error is returned`() = runTest {
-        mockData(recipeResource = Resource.Success(data = null))
+        mockData()
         assertIs<Resource.Error<Unit>>(
             callTestedMethod(
                 recipeDiaryEntryRequest = mockRecipeDiaryEntryRequest().copy(
@@ -63,7 +63,7 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     @Test
     fun `Check if date is empty, resource error is returned`() = runTest {
-        mockData(recipeResource = Resource.Success(data = null))
+        mockData()
         assertIs<Resource.Error<Unit>>(
             callTestedMethod(
                 recipeDiaryEntryRequest = mockRecipeDiaryEntryRequest().copy(
@@ -75,11 +75,24 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     @Test
     fun `Check if date is invalid, resource error is returned`() = runTest {
-        mockData(recipeResource = Resource.Success(data = null))
+        mockData()
         assertIs<Resource.Error<Unit>>(
             callTestedMethod(
                 recipeDiaryEntryRequest = mockRecipeDiaryEntryRequest().copy(
                     date = MockConstants.INVALID_DATE_2021
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `Check if date is 2 weeks ago, resource error is returned`() = runTest {
+        mockLocalDate(value = MockConstants.MOCK_DATE_2022)
+        mockData()
+        assertIs<Resource.Error<Unit>>(
+            callTestedMethod(
+                recipeDiaryEntryRequest = mockRecipeDiaryEntryRequest().copy(
+                    date = MockConstants.MOCK_DATE_2022_11_27
                 )
             )
         )
