@@ -11,9 +11,12 @@ class AddRecipeDiaryEntryUseCase(
 ) {
 
     suspend operator fun invoke(request: RecipeDiaryEntryRequest, userId: String): Resource<Boolean> {
-        return if (request.servings <= 0 || request.mealName.isEmpty() || request.timestamp <= 0 || request.date.isEmpty()) {
+        return if (request.servings <= 0 || request.timestamp <= 0 || request.date.isEmpty()) {
             Resource.Error()
         } else {
+            val nutritionValues = request.recipe.calculateNutritionValues(request.servings)
+            println(nutritionValues.toString())
+            println(request.recipe.nutritionValues)
             diaryRepository.insertRecipeDiaryEntry(
                 recipeDiaryEntry = RecipeDiaryEntry(
                     id = "",

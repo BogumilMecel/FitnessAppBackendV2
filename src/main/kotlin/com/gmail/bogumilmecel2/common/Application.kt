@@ -89,7 +89,7 @@ fun Application.module() {
 
     val diaryUseCases = DiaryUseCases(
         getDiaryEntries = GetDiaryEntries(diaryRepository),
-        insertDiaryEntry = InsertDiaryEntry(diaryRepository),
+        insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(diaryRepository),
         deleteDiaryEntry = DeleteDiaryEntry(diaryRepository),
         getUserCaloriesSum = GetUserCaloriesSum(diaryRepository)
     )

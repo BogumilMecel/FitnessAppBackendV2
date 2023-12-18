@@ -1,6 +1,8 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 
 import com.gmail.bogumilmecel2.common.util.Resource
+import com.gmail.bogumilmecel2.diary_feature.domain.model.DeleteDiaryEntryRequest
+import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryEntryType
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 
 class DeleteDiaryEntry(
@@ -8,12 +10,22 @@ class DeleteDiaryEntry(
 ) {
 
     suspend operator fun invoke(
-        diaryEntryId:String,
+        deleteDiaryEntryRequest: DeleteDiaryEntryRequest,
         userId:String
-    ):Resource<Boolean>{
-        return diaryRepository.deleteDiaryEntry(
-            diaryEntryId = diaryEntryId,
-            userId = userId
-        )
+    ):Resource<Unit>{
+        return when(deleteDiaryEntryRequest.diaryEntryType) {
+            DiaryEntryType.PRODUCT -> {
+                diaryRepository.deleteProductDiaryEntry(
+                    productDiaryEntryId = deleteDiaryEntryRequest.diaryEntryId,
+                    userId = userId
+                )
+            }
+            DiaryEntryType.RECIPE -> {
+                diaryRepository.deleteRecipeDiaryEntry(
+                    recipeDiaryEntryId = deleteDiaryEntryRequest.diaryEntryId,
+                    userId = userId
+                )
+            }
+        }
     }
 }

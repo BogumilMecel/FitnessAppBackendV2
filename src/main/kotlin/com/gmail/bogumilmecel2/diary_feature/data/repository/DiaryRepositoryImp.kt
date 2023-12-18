@@ -30,16 +30,15 @@ class DiaryRepositoryImp(
     override suspend fun insertDiaryEntry(
         productDiaryEntry: ProductDiaryEntry,
         userId: String
-    ): Resource<ProductDiaryEntryDto> {
+    ): Resource<ProductDiaryEntry> {
         return try {
-            val insertedDiaryEntryId =
-                productDiaryCol.insertOne(productDiaryEntry.toDto(userId)).insertedId?.asObjectId()
-            if (insertedDiaryEntryId?.isObjectId == true) {
-                val newDiaryEntry = productDiaryEntry.toDto(userId).copy(_id = insertedDiaryEntryId.value)
-                Resource.Success(newDiaryEntry)
-            } else {
-                throw NullPointerException()
-            }
+            Resource.Success(
+                data = productDiaryEntry.copy(
+                    id = productDiaryEntry.toDto(userId = userId).apply {
+                        productDiaryCol.insertOne(this)
+                    }._id.toString()
+                )
+            )
         } catch (e: Exception) {
             handleExceptionWithResource(exception = e)
         }
@@ -48,33 +47,37 @@ class DiaryRepositoryImp(
     override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Boolean> {
         return try {
             Resource.Success(
-                data = recipeDiaryCol.insertOne(recipeDiaryEntry.toDto(userId = userId.toObjectId())).wasAcknowledged()
+                data = recipeDiaryCol.insertOne(recipeDiaryEntry.toDto(userId = userId)).wasAcknowledged()
             )
         } catch (e: Exception) {
             handleExceptionWithResource(exception = e)
         }
     }
 
-    override suspend fun getProductDiaryEntries(date: String, userId: String): Resource<List<ProductDiaryEntryDto>> {
+    override suspend fun getProductDiaryEntries(date: String, userId: String): Resource<List<ProductDiaryEntry>> {
         return try {
             val productDiaryEntries =
                 productDiaryCol.find(
                     ProductDiaryEntryDto::userId eq userId.toObjectId(),
                     ProductDiaryEntryDto::date eq date
-                ).toList()
+                ).toList().map {
+                    it.toDiaryEntry()
+                }
             Resource.Success(data = productDiaryEntries)
         } catch (e: Exception) {
             handleExceptionWithResource(exception = e)
         }
     }
 
-    override suspend fun getRecipeDiaryEntries(date: String, userId: String): Resource<List<RecipeDiaryEntryDto>> {
+    override suspend fun getRecipeDiaryEntries(date: String, userId: String): Resource<List<RecipeDiaryEntry>> {
         return try {
             Resource.Success(
                 data = recipeDiaryCol.find(
-                    RecipeDiaryEntryDto::userId eq userId.toObjectId(),
+                    RecipeDiaryEntryDto::userId eq userId,
                     RecipeDiaryEntryDto::date eq date,
-                ).toList()
+                ).toList().map {
+                    it.toObject()
+                }
             )
         } catch (e: Exception) {
             handleExceptionWithResource(exception = e)
@@ -83,9 +86,7 @@ class DiaryRepositoryImp(
 
     override suspend fun getDiaryEntry(id: String): Resource<ProductDiaryEntry?> {
         return try {
-            Resource.Success(
-                productDiaryCol.findOne(ProductDiaryEntryDto::_id eq id.toObjectId())?.toDiaryEntry()
-            )
+            Resource.Success(productDiaryCol.findOne(ProductDiaryEntryDto::_id eq id.toObjectId())?.toDiaryEntry())
         } catch (e: Exception) {
             handleExceptionWithResource(exception = e)
         }
@@ -130,14 +131,6 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun removeDiaryEntry(diaryEntryId: String): Resource<Boolean> {
-        return try {
-            Resource.Success(productDiaryCol.deleteOneById(diaryEntryId).wasAcknowledged())
-        } catch (e: Exception) {
-            handleExceptionWithResource(exception = e)
-        }
-    }
-
     override suspend fun editDiaryEntry(productDiaryEntry: ProductDiaryEntry): Resource<Boolean> {
         TODO("Not yet implemented")
     }
@@ -154,15 +147,30 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun deleteDiaryEntry(diaryEntryId: String, userId: String): Resource<Boolean> {
+    override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Unit> {
         return try {
-            Resource.Success(
-                productDiaryCol.deleteOne(
-                    ProductDiaryEntryDto::_id eq diaryEntryId.toObjectId(),
-                    ProductDiaryEntryDto::userId eq userId.toObjectId()
-                ).wasAcknowledged()
-            )
+            val wasAcknowledged = productDiaryCol.deleteOne(
+                ProductDiaryEntryDto::_id eq productDiaryEntryId.toObjectId(),
+                ProductDiaryEntryDto::userId eq userId.toObjectId()
+            ).wasAcknowledged()
+            if (wasAcknowledged) {
+                Resource.Success(data = Unit)
+            } else throw Exception()
         } catch (e: Exception) {
+            handleExceptionWithResource(exception = e)
+        }
+    }
+
+    override suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Unit> {
+        return try {
+            val wasAcknowledged = recipeDiaryCol.deleteOne(
+                RecipeDiaryEntryDto::_id eq recipeDiaryEntryId.toObjectId(),
+                RecipeDiaryEntryDto::userId eq userId
+            ).wasAcknowledged()
+            if (wasAcknowledged) {
+                Resource.Success(data = Unit)
+            } else throw Exception()
+        } catch (e:Exception) {
             handleExceptionWithResource(exception = e)
         }
     }

@@ -72,34 +72,12 @@ fun RecipeDto.toObject(): Recipe = Recipe(
     isPublic = isPublic,
 )
 
-fun RecipeDiaryEntry.toDto(userId: ObjectId): RecipeDiaryEntryDto = RecipeDiaryEntryDto(
-    _id = id.toObjectId(),
-    recipe = recipe,
-    portions = portions,
-    date = date,
-    userId = userId,
-    timestamp = timestamp,
-    nutritionValues = nutritionValues,
-    mealName = mealName
-)
-
-fun RecipeDiaryEntryDto.toObject(): RecipeDiaryEntry = RecipeDiaryEntry(
-    id = _id.toString(),
-    recipe = recipe,
-    portions = portions,
-    userId = userId.toString(),
-    date = date,
-    timestamp = timestamp,
-    nutritionValues = nutritionValues,
-    mealName = mealName
-)
-
 fun Recipe.calculateNutritionValues(servings: Int): NutritionValues {
     val nutritionValues = this.nutritionValues
     return NutritionValues(
-        calories = (nutritionValues.calories.toDouble() * (servings / this.servings)).toInt(),
-        carbohydrates = (nutritionValues.carbohydrates * (servings / this.servings)).round(2),
-        protein = (nutritionValues.protein * (servings / this.servings)).round(2),
-        fat = (nutritionValues.fat * (servings / this.servings)).round(2)
+        calories = (nutritionValues.calories.toDouble() * (servings.toDouble() / this.servings.toDouble())).toInt(),
+        carbohydrates = (nutritionValues.carbohydrates * (servings.toDouble() / this.servings.toDouble())).round(2),
+        protein = (nutritionValues.protein * (servings.toDouble() / this.servings.toDouble())).round(2),
+        fat = (nutritionValues.fat * (servings.toDouble() / this.servings.toDouble())).round(2)
     )
 }
