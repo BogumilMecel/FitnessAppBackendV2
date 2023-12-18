@@ -17,10 +17,7 @@ import com.gmail.bogumilmecel2.common.plugins.configureLocations
 import com.gmail.bogumilmecel2.common.plugins.configureMonitoring
 import com.gmail.bogumilmecel2.common.plugins.configureSerialization
 import com.gmail.bogumilmecel2.diary_feature.data.repository.DiaryRepositoryImp
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateProductNutritionValuesUseCase
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetUserDiaryItemsUseCase
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDiaryNameValidUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.*
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.*
@@ -104,6 +101,7 @@ fun Application.module() {
     val calculateProductNutritionValuesUseCase = CalculateProductNutritionValuesUseCase()
     val calculateRecipeNutritionValuesUseCase = CalculateRecipeNutritionValuesUseCase()
     val getProductDiaryHistoryUseCase = GetProductDiaryHistoryUseCase(diaryRepository = diaryRepository)
+    val isTimestampInTwoWeeksUseCase = IsTimestampInTwoWeeksUseCase()
 
     val diaryUseCases = DiaryUseCases(
         getDiaryEntries = GetDiaryEntries(diaryRepository),
@@ -112,19 +110,24 @@ fun Application.module() {
             getProductUseCase = getProductUseCase,
             calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
         ),
-        deleteDiaryEntry = DeleteDiaryEntry(diaryRepository),
+        deleteDiaryEntry = DeleteDiaryEntry(
+            diaryRepository = diaryRepository,
+            isTimestampInTwoWeeksUseCase = isTimestampInTwoWeeksUseCase
+        ),
         getUserCaloriesSum = GetUserCaloriesSum(diaryRepository),
         editProductDiaryEntryUseCase = EditProductDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getProductDiaryEntryUseCase = getProductDiaryEntryUseCase,
             getProductUseCase = getProductUseCase,
-            calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase
+            calculateProductNutritionValuesUseCase = calculateProductNutritionValuesUseCase,
+            isTimestampInTwoWeeksUseCase = isTimestampInTwoWeeksUseCase
         ),
         editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getRecipeDiaryEntryUseCase = getRecipeDiaryEntryUseCase,
             getRecipeUseCase = getRecipeUseCase,
             calculateRecipeNutritionValuesUseCase = calculateRecipeNutritionValuesUseCase,
+            isTimestampInTwoWeeksUseCase = isTimestampInTwoWeeksUseCase
         ),
         getProductDiaryHistoryUseCase = getProductDiaryHistoryUseCase
     )
