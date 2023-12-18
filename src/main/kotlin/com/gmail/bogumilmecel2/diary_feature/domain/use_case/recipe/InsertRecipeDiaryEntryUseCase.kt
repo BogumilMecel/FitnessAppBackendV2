@@ -7,13 +7,13 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntr
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 
-class AddRecipeDiaryEntryUseCase(
+class InsertRecipeDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
     private val getRecipeUseCase: GetRecipeUseCase,
     private val calculateRecipeNutritionValuesUseCase: CalculateRecipeNutritionValuesUseCase
 ) {
 
-    suspend operator fun invoke(request: RecipeDiaryEntryRequest, userId: String): Resource<Unit> {
+    suspend operator fun invoke(request: RecipeDiaryEntryRequest, userId: String): Resource<RecipeDiaryEntry> {
         val recipe = getRecipeUseCase(recipeId = request.recipeId).data ?: return Resource.Error()
 
         return if (request.servings <= 0 || request.date.isEmpty()) {

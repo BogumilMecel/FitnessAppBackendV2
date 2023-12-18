@@ -30,7 +30,7 @@ fun Route.configureDiaryRoutes(
         configureGetDiaryEntriesRoute(diaryUseCases.getDiaryEntries)
         configureDeleteDiaryEntryRoute(diaryUseCases.deleteDiaryEntry)
         configureGetUserCaloriesSumRoute(diaryUseCases.getUserCaloriesSum)
-        configurePostRecipeDiaryEntry(recipeUseCases.addRecipeDiaryEntryUseCase)
+        configurePostRecipeDiaryEntry(recipeUseCases.insertRecipeDiaryEntryUseCase)
         configureEditProductDiaryEntryRoute(diaryUseCases.editProductDiaryEntryUseCase)
         configureEditRecipeDiaryEntryRoute(diaryUseCases.editRecipeDiaryEntryUseCase)
         configureGetProductDiaryHistoryRoute(diaryUseCases.getProductDiaryHistoryUseCase)

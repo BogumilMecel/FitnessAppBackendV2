@@ -18,7 +18,7 @@ class InsertProductDiaryEntryUseCase(
     suspend operator fun invoke(
         productDiaryEntryPostRequest: ProductDiaryEntryPostRequest,
         userId: String
-    ): Resource<Unit> = with(productDiaryEntryPostRequest) {
+    ): Resource<ProductDiaryEntry> = with(productDiaryEntryPostRequest) {
         val product = getProductUseCase(productId = productDiaryEntryPostRequest.productId).data ?: return Resource.Error()
 
         return if (productDiaryEntryPostRequest.date.isEmpty()) {

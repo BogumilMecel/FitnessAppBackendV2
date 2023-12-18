@@ -176,7 +176,7 @@ fun Application.module() {
             getUsernameUseCase = getUsernameUseCase
         ),
         searchForRecipes = SearchForRecipes(diaryRepository = diaryRepository),
-        addRecipeDiaryEntryUseCase = AddRecipeDiaryEntryUseCase(
+        insertRecipeDiaryEntryUseCase = InsertRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             getRecipeUseCase = getRecipeUseCase,
             calculateRecipeNutritionValuesUseCase = calculateRecipeNutritionValuesUseCase

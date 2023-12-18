@@ -67,7 +67,8 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     @Test
     fun `Check if repository returns resource error, resource error is returned`() = runTest {
-        mockData(repositoryResource = Resource.Error())
+        mockData()
+        mockRepositoryResponse()
         assertIs<Resource.Error<Unit>>(callTestedMethod())
     }
 
@@ -78,21 +79,23 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         val productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest()
         mockLocalDate(utcTimestamp = MockConstants.TIMESTAMP)
         mockData()
+        val expectedProductDiaryEntry = ProductDiaryEntry(
+            weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
+            mealName = productDiaryEntryPostRequest.mealName,
+            utcTimestamp = MockConstants.TIMESTAMP,
+            date = productDiaryEntryPostRequest.date,
+            userId = MockConstants.USER_ID_1,
+            nutritionValues = nutritionValues,
+            productId = productDiaryEntryPostRequest.productId,
+            productName = product.name,
+            productMeasurementUnit = product.measurementUnit,
+            lastEditedUtcTimestamp = MockConstants.TIMESTAMP
+        )
+        mockRepositoryResponse(Resource.Success(expectedProductDiaryEntry))
         assertIs<Resource.Success<Unit>>(callTestedMethod(productDiaryEntryPostRequest = productDiaryEntryPostRequest))
         coVerify(exactly = 1) {
             diaryRepository.insertProductDiaryEntry(
-                productDiaryEntry = ProductDiaryEntry(
-                    weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
-                    mealName = productDiaryEntryPostRequest.mealName,
-                    utcTimestamp = MockConstants.TIMESTAMP,
-                    date = productDiaryEntryPostRequest.date,
-                    userId = MockConstants.USER_ID_1,
-                    nutritionValues = nutritionValues,
-                    productId = productDiaryEntryPostRequest.productId,
-                    productName = product.name,
-                    productMeasurementUnit = product.measurementUnit,
-                    lastEditedUtcTimestamp = MockConstants.TIMESTAMP
-                ),
+                productDiaryEntry = expectedProductDiaryEntry,
                 userId = MockConstants.USER_ID_1
             )
         }
@@ -100,17 +103,24 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private fun mockData(
         productResource: Resource<Product?> = Resource.Success(MockConstants.Diary.getSampleProduct()),
-        repositoryResource: Resource<Unit> = Resource.Success(Unit),
         calculateProductNutritionValuesResource: Resource<NutritionValues> = Resource.Success(MockConstants.Diary.getSampleNutritionValues())
     ) {
         coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_11) } returns productResource
-        coEvery { diaryRepository.insertProductDiaryEntry(productDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns repositoryResource
         coEvery {
             calculateProductNutritionValuesUseCase(
                 product = MockConstants.Diary.getSampleProduct(),
                 weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
             )
         } returns calculateProductNutritionValuesResource
+    }
+
+    private fun mockRepositoryResponse(resource: Resource<ProductDiaryEntry> = Resource.Error()) {
+        coEvery {
+            diaryRepository.insertProductDiaryEntry(
+                productDiaryEntry = any(),
+                userId = MockConstants.USER_ID_1
+            )
+        } returns resource
     }
 
     private suspend fun callTestedMethod(
