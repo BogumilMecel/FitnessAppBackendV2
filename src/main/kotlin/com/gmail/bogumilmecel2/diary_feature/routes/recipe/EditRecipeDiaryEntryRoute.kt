@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.diary_feature.routes.recipe
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
 import com.gmail.bogumilmecel2.common.util.extensions.receiveOrRespond
-import com.gmail.bogumilmecel2.diary_feature.domain.model.EditRecipeDiaryEntryRequest
+import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.EditRecipeDiaryEntryUseCase
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -15,11 +15,11 @@ fun Route.configureEditRecipeDiaryEntryRoute(
     authenticate {
         put("/recipe") {
             call.run {
-                receiveOrRespond<EditRecipeDiaryEntryRequest>()?.let { request ->
+                receiveOrRespond<RecipeDiaryEntry>()?.let { recipeDiaryEntry ->
                     getUserId()?.let { userId ->
                         handleResource(
                             resource = editRecipeDiaryEntryUseCase(
-                                editRecipeDiaryEntryRequest = request,
+                                recipeDiaryEntry = recipeDiaryEntry,
                                 userId = userId
                             )
                         )
