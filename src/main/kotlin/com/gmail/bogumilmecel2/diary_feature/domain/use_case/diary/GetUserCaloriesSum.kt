@@ -12,11 +12,12 @@ class GetUserCaloriesSum(
         date:String,
         userId:String
     ):Resource<CaloriesSumResponse>{
-        return Resource.Success(
-            data = diaryRepository.getUserCaloriesSum(
-                date = date,
-                userId = userId
-            ).data ?: CaloriesSumResponse(caloriesSum = 0)
-        )
+        return Resource.Error()
+//        return Resource.Success(
+//            data = diaryRepository.getUserCaloriesSum(
+//                date = date,
+//                userId = userId
+//            ).data ?: CaloriesSumResponse(caloriesSum = 0)
+//        )
     }
 }
