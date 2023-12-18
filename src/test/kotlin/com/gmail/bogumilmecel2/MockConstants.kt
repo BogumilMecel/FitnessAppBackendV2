@@ -22,8 +22,9 @@ object MockConstants {
     const val TIMESTAMP_MORE_THAN_2_LATER = TIMESTAMP + DateUtils.MILLIS_PER_DAY * 14 + 1
 
     object Diary {
-        private const val PRODUCT_NAME_1 = "Rice"
+        const val PRODUCT_NAME_1 = "Rice"
         const val RECIPE_NAME = "Rice And Chicken"
+        const val BARCODE = "1234567890"
 
         const val PRODUCT_ID_11 = "11"
         const val DIARY_ENTRY_ID_21 = "21"

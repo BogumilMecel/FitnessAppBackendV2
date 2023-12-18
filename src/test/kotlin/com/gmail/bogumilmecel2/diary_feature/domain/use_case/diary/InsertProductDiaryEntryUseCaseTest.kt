@@ -8,7 +8,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDia
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateProductNutritionValuesUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateNutritionValuesUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -20,7 +20,7 @@ import kotlin.test.assertIs
 class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private val getProductUseCase = mockkClass(GetProductUseCase::class)
-    private val calculateProductNutritionValuesUseCase = mockkClass(CalculateProductNutritionValuesUseCase::class)
+    private val calculateNutritionValuesUseCase = mockkClass(CalculateNutritionValuesUseCase::class)
     private val insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
         diaryRepository = diaryRepository,
         getProductUseCase = getProductUseCase,
@@ -142,8 +142,8 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     ) {
         coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_11) } returns productResource
         coEvery {
-            calculateProductNutritionValuesUseCase(
-                product = MockConstants.Diary.getSampleProduct(),
+            calculateNutritionValuesUseCase(
+                nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
                 weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
             )
         } returns calculateProductNutritionValuesResource
