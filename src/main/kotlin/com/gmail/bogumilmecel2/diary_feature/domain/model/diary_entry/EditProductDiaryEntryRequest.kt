@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class EditProductDiaryEntryRequest(
-    val productDiaryEntry: ProductDiaryEntry,
+    val productDiaryEntryId: String,
     val newWeight: Int
 )

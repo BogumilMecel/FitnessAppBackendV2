@@ -11,13 +11,15 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntr
 interface DiaryRepository {
     suspend fun getProductDiaryEntries(date: String, userId: String): Resource<List<ProductDiaryEntry>>
     suspend fun getRecipeDiaryEntries(date: String, userId: String): Resource<List<RecipeDiaryEntry>>
-    suspend fun getDiaryEntry(id: String): Resource<ProductDiaryEntry?>
+    suspend fun getProductDiaryEntry(id: String): Resource<ProductDiaryEntry?>
+    suspend fun getRecipeDiaryEntry(id: String): Resource<RecipeDiaryEntry?>
     suspend fun insertDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<ProductDiaryEntry>
     suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Boolean>
     suspend fun getProducts(text: String): Resource<List<Product>>
     suspend fun getProduct(productId: String): Resource<Product?>
     suspend fun deleteRecipeDiaryEntry(recipeDiaryEntryId: String, userId: String): Resource<Boolean>
-    suspend fun editDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Boolean>
+    suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Boolean>
+    suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Boolean>
     suspend fun insertProduct(product: Product, userId: String, country: Country): Resource<Product>
     suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Boolean>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>

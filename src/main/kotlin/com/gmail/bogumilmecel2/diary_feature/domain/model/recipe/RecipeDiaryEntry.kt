@@ -17,7 +17,7 @@ data class RecipeDiaryEntry(
     override val date: String,
     override val mealName: MealName,
     val recipe: Recipe,
-    val portions: Int,
+    val servings: Int,
 ) : DiaryItem
 
 data class RecipeDiaryEntryDto(
@@ -25,7 +25,7 @@ data class RecipeDiaryEntryDto(
     val nutritionValues: NutritionValues,
     val timestamp: Long,
     val recipe: Recipe,
-    val portions: Int,
+    val servings: Int,
     val userId: String,
     val date: String,
     val mealName: MealName,
@@ -34,7 +34,7 @@ data class RecipeDiaryEntryDto(
 fun RecipeDiaryEntry.toDto(userId: String): RecipeDiaryEntryDto = RecipeDiaryEntryDto(
     _id = id.toObjectId(),
     recipe = recipe,
-    portions = portions,
+    servings = servings,
     date = date,
     userId = userId,
     timestamp = timestamp,
@@ -45,7 +45,7 @@ fun RecipeDiaryEntry.toDto(userId: String): RecipeDiaryEntryDto = RecipeDiaryEnt
 fun RecipeDiaryEntryDto.toObject(): RecipeDiaryEntry = RecipeDiaryEntry(
     id = _id.toString(),
     recipe = recipe,
-    portions = portions,
+    servings = servings,
     userId = userId,
     date = date,
     timestamp = timestamp,
