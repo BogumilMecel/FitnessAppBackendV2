@@ -40,9 +40,9 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Boolean> {
+    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<Unit> {
         return handleRequest {
-            recipeDiaryCol.insertOne(recipeDiaryEntry.toDto(userId = userId)).wasAcknowledged()
+            recipeDiaryCol.insertOne(recipeDiaryEntry.toDto(userId = userId)).wasAcknowledgedOrThrow()
         }
     }
 

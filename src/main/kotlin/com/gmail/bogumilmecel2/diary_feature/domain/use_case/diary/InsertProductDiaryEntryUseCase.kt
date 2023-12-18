@@ -21,9 +21,7 @@ class InsertProductDiaryEntryUseCase(
     ): Resource<ProductDiaryEntry> = with(productDiaryEntryPostRequest) {
         val product = getProductUseCase(productId = productDiaryEntryPostRequest.productId).data ?: return Resource.Error()
 
-        return if (productDiaryEntryPostRequest.weight <= 0) {
-            Resource.Error()
-        } else if (productDiaryEntryPostRequest.date.isEmpty()) {
+        return if (productDiaryEntryPostRequest.date.isEmpty()) {
             Resource.Error()
         } else if (!productDiaryEntryPostRequest.date.isValidDate()) {
             Resource.Error()

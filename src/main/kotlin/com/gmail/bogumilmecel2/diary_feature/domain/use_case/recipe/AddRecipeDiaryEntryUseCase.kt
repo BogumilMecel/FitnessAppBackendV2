@@ -5,15 +5,15 @@ import com.gmail.bogumilmecel2.common.util.CustomDateUtils.isValidDate
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryRequest
-import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.calculateNutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 
 class AddRecipeDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
-    private val getRecipeUseCase: GetRecipeUseCase
+    private val getRecipeUseCase: GetRecipeUseCase,
+    private val calculateRecipeNutritionValuesUseCase: CalculateRecipeNutritionValuesUseCase
 ) {
 
-    suspend operator fun invoke(request: RecipeDiaryEntryRequest, userId: String): Resource<Boolean> {
+    suspend operator fun invoke(request: RecipeDiaryEntryRequest, userId: String): Resource<Unit> {
         val recipe = getRecipeUseCase(recipeId = request.recipeId).data ?: return Resource.Error()
 
         return if (request.servings <= 0 || request.date.isEmpty()) {
@@ -24,7 +24,10 @@ class AddRecipeDiaryEntryUseCase(
             diaryRepository.insertRecipeDiaryEntry(
                 recipeDiaryEntry = RecipeDiaryEntry(
                     id = "",
-                    nutritionValues = recipe.calculateNutritionValues(request.servings),
+                    nutritionValues = calculateRecipeNutritionValuesUseCase(
+                        recipe = recipe,
+                        servings = request.servings
+                    ).data ?: return Resource.Error(),
                     date = request.date,
                     utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
                     userId = userId,
