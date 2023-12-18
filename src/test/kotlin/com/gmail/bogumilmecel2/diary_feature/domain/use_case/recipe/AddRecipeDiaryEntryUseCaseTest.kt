@@ -115,7 +115,8 @@ class AddRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
                     mealName = request.mealName,
                     recipeName = MockConstants.Diary.RECIPE_NAME,
                     recipeId = MockConstants.Diary.RECIPE_ID_31,
-                    servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1
+                    servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1,
+                    lastEditedUtcTimestamp = MockConstants.TIMESTAMP
                 ),
                 userId = MockConstants.USER_ID_1
             )

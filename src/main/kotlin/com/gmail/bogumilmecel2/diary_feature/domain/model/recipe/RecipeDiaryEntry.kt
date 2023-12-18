@@ -16,7 +16,7 @@ data class RecipeDiaryEntry(
     override val userId: String = "",
     override val date: String = "",
     override val mealName: MealName = MealName.BREAKFAST,
-    val lastEditedUtcTimestamp: Long,
+    val lastEditedUtcTimestamp: Long = 0,
     val recipeName: String = "",
     val recipeId: String = "",
     val servings: Int = 0,
