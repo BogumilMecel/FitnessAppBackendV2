@@ -5,25 +5,47 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.Nutri
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Ingredient
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.TimeRequired
-import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.ProductPrice
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
 
 @Serializable
 data class Recipe(
+    @SerialName("id")
     val id: String = "",
+
+    @SerialName("name")
     val name: String = "",
+
+    @SerialName("ingredients")
     val ingredients: List<Ingredient> = emptyList(),
+
+    @SerialName("utc_timestamp")
     val utcTimestamp: Long = System.currentTimeMillis(),
+
+    @SerialName("image_url")
     val imageUrl: String? = null,
+
+    @SerialName("nutrition_values")
     val nutritionValues: NutritionValues = NutritionValues(),
+
+    @SerialName("time_required")
     val timeRequired: TimeRequired = TimeRequired.LOW,
+
+    @SerialName("difficulty")
     val difficulty: Difficulty = Difficulty.LOW,
+
+    @SerialName("servings")
     val servings: Int = 0,
-    var isPublic: Boolean = false,
+
+    @SerialName("is_public")
+    val isPublic: Boolean = false,
+
+    @SerialName("username")
     val username: String = "",
+
+    @SerialName("user_id")
     val userId: String = "",
-    val productPrice: ProductPrice? = null
 )
 
 data class RecipeDto(
