@@ -23,7 +23,7 @@ class InsertProductUseCase(
         with(newProductRequest) {
             return if (!isDiaryNameValidUseCase(name = name)) {
                 Resource.Error()
-            } else if (nutritionValuesIn != NutritionValuesIn.HUNDRED_GRAMS && containerWeight <= 0) {
+            } else if (!isContainerWeightCorrect(nutritionValuesIn, containerWeight)) {
                 Resource.Error()
             } else if (!checkIfNutritionValuesAreNaturalNumbers(nutritionValues = nutritionValues)) {
                 Resource.Error()
@@ -32,21 +32,17 @@ class InsertProductUseCase(
             } else {
                 val username = getUsernameUseCase(userId = userId)
                 if (username != null) {
-                    val realContainerWeight = containerWeight.let { weight ->
-                        if (newProductRequest.nutritionValuesIn == NutritionValuesIn.HUNDRED_GRAMS && weight <= 0) 100 else weight
-                    }
-
                     val product = Product(
                         name = name,
                         barcode = barcode,
-                        containerWeight = realContainerWeight,
+                        containerWeight = containerWeight,
                         timestamp = timestamp,
                         nutritionValuesIn = nutritionValuesIn,
                         measurementUnit = newProductRequest.measurementUnit,
-                        nutritionValues = if (newProductRequest.nutritionValuesIn == NutritionValuesIn.HUNDRED_GRAMS) newProductRequest.nutritionValues else {
+                        nutritionValues = if (newProductRequest.nutritionValuesIn == NutritionValuesIn.HUNDRED_GRAMS) nutritionValues else {
                             calculateNutritionValuesIn100g(
                                 nutritionValues = newProductRequest.nutritionValues,
-                                weight = newProductRequest.containerWeight
+                                weight = newProductRequest.containerWeight ?: 100
                             )
                         },
                         username = username,
@@ -61,6 +57,21 @@ class InsertProductUseCase(
 
     private fun checkIfNutritionValuesAreNaturalNumbers(nutritionValues: NutritionValues) = with(nutritionValues) {
         return@with calories.isNumberNatural() && carbohydrates.isNumberNatural() && protein.isNumberNatural() && fat.isNumberNatural()
+    }
+
+    private fun isContainerWeightCorrect(nutritionValuesIn: NutritionValuesIn, containerWeight: Int?): Boolean {
+        when (nutritionValuesIn) {
+            NutritionValuesIn.HUNDRED_GRAMS -> {
+                if (containerWeight != null) {
+                    if (containerWeight <= 0) {
+                        return false
+                    }
+                }
+                return true
+            }
+
+            else -> return !(containerWeight == null || containerWeight <= 0)
+        }
     }
 
     private fun calculateNutritionValuesIn100g(nutritionValues: NutritionValues, weight: Int): NutritionValues {
