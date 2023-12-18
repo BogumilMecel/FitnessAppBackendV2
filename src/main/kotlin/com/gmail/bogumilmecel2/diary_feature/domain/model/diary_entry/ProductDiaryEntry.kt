@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
-import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiarySearchItem
+import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
@@ -63,11 +63,11 @@ fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
     productMeasurementUnit = measurementUnit
 )
 
-fun ProductDiaryEntryDto.toProductDiarySearchItem() = ProductDiarySearchItem(
+fun ProductDiaryEntryDto.toProductDiarySearchItem() = ProductDiaryHistoryItem(
     measurementUnit = measurementUnit,
     nutritionValues = nutritionValues,
     productId = productId,
     productName = productName,
     weight = weight,
-    timestamp = utcTimestamp
+    utcTimestamp = utcTimestamp
 )
