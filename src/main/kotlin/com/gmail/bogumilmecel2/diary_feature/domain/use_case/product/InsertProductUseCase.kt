@@ -1,6 +1,7 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.product
 
 import com.gmail.bogumilmecel2.common.domain.constants.ValidationConstants
+import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.isLengthInRange
@@ -19,7 +20,7 @@ class InsertProductUseCase(
     private val getUsernameUseCase: GetUsernameUseCase,
     private val isDiaryNameValidUseCase: IsDiaryNameValidUseCase
 ) {
-    suspend operator fun invoke(newProductRequest: NewProductRequest, userId: String): Resource<Product> =
+    suspend operator fun invoke(newProductRequest: NewProductRequest, userId: String, country: Country): Resource<Product> =
         with(newProductRequest) {
             return if (!isDiaryNameValidUseCase(name = name)) {
                 Resource.Error()
@@ -48,7 +49,7 @@ class InsertProductUseCase(
                         username = username,
                         userId = userId
                     )
-                    diaryRepository.insertProduct(product = product, userId = userId)
+                    diaryRepository.insertProduct(product = product, userId = userId, country = country)
                 } else {
                     Resource.Error()
                 }

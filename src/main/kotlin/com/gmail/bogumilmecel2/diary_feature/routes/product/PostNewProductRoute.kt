@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.routes.product
 
+import com.gmail.bogumilmecel2.common.util.extensions.getCountryParameter
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
 import com.gmail.bogumilmecel2.common.util.extensions.receiveOrRespond
@@ -17,12 +18,15 @@ fun Route.configurePostNewProductRoute(
             call.run {
                 receiveOrRespond<NewProductRequest>()?.let { newProductRequest ->
                     getUserId()?.let { userId ->
-                        handleResource(
-                            resource = insertNewProduct(
-                                newProductRequest = newProductRequest,
-                                userId = userId
+                        getCountryParameter()?.let { country ->
+                            handleResource(
+                                resource = insertNewProduct(
+                                    newProductRequest = newProductRequest,
+                                    userId = userId,
+                                    country = country
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

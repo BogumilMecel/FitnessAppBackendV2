@@ -1,36 +1,30 @@
 package com.gmail.bogumilmecel2.diary_feature.routes.product
 
-import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.GetProducts
-import io.ktor.http.*
+import com.gmail.bogumilmecel2.common.util.extensions.getCountryParameter
+import com.gmail.bogumilmecel2.common.util.extensions.getParameter
+import com.gmail.bogumilmecel2.common.util.extensions.handleResource
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.GetProductsUseCase
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.configureSearchForProductWithTextRoute(
-    getProducts: GetProducts
+    getProductsUseCase: GetProductsUseCase
 ){
     authenticate {
         get("/{searchText}") {
-            val searchText = call.parameters["searchText"]
-
-            if (searchText==null){
-                call.respond(HttpStatusCode.BadRequest, message = "Incorrect search text")
-                return@get
-            }
-
-            val resource = getProducts(searchText)
-
-            if (resource is Resource.Error){
-                if (resource.error.exception is NullPointerException){
-                    call.respond(HttpStatusCode.NotFound)
-                }else{
-                    call.respond(HttpStatusCode.BadRequest)
+            call.run {
+                getParameter("searchText")?.let { searchText ->
+                    getCountryParameter()?.let { country ->
+                        handleResource(
+                            resource = getProductsUseCase(
+                                searchText = searchText,
+                                country = country,
+                                currency = country.getCurrency()
+                            )
+                        )
+                    }
                 }
-                return@get
-            }else{
-                call.respond(resource.data!!)
             }
         }
     }
