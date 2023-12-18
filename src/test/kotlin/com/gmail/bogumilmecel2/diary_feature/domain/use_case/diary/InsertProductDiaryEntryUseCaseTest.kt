@@ -2,7 +2,6 @@ package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 
 import com.gmail.bogumilmecel2.BaseDiaryTest
 import com.gmail.bogumilmecel2.MockConstants
-import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
@@ -95,8 +94,8 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     @Test
     fun `Check if repository returns success, resource success is returned and correct data is used`() = runTest {
-        val product = mockProduct()
-        val nutritionValues = mockNutritionValues()
+        val product = MockConstants.Diary.getSampleProduct()
+        val nutritionValues = MockConstants.Diary.getSampleNutritionValues()
         val productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest()
         mockLocalDate()
         mockData()
@@ -120,15 +119,15 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     }
 
     private fun mockData(
-        productResource: Resource<Product?> = Resource.Success(mockProduct()),
+        productResource: Resource<Product?> = Resource.Success(MockConstants.Diary.getSampleProduct()),
         repositoryResource: Resource<ProductDiaryEntry> = Resource.Success(ProductDiaryEntry()),
-        calculateProductNutritionValuesResource: Resource<NutritionValues> = Resource.Success(mockNutritionValues())
+        calculateProductNutritionValuesResource: Resource<NutritionValues> = Resource.Success(MockConstants.Diary.getSampleNutritionValues())
     ) {
         coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_11) } returns productResource
         coEvery { diaryRepository.insertDiaryEntry(productDiaryEntry = any(), userId = MockConstants.USER_ID) } returns repositoryResource
         coEvery {
             calculateProductNutritionValuesUseCase(
-                product = mockProduct(),
+                product = MockConstants.Diary.getSampleProduct(),
                 weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
             )
         } returns calculateProductNutritionValuesResource
@@ -149,17 +148,5 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         weight = weight,
         mealName = MealName.BREAKFAST,
         date = date
-    )
-
-    private fun mockNutritionValues() = NutritionValues(
-        calories = 215,
-        carbohydrates = 21.0,
-        protein = 7.0,
-        fat = 2.0
-    )
-
-    private fun mockProduct() = Product(
-        name = MockConstants.Diary.PRODUCT_NAME_1,
-        measurementUnit = MeasurementUnit.MILLILITERS
     )
 }
