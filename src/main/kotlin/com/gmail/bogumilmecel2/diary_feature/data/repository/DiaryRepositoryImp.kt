@@ -5,16 +5,16 @@ import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.CaloriesSumResponse
-import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
-import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
-import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toDiaryEntry
-import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toDto
+import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiarySearchItem
+import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.*
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toProduct
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.*
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
+import com.mongodb.client.model.Accumulators
+import com.mongodb.client.model.Aggregates
 import org.litote.kmongo.MongoOperator
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
@@ -67,6 +67,21 @@ class DiaryRepositoryImp(
     override suspend fun getProductDiaryEntry(id: String): Resource<ProductDiaryEntry?> {
         return handleRequest {
             productDiaryCol.findOne(ProductDiaryEntryDto::_id eq id.toObjectId())?.toDiaryEntry()
+        }
+    }
+
+    override suspend fun getProductDiaryHistory(userId: String): Resource<List<ProductDiarySearchItem>> {
+        return handleRequest {
+            productDiaryCol
+                .aggregate<ProductDiaryEntryDto>(
+                    pipeline = listOf(
+                        Aggregates.group("\$productId", Accumulators.first("entry", "\$\$ROOT")),
+                        Aggregates.replaceRoot("\$entry"),
+                        Aggregates.limit(20)
+                    )
+                ).toList().map {
+                    it.toProductDiarySearchItem()
+                }
         }
     }
 

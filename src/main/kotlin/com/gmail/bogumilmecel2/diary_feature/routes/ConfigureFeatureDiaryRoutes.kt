@@ -33,6 +33,7 @@ fun Route.configureDiaryRoutes(
         configurePostRecipeDiaryEntry(recipeUseCases.addRecipeDiaryEntryUseCase)
         configureEditProductDiaryEntryRoute(diaryUseCases.editProductDiaryEntryUseCase)
         configureEditRecipeDiaryEntryRoute(diaryUseCases.editRecipeDiaryEntryUseCase)
+        configureGetProductDiaryHistoryRoute(diaryUseCases.getProductDiaryHistoryUseCase)
     }
 
     route("/recipes"){
