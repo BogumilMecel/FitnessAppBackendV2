@@ -1,9 +1,8 @@
 package com.gmail.bogumilmecel2.authentication.routes
 
-import com.gmail.bogumilmecel2.authentication.domain.model.user.AuthenticationRequest
+import com.gmail.bogumilmecel2.common.util.extensions.getTimezoneHeader
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
-import com.gmail.bogumilmecel2.common.util.extensions.receiveOrRespond
 import com.gmail.bogumilmecel2.user.user_data.domain.use_cases.GetUser
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -16,10 +15,10 @@ fun Route.configureAuthenticateRoute(
         post("/authenticate") {
             call.run {
                 getUserId()?.let { userId ->
-                    receiveOrRespond<AuthenticationRequest>()?.let { request ->
+                    getTimezoneHeader()?.let { timezone ->
                         handleResource(
                             resource = getUser(
-                                timestamp = request.timestamp,
+                                timezone = timezone,
                                 userId = userId
                             )
                         )

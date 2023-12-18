@@ -9,6 +9,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import kotlinx.datetime.TimeZone
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -70,6 +71,19 @@ suspend inline fun ApplicationCall.getCurrencyHeader(): Currency? {
     return try {
         this.request.headers["currency"]?.let {
             Currency.valueOf(it)
+        }
+    } catch (e: Exception) {
+        null
+    } ?: kotlin.run {
+        respondBadRequest(this)
+        null
+    }
+}
+
+suspend inline fun ApplicationCall.getTimezoneHeader(): TimeZone? {
+    return try {
+        this.request.headers["timezone"]?.let {
+            TimeZone.of(zoneId = it)
         }
     } catch (e: Exception) {
         null

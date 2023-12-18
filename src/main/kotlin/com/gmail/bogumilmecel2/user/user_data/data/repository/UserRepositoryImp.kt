@@ -8,6 +8,9 @@ import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.user.log.domain.model.LogEntry
+import com.gmail.bogumilmecel2.user.log.domain.model.LogEntryDto
+import com.gmail.bogumilmecel2.user.log.domain.model.toDto
+import com.gmail.bogumilmecel2.user.log.domain.model.toLogEntry
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
@@ -21,7 +24,8 @@ import org.litote.kmongo.setValue
 
 class UserRepositoryImp(
     private val userCol: CoroutineCollection<UserDto>,
-    private val weightCol: CoroutineCollection<WeightEntryDto>
+    private val weightCol: CoroutineCollection<WeightEntryDto>,
+    private val logEntryCol: CoroutineCollection<LogEntryDto>
 ) : UserRepository, BaseRepository() {
 
     override suspend fun saveUserInformation(userInformation: UserInformation, userId: String): Resource<Boolean> {
@@ -47,13 +51,12 @@ class UserRepositoryImp(
 
     override suspend fun saveLogEntry(entry: LogEntry, userId: String): Resource<LogEntry> {
         return handleRequest {
-            val wasAcknowledged =
-                userCol.updateOneById(userId.toObjectId(), setValue(UserDto::latestLogEntry, entry)).wasAcknowledged()
+            val wasAcknowledged = logEntryCol.insertOne(entry.toDto(userId = userId)).wasAcknowledged()
 
             if (wasAcknowledged) {
                 LogEntry(
                     streak = entry.streak,
-                    timestamp = entry.timestamp
+                    utcTimestamp = entry.utcTimestamp
                 )
             } else throw Exception()
         }
@@ -61,7 +64,11 @@ class UserRepositoryImp(
 
     override suspend fun getLatestLogEntry(userId: String): Resource<LogEntry?> {
         return handleRequest {
-            userCol.findOneById(userId.toObjectId())?.latestLogEntry
+            logEntryCol
+                .find(LogEntryDto::userId eq userId)
+                .sort(descending(LogEntryDto::utcTimestamp))
+                .first()
+                ?.toLogEntry()
         }
     }
 
