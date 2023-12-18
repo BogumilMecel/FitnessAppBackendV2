@@ -28,14 +28,14 @@ data class ProductDiaryEntryDto(
     val date: String,
     var weight: Int,
     val mealName: MealName,
-    val userId: ObjectId,
+    val userId: String,
     val product: Product
 )
 
 fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiaryEntryDto(
     _id = id.toObjectId(),
     timestamp = timestamp,
-    userId = userId.toObjectId(),
+    userId = userId,
     nutritionValues = nutritionValues,
     date = date,
     weight = weight,
