@@ -14,6 +14,10 @@ import org.litote.kmongo.reactivestreams.KMongo
 
 class DatabaseManager {
 
+    companion object {
+        const val NAME_INDEX = "{ 'name': 1 }"
+    }
+
     // config
     private val databaseName = "fitness_app"
     private val password = System.getenv("MONGO_PW")
