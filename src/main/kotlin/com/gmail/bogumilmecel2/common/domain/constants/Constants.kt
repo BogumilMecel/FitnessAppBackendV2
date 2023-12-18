@@ -2,6 +2,8 @@ package com.gmail.bogumilmecel2.common.domain.constants
 
 object ValidationConstants {
 
+    const val DEFAULT_PAGE_SIZE = 20
+
     object Authentication {
         const val USERNAME_MAX_LENGTH = 32
         const val USERNAME_MIN_LENGTH = 4
