@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.common.util.extensions
 
+import com.gmail.bogumilmecel2.common.domain.constants.Constants
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.common.util.Resource
@@ -62,7 +63,7 @@ fun ApplicationCall.getNullableParameter(name: String): String? {
 }
 
 suspend inline fun ApplicationCall.getCountryHeader(): Country? {
-    return this.request.headers["country"]?.let {
+    return this.request.headers[Constants.ApiConstants.COUNTRY]?.let {
         Country.getCountryFromString(it)
     } ?: kotlin.run {
         respondBadRequest(this)
@@ -73,7 +74,7 @@ suspend inline fun ApplicationCall.getCountryHeader(): Country? {
 
 suspend inline fun ApplicationCall.getCurrencyHeader(): Currency? {
     return try {
-        this.request.headers["currency"]?.let {
+        this.request.headers[Constants.ApiConstants.CURRENCY]?.let {
             Currency.valueOf(it)
         }
     } catch (e: Exception) {
@@ -86,7 +87,7 @@ suspend inline fun ApplicationCall.getCurrencyHeader(): Currency? {
 
 suspend inline fun ApplicationCall.getTimezoneHeader(): TimeZone? {
     return try {
-        this.request.headers["timezone"]?.let {
+        this.request.headers[Constants.ApiConstants.TIME_ZONE]?.let {
             TimeZone.of(zoneId = it)
         }
     } catch (e: Exception) {
