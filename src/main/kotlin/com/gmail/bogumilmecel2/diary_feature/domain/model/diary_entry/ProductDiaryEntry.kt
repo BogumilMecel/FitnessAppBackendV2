@@ -1,10 +1,10 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry
 
+import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
-import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
@@ -17,8 +17,10 @@ data class ProductDiaryEntry(
     override val date: String,
     override val userId: String,
     override val mealName: MealName,
-    val weight: Int,
-    val product: Product
+    val productMeasurementUnit: MeasurementUnit,
+    val productName: String,
+    val productId: String,
+    val weight: Int = 0,
 ) : DiaryItem
 
 data class ProductDiaryEntryDto(
@@ -26,10 +28,12 @@ data class ProductDiaryEntryDto(
     val nutritionValues: NutritionValues,
     val utcTimestamp: Long,
     val date: String,
-    var weight: Int,
     val mealName: MealName,
     val userId: String,
-    val product: Product
+    val measurementUnit: MeasurementUnit,
+    val productName: String,
+    val productId: String,
+    val weight: Int,
 )
 
 fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiaryEntryDto(
@@ -40,7 +44,9 @@ fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiary
     date = date,
     weight = weight,
     mealName = mealName,
-    product = product
+    productName = productName,
+    measurementUnit = productMeasurementUnit,
+    productId = productId
 )
 
 fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
@@ -50,6 +56,8 @@ fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
     date = date,
     weight = weight,
     mealName = mealName,
-    product = product,
-    userId = userId
+    productId = productId,
+    userId = userId,
+    productName = productName,
+    productMeasurementUnit = measurementUnit
 )
