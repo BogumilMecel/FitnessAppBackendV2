@@ -173,7 +173,8 @@ fun Application.module() {
             addWeightEntryUseCase = addWeightEntryUseCase
         ),
         getUserProductDiaryEntriesUseCase = GetUserProductDiaryEntriesUseCase(diaryRepository),
-        getUserRecipeDiaryEntriesUseCase = GetUserRecipeDiaryEntriesUseCase(diaryRepository)
+        getUserRecipeDiaryEntriesUseCase = GetUserRecipeDiaryEntriesUseCase(diaryRepository),
+        getUserProductsUseCase = GetUserProductsUseCase(diaryRepository)
     )
 
     val recipeUseCases = RecipeUseCases(
