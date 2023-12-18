@@ -19,7 +19,7 @@ class CalculateNutritionValuesUseCaseTest {
 
     @Test
     fun `Check if weight is less than 0, resource error is returned`() = runTest {
-        assertIs<Resource.Error<NutritionValues>>(callTestedMethod(weight = MockConstants.Diary.NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT))
+        assertIs<Resource.Error<NutritionValues>>(callTestedMethod(weight = MockConstants.Diary.NEGATIVE_VALUE))
     }
 
     @Test

@@ -89,7 +89,7 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         assertIs<Resource.Error<Unit>>(
             callTestedMethod(
                 productDiaryEntryPostRequest = mockProductDiaryEntryPostRequest(
-                    weight = MockConstants.Diary.NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT
+                    weight = MockConstants.Diary.NEGATIVE_VALUE
                 )
             )
         )

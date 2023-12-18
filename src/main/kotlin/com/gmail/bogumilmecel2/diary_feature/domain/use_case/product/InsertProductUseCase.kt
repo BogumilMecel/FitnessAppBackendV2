@@ -12,7 +12,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NewProductRequ
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.AreNutritionValuesValid
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.AreNutritionValuesValidUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateNutritionValuesUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDiaryNameValidUseCase
 
@@ -20,7 +20,7 @@ class InsertProductUseCase(
     private val diaryRepository: DiaryRepository,
     private val getUsernameUseCase: GetUsernameUseCase,
     private val isDiaryNameValidUseCase: IsDiaryNameValidUseCase,
-    private val areNutritionValuesValid: AreNutritionValuesValid,
+    private val areNutritionValuesValidUseCase: AreNutritionValuesValidUseCase,
     private val calculateNutritionValuesUseCase: CalculateNutritionValuesUseCase
 ) {
     suspend operator fun invoke(newProductRequest: NewProductRequest, userId: String, country: Country): Resource<Product> =
@@ -41,7 +41,7 @@ class InsertProductUseCase(
                 }
             }
 
-            if (!areNutritionValuesValid(nutritionValues = nutritionValues)) return Resource.Error.create(
+            if (!areNutritionValuesValidUseCase(nutritionValues = nutritionValues)) return Resource.Error.create(
                 message = R("insert_product_invalid_nutrition_values")
             )
 
