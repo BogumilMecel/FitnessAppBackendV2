@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
+@Suppress("unused")
 @OptIn(DelicateCoroutinesApi::class)
 fun Application.module() {
     val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext

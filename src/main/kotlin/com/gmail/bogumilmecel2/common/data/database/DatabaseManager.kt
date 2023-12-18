@@ -15,10 +15,6 @@ import org.litote.kmongo.reactivestreams.KMongo
 
 class DatabaseManager {
 
-    companion object {
-        const val NAME_INDEX = "{ 'name': 1 }"
-    }
-
     // config
     private val databaseName = "fitness_app"
     private val password = System.getenv("MONGO_PW")
@@ -38,6 +34,9 @@ class DatabaseManager {
     fun getPriceCollection(): CoroutineCollection<PriceDto> = client.getCollection("price_collection")
     fun getWeightDialogsQuestionCol(): CoroutineCollection<WeightDialogsQuestion> = client.getCollection("weight_dialogs_question_collection")
 
+    @Suppress("unused")
+    fun getIndexKey(fieldName: String, number: Int = 1) = "{$fieldName: $number}"
+
     suspend fun listAllIndexes() {
         listIndexes(getProductDiaryCollection())
         listIndexes(getRecipeDiaryCollection())
@@ -53,11 +52,13 @@ class DatabaseManager {
         println("${T::class.java.simpleName} indexes: ${collection.listIndexes<Any>().toList()}")
     }
 
+    @Suppress("unused")
     suspend fun <T: Any> removeIndex(
         collection: CoroutineCollection<T>,
         indexName: String
     ) = collection.dropIndex(indexName = indexName)
 
+    @Suppress("unused")
     suspend fun <T: Any> createIndex(
         collection: CoroutineCollection<T>,
         key: String

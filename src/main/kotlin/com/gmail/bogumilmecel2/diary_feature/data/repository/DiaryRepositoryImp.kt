@@ -231,11 +231,15 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getUserRecipes(userId: String): Resource<List<Recipe>> {
+    override suspend fun getUserRecipes(
+        userId: String,
+        latestTimestamp: Long
+    ): Resource<List<Recipe>> {
         return handleRequest {
             recipeCol
                 .find(RecipeDto::userId eq userId)
-                .limit(50).descendingSort(RecipeDto::utcTimestamp)
+                .filter(RecipeDto::utcTimestamp gt latestTimestamp)
+                .descendingSort(RecipeDto::utcTimestamp)
                 .toList()
                 .map { it.toObject() }
         }

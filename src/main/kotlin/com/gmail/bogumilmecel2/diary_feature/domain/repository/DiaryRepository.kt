@@ -43,5 +43,8 @@ interface DiaryRepository {
         userId: String,
         latestTimestamp: Long
     ): Resource<List<Product>>
-    suspend fun getUserRecipes(userId: String): Resource<List<Recipe>>
+    suspend fun getUserRecipes(
+        userId: String,
+        latestTimestamp: Long
+    ): Resource<List<Recipe>>
 }
