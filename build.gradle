@@ -12,12 +12,6 @@ application{
     mainClassName = "io.ktor.server.netty.DevelopmentEngine"
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-    maven { url "https://jitpack.io" }
-}
-
 dependencies {
     implementation "io.ktor:ktor-server-content-negotiation-jvm:$ktor_version"
     implementation "io.ktor:ktor-server-core-jvm:$ktor_version"
@@ -45,4 +39,5 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-datetime:0.4.0'
     implementation 'com.github.aymanizz:ktor-i18n:2.0.0'
+    implementation 'com.github.bodzio6978:fitness-app-common:1.3'
 }
