@@ -4,6 +4,7 @@ import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
@@ -64,7 +65,9 @@ data class ProductDto(
 
     val userId: String = "",
 
-    val country: Country = Country.POLAND
+    val country: Country = Country.POLAND,
+
+    val date: LocalDateTime? = null
 )
 
 fun Product.toDto(userId: String, country: Country): ProductDto = ProductDto(
