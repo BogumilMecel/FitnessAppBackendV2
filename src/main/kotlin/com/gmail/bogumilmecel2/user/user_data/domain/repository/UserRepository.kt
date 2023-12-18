@@ -11,7 +11,8 @@ import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
 interface UserRepository {
     suspend fun saveUserNutritionValues(nutritionValues: NutritionValues, userId: String): Resource<Boolean>
     suspend fun saveUserInformation(userInformation: UserInformation, userId: String): Resource<Boolean>
-    suspend fun saveLogEntry(entry: LogEntry, userId: String): Resource<LogEntry>
+    suspend fun saveLogEntry(entry: LogEntry, userId: String): Resource<Unit>
+    suspend fun updateUserLogStreak(userId: String, streak: Int): Resource<Unit>
     suspend fun getLatestLogEntry(userId: String): Resource<LogEntry?>
     suspend fun getUserByEmail(email: String): Resource<UserDto?>
     suspend fun registerNewUser(user: UserDto): Resource<Boolean>

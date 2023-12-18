@@ -2,10 +2,12 @@ package com.gmail.bogumilmecel2.common.domain.util
 
 import com.gmail.bogumilmecel2.common.domain.model.CustomException
 import com.gmail.bogumilmecel2.common.util.Resource
+import com.mongodb.client.result.InsertOneResult
+import com.mongodb.client.result.UpdateResult
 
 open class BaseRepository() {
 
-    suspend inline fun <R> handleRequest(block: () -> R): Resource<R> {
+    inline fun <R> handleRequest(block: () -> R): Resource<R> {
         return try {
             Resource.Success(block())
         } catch (e: Exception) {
@@ -20,4 +22,7 @@ open class BaseRepository() {
             data = data
         )
     }
+
+    protected fun InsertOneResult.wasAcknowledgedOrNull() = if (this.wasAcknowledged()) true else null
+    protected fun UpdateResult.wasAcknowledgedOrNull() = if (this.wasAcknowledged()) true else null
 }

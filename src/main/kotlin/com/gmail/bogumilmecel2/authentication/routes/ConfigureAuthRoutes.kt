@@ -14,7 +14,7 @@ fun Route.configureAuthRoutes(
             getUserByUsername = authUseCases.getUserByUsername,
             tokenConfig = tokenConfig
         )
-        configureAuthenticateRoute(authUseCases.getUser)
+        configureAuthenticateRoute(authUseCases.getUserUseCase)
     }
 }
 
