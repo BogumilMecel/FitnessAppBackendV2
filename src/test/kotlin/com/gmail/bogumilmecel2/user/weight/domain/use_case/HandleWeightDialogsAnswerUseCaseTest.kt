@@ -61,7 +61,7 @@ class HandleWeightDialogsAnswerUseCaseTest : BaseTest() {
             coVerify(exactly = 1) {
                 userRepository.updateWeightDialogsData(
                     weightDialogs = this@with.copy(askedCount = expectedAskedCount),
-                    userId = MockConstants.USER_ID
+                    userId = MockConstants.USER_ID_1
                 )
             }
         }
@@ -71,11 +71,11 @@ class HandleWeightDialogsAnswerUseCaseTest : BaseTest() {
         userResource: Resource<User?> = Resource.Success(data = mockUser()),
         updateResource: Resource<Unit> = Resource.Success(Unit),
     ) {
-        coEvery { userRepository.getUser(MockConstants.USER_ID) } returns userResource
+        coEvery { userRepository.getUser(MockConstants.USER_ID_1) } returns userResource
         coEvery {
             userRepository.updateWeightDialogsData(
                 weightDialogs = any(),
-                userId = MockConstants.USER_ID
+                userId = MockConstants.USER_ID_1
             )
         } returns updateResource
     }
@@ -93,7 +93,7 @@ class HandleWeightDialogsAnswerUseCaseTest : BaseTest() {
     )
 
     private suspend fun callTestedMethod(accepted: Boolean? = true) = handleWeightDialogsAnswerUseCase(
-        userId = MockConstants.USER_ID,
+        userId = MockConstants.USER_ID_1,
         weightDialogsRequest = WeightDialogsRequest(accepted = accepted),
         timeZone = timeZone
     )

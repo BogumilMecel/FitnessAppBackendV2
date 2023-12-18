@@ -90,7 +90,7 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest: BaseTest() {
     }
 
     private suspend fun callTestesUseCase() = checkIfShouldAskForWeightDialogsUseCase(
-        userId = MockConstants.USER_ID,
+        userId = MockConstants.USER_ID_1,
         timeZone = TimeZone.UTC
     )
 
@@ -107,16 +107,16 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest: BaseTest() {
         logEntriesResource: Resource<List<LogEntry>> = Resource.Success(data = getSampleLogEntries()),
         weightEntriesResource: Resource<List<WeightEntry>> = Resource.Success(data = getSampleWeightEntries())
     ) {
-        coEvery { userRepository.getUser(MockConstants.USER_ID) } returns userResource
+        coEvery { userRepository.getUser(MockConstants.USER_ID_1) } returns userResource
         coEvery {
             getLogEntriesUseCase(
-                userId = MockConstants.USER_ID,
+                userId = MockConstants.USER_ID_1,
                 limit = ValidationConstants.Weight.MINIMUM_ENTRIES_COUNT
             )
         } returns logEntriesResource
         coEvery {
             getWeightEntriesUseCase(
-                userId = MockConstants.USER_ID,
+                userId = MockConstants.USER_ID_1,
                 limit = ValidationConstants.Weight.MINIMUM_ENTRIES_COUNT
             )
         } returns weightEntriesResource

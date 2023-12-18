@@ -10,12 +10,12 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class RecipeDiaryEntry(
-    override val id: String,
-    override val nutritionValues: NutritionValues,
-    override val utcTimestamp: Long,
-    override val userId: String,
-    override val date: String,
-    override val mealName: MealName,
+    override val id: String = "",
+    override val nutritionValues: NutritionValues = NutritionValues(),
+    override val utcTimestamp: Long = 0,
+    override val userId: String = "",
+    override val date: String = "",
+    override val mealName: MealName = MealName.BREAKFAST,
     val recipeName: String = "",
     val recipeId: String = "",
     val servings: Int = 0,

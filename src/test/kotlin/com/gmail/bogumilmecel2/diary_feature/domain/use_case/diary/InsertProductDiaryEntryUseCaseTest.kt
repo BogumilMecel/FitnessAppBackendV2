@@ -87,13 +87,13 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
                     mealName = productDiaryEntryPostRequest.mealName,
                     utcTimestamp = CustomDateUtils.getCurrentUtcTimestamp(),
                     date = productDiaryEntryPostRequest.date,
-                    userId = MockConstants.USER_ID,
+                    userId = MockConstants.USER_ID_1,
                     nutritionValues = nutritionValues,
                     productId = productDiaryEntryPostRequest.productId,
                     productName = product.name,
                     productMeasurementUnit = product.measurementUnit
                 ),
-                userId = MockConstants.USER_ID
+                userId = MockConstants.USER_ID_1
             )
         }
     }
@@ -104,7 +104,7 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         calculateProductNutritionValuesResource: Resource<NutritionValues> = Resource.Success(MockConstants.Diary.getSampleNutritionValues())
     ) {
         coEvery { getProductUseCase(productId = MockConstants.Diary.PRODUCT_ID_11) } returns productResource
-        coEvery { diaryRepository.insertDiaryEntry(productDiaryEntry = any(), userId = MockConstants.USER_ID) } returns repositoryResource
+        coEvery { diaryRepository.insertDiaryEntry(productDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns repositoryResource
         coEvery {
             calculateProductNutritionValuesUseCase(
                 product = MockConstants.Diary.getSampleProduct(),
@@ -117,7 +117,7 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         productDiaryEntryPostRequest: ProductDiaryEntryPostRequest = mockProductDiaryEntryPostRequest()
     ) = insertProductDiaryEntryUseCase(
         productDiaryEntryPostRequest = productDiaryEntryPostRequest,
-        userId = MockConstants.USER_ID
+        userId = MockConstants.USER_ID_1
     )
 
     private fun mockProductDiaryEntryPostRequest(

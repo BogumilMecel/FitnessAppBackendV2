@@ -78,7 +78,7 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
         coVerify(exactly = 1) {
             diaryRepository.editProductDiaryEntry(
                 productDiaryEntry = expectedProductDiaryEntry,
-                userId = MockConstants.USER_ID
+                userId = MockConstants.USER_ID_1
             )
         }
     }
@@ -97,12 +97,12 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
                 weight = any()
             )
         } returns calculateProductNutritionValuesResource
-        coEvery { diaryRepository.editProductDiaryEntry(productDiaryEntry = any(), userId = MockConstants.USER_ID) } returns repositoryResource
+        coEvery { diaryRepository.editProductDiaryEntry(productDiaryEntry = any(), userId = MockConstants.USER_ID_1) } returns repositoryResource
     }
 
     private suspend fun callTestedMethod(weight: Int = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1) = editProductDiaryEntryUseCase(
         editProductDiaryEntryRequest = mockEditProductDiaryEntryRequest(weight = weight),
-        userId = MockConstants.USER_ID
+        userId = MockConstants.USER_ID_1
     )
 
     private fun mockEditProductDiaryEntryRequest(weight: Int) = EditProductDiaryEntryRequest(
