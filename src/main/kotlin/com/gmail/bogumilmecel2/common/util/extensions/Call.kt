@@ -45,7 +45,7 @@ suspend fun ApplicationCall.getUserId(): String? {
 }
 
 suspend inline fun <reified T : Any> ApplicationCall.receiveOrRespond(): T? {
-    return this.receiveOrNull() ?: kotlin.run {
+    return runCatching { this.receiveNullable<T>() }.getOrNull() ?: run {
         respondBadRequest(this)
         null
     }
