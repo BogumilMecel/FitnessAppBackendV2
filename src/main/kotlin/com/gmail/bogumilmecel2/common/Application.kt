@@ -59,7 +59,6 @@ fun Application.module() {
         userCol = databaseManager.client.getCollection("user_collection"),
         weightCol = databaseManager.client.getCollection("weight_collection"),
         logEntryCol = databaseManager.client.getCollection("log_entry_collection"),
-        weightDialogsCol = databaseManager.client.getCollection("weight_dialogs_collection")
     )
 
     val getUsernameUseCase = GetUsernameUseCase(userRepository = userRepository)

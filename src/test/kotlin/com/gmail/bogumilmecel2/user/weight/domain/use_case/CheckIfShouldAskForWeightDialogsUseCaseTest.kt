@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.user.weight.domain.use_case
 
 import com.gmail.bogumilmecel2.BaseTest
 import com.gmail.bogumilmecel2.MockConstants
+import com.gmail.bogumilmecel2.authentication.domain.model.user.User
 import com.gmail.bogumilmecel2.common.domain.constants.ValidationConstants
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.log.domain.model.LogEntry
@@ -31,14 +32,14 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest: BaseTest() {
 
     @Test
     fun `check if get user returns resource error, resource error is returned`() = runTest {
-        mockClasses(userWeightDialogsResource = Resource.Error())
+        mockClasses(userResource = Resource.Error())
         assertIs<Resource.Error<Unit>>(callTestesUseCase())
     }
 
     @Test
     fun `check if get data returns resource success with already accepted weight dialogs, resource error is returned`() =
         runTest {
-            mockClasses(userWeightDialogsResource = Resource.Success(data = mockWeightDialogs(accepted = true)))
+            mockClasses(userResource = Resource.Success(data = User(weightDialogs = mockWeightDialogs(accepted = true))))
             assertIs<Resource.Error<Unit>>(callTestesUseCase())
         }
 
@@ -46,14 +47,14 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest: BaseTest() {
     fun `check if get data returns resource success with already asked for weight dialogs today, resource error is returned`() =
         runTest {
             mockLocalDate(value = MockConstants.MOCK_DATE_2021)
-            mockClasses(userWeightDialogsResource = Resource.Success(data = mockWeightDialogs(lastTimeAsked = MockConstants.MOCK_DATE_2021)))
+            mockClasses(userResource = Resource.Success(data = User(weightDialogs = mockWeightDialogs(lastTimeAsked = MockConstants.MOCK_DATE_2021))))
             assertIs<Resource.Error<Unit>>(callTestesUseCase())
         }
 
     @Test
     fun `check if get data returns resource success with already asked for weight dialogs 3 times, resource error is returned`() =
         runTest {
-            mockClasses(userWeightDialogsResource = Resource.Success(data = mockWeightDialogs(askedCount = ValidationConstants.Weight.MINIMUM_ENTRIES_COUNT)))
+            mockClasses(userResource = Resource.Success(data = User(weightDialogs = mockWeightDialogs(askedCount = ValidationConstants.Weight.MINIMUM_ENTRIES_COUNT))))
             assertIs<Resource.Error<Unit>>(callTestesUseCase())
         }
 
@@ -94,17 +95,19 @@ class CheckIfShouldAskForWeightDialogsUseCaseTest: BaseTest() {
     )
 
     private fun mockClasses(
-        userWeightDialogsResource: Resource<WeightDialogs?> = Resource.Success(
-            data = WeightDialogs(
-                accepted = false,
-                askedCount = 1,
-                lastTimeAsked = MockConstants.MOCK_DATE_2021
+        userResource: Resource<User?> = Resource.Success(
+            data = User(
+                weightDialogs = WeightDialogs(
+                    accepted = false,
+                    askedCount = 1,
+                    lastTimeAsked = MockConstants.MOCK_DATE_2021
+                )
             )
         ),
         logEntriesResource: Resource<List<LogEntry>> = Resource.Success(data = getSampleLogEntries()),
         weightEntriesResource: Resource<List<WeightEntry>> = Resource.Success(data = getSampleWeightEntries())
     ) {
-        coEvery { userRepository.getWeightDialogsData(MockConstants.USER_ID) } returns userWeightDialogsResource
+        coEvery { userRepository.getUser(MockConstants.USER_ID) } returns userResource
         coEvery {
             getLogEntriesUseCase(
                 userId = MockConstants.USER_ID,
