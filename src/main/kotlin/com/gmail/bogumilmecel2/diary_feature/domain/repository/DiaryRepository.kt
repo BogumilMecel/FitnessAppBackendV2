@@ -28,7 +28,10 @@ interface DiaryRepository {
     suspend fun addNewRecipe(recipe: Recipe): Resource<Recipe>
     suspend fun getRecipe(recipeId: String): Resource<Recipe?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
-    suspend fun getProductDiaryHistory(userId: String): Resource<List<ProductDiaryHistoryItem>>
+    suspend fun getProductDiaryHistory(
+        userId: String,
+        fromTimestamp: Long
+    ): Resource<List<ProductDiaryHistoryItem>>
     suspend fun getUserProducts(userId: String): Resource<List<Product>>
     suspend fun getUserRecipes(userId: String): Resource<List<Recipe>>
 }
