@@ -7,14 +7,12 @@ import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateProductNutritionValuesUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
 import kotlinx.datetime.LocalDate
 
 class InsertProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
     private val getProductUseCase: GetProductUseCase,
-    private val calculateProductNutritionValuesUseCase: CalculateProductNutritionValuesUseCase
 ) {
 
     suspend operator fun invoke(
@@ -32,16 +30,13 @@ class InsertProductDiaryEntryUseCase(
 
         diaryRepository.insertProductDiaryEntry(
             productDiaryEntry = ProductDiaryEntry(
-                weight = productDiaryEntryPostRequest.weight,
-                mealName = productDiaryEntryPostRequest.mealName,
+                weight = weight,
+                mealName = mealName,
                 utcTimestamp = currentTimestamp,
-                date = productDiaryEntryPostRequest.date,
+                date = date,
                 userId = userId,
-                nutritionValues = calculateProductNutritionValuesUseCase(
-                    product = product,
-                    weight = productDiaryEntryPostRequest.weight
-                ).data ?: return Resource.Error(),
-                productId = productDiaryEntryPostRequest.productId,
+                nutritionValues = nutritionValues,
+                productId = product.id,
                 productName = product.name,
                 productMeasurementUnit = product.measurementUnit,
                 lastEditedUtcTimestamp = currentTimestamp
