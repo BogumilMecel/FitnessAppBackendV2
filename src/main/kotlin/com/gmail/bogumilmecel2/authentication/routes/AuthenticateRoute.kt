@@ -9,9 +9,7 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.routing.*
 
-fun Route.configureAuthenticateRoute(
-    getUserUseCase: GetUserUseCase
-) {
+fun Route.configureAuthenticateRoute(getUserUseCase: GetUserUseCase) {
     authenticate {
         post("/authenticate") {
             call.run {

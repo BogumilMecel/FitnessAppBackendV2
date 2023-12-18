@@ -24,6 +24,7 @@ import com.gmail.bogumilmecel2.diary_feature.price_feature.data.repository.Price
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetProductPriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetRecipePriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.routes.configureDiaryRoutes
+import com.gmail.bogumilmecel2.user.device.data.repository.DeviceRepositoryImp
 import com.gmail.bogumilmecel2.user.log.domain.use_case.CheckLatestLogEntryAndGetLogStreakUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLogEntriesUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.InsertLogEntryUseCase
@@ -62,6 +63,8 @@ fun Application.module() {
         logEntryCol = databaseManager.getLogEntryCollection(),
         weightDialogsQuestionCol = databaseManager.getWeightDialogsQuestionCol()
     )
+
+    val deviceRepository = DeviceRepositoryImp(deviceCollection = databaseManager.getDeviceCollection())
 
     val getUsernameUseCase = GetUsernameUseCase(userRepository = userRepository)
     val isDiaryNameValidUseCase = IsDiaryNameValidUseCase()
@@ -236,6 +239,7 @@ fun Application.module() {
                     getUserObjectUseCase = GetUserObjectUseCase(userRepository = userRepository),
                     checkLatestLogEntryAndGetLogStreakUseCase = checkLatestLogEntryAndGetLogStreakUseCase,
                     getWeightEntriesUseCase = getWeightEntriesUseCase,
+                    deviceRepository = deviceRepository
                 )
             )
         )

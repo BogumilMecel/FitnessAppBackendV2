@@ -1,8 +1,8 @@
 package com.gmail.bogumilmecel2.common.data.database
 
 import com.gmail.bogumilmecel2.authentication.domain.model.user.UserDto
+import com.gmail.bogumilmecel2.diary_feature.domain.model.DeviceDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
-import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDto
@@ -35,6 +35,7 @@ class DatabaseManager {
     fun getLogEntryCollection(): CoroutineCollection<LogEntryDto> = client.getCollection("log_entry_collection")
     fun getPriceCollection(): CoroutineCollection<PriceDto> = client.getCollection("price_collection")
     fun getWeightDialogsQuestionCol(): CoroutineCollection<WeightDialogsQuestion> = client.getCollection("weight_dialogs_question_collection")
+    fun getDeviceCollection(): CoroutineCollection<DeviceDto> = client.getCollection("device_collection")
 
     @Suppress("unused")
     fun getIndexKey(fieldName: String, number: Int = 1) = "{$fieldName: $number}"
