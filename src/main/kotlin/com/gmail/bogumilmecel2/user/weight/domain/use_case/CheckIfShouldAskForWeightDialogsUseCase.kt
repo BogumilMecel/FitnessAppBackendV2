@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.user.weight.domain.use_case
 
-import com.gmail.bogumilmecel2.common.domain.constants.ValidationConstants
+import com.gmail.bogumilmecel2.common.domain.constants.Constants
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLogEntriesUseCase
@@ -23,7 +23,7 @@ class CheckIfShouldAskForWeightDialogsUseCase(
         if (userWeightDialogsData != null) {
             if (userWeightDialogsData.accepted == true) return Resource.Error()
             if (userWeightDialogsData.lastTimeAsked == CustomDateUtils.getCurrentTimeZoneLocalDate(timeZone = timeZone).toString()) return Resource.Error()
-            if (userWeightDialogsData.askedCount >= ValidationConstants.Weight.MINIMUM_ENTRIES_COUNT) return Resource.Error()
+            if (userWeightDialogsData.askedCount >= Constants.Weight.MINIMUM_ENTRIES_COUNT) return Resource.Error()
         }
 
         if (!checkIfWeightAndLogEntriesAreValid(userId)) return Resource.Error()
@@ -32,7 +32,7 @@ class CheckIfShouldAskForWeightDialogsUseCase(
     }
 
     private suspend fun checkIfWeightAndLogEntriesAreValid(userId: String): Boolean {
-        val minNumber = ValidationConstants.Weight.MINIMUM_ENTRIES_COUNT
+        val minNumber = Constants.Weight.MINIMUM_ENTRIES_COUNT
 
         val latestTwoLogEntries = getLogEntriesUseCase(userId = userId, limit = minNumber).data ?: return false
         if (latestTwoLogEntries.size < minNumber) return false

@@ -16,6 +16,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Sorts
 import org.litote.kmongo.MongoOperator
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
@@ -73,17 +74,28 @@ class DiaryRepositoryImp(
 
     override suspend fun getProductDiaryHistory(
         userId: String,
-        fromTimestamp: Long
+        skip: Int,
+        limit: Int,
+        searchText: String?
     ): Resource<List<ProductDiaryHistoryItem>> {
         return handleRequest {
             productDiaryCol
                 .aggregate<ProductDiaryEntryDto>(
-                    pipeline = listOf(
-                        Aggregates.match(Filters.gt("utcTimestamp", fromTimestamp)),
-                        Aggregates.group("\$productId", Accumulators.first("entry", "\$\$ROOT")),
-                        Aggregates.replaceRoot("\$entry"),
-                        Aggregates.limit(20)
-                    )
+                    pipeline = buildList {
+                        if (searchText != null) {
+                            add(Aggregates.match(Filters.regex("yourFieldContainingText", searchText, "i")))
+                        }
+                        addAll(
+                            listOf(
+                                Aggregates.match(Filters.eq("userId", userId)),
+                                Aggregates.sort(Sorts.descending("utcTimestamp")),
+                                Aggregates.skip(skip),
+                                Aggregates.limit(limit),
+                                Aggregates.group("\$productId", Accumulators.first("entry", "\$\$ROOT")),
+                                Aggregates.replaceRoot("\$entry"),
+                            )
+                        )
+                    }
                 ).toList().map {
                     it.toProductDiarySearchItem()
                 }
@@ -210,7 +222,7 @@ class DiaryRepositoryImp(
                 .find(ProductDto::userId eq userId)
                 .limit(50).descendingSort(ProductDto::utcTimestamp)
                 .toList()
-                .map {it.toProduct() }
+                .map { it.toProduct() }
         }
     }
 
@@ -220,7 +232,7 @@ class DiaryRepositoryImp(
                 .find(RecipeDto::userId eq userId)
                 .limit(50).descendingSort(RecipeDto::utcTimestamp)
                 .toList()
-                .map {it.toObject() }
+                .map { it.toObject() }
         }
     }
 }

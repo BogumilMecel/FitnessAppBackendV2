@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.common.domain.constants
 
-object ValidationConstants {
+object Constants {
 
     const val DEFAULT_PAGE_SIZE = 20
 
@@ -21,5 +21,10 @@ object ValidationConstants {
 
     object Weight {
         const val MINIMUM_ENTRIES_COUNT = 2
+    }
+
+    object ApiConstants {
+        const val PAGE = "page"
+        const val SEARCH_TEXT = "searchText"
     }
 }
