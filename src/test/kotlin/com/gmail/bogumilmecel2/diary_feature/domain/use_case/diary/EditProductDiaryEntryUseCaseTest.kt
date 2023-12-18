@@ -1,26 +1,23 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 
-import com.gmail.bogumilmecel2.BaseTest
+import com.gmail.bogumilmecel2.BaseDiaryTest
 import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.EditProductDiaryEntryRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
-import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateProductNutritionValuesUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.mockk
 import io.mockk.mockkClass
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertIs
 
-class EditProductDiaryEntryUseCaseTest : BaseTest() {
+class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
-    private val diaryRepository = mockk<DiaryRepository>()
     private val getProductUseCase = mockkClass(GetProductUseCase::class)
     private val getProductDiaryEntryUseCase = mockkClass(GetProductDiaryEntryUseCase::class)
     private val calculateProductNutritionValuesUseCase = mockkClass(CalculateProductNutritionValuesUseCase::class)

@@ -6,6 +6,7 @@ object MockConstants {
     const val MOCK_DATE_2021 = "2021-12-12"
 
     object Diary {
+        const val PRODUCT_NAME_1 = "rice"
         const val PRODUCT_ID_11 = "11"
         const val DIARY_ENTRY_ID_21 = "21"
         const val NEGATIVE_PRODUCT_DIARY_ENTRY_WEIGHT = -1
