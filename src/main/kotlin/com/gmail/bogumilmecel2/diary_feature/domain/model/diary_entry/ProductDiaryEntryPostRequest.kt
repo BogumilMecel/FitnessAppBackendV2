@@ -7,9 +7,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProductDiaryEntryPostRequest(
-    val productId: String,
-    val weight: Int,
-    val mealName: MealName,
-    val date: LocalDate,
-    val nutritionValues: NutritionValues
+    val productId: String? = null,
+    val weight: Int? = null,
+    val mealName: MealName? = null,
+    val date: LocalDate? = null,
+    val nutritionValues: NutritionValues? = null,
 )

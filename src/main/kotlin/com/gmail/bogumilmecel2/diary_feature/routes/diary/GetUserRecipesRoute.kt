@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.routes.diary
 
-import com.gmail.bogumilmecel2.common.util.extensions.getDateParameter
+import com.gmail.bogumilmecel2.common.util.extensions.getDateTimeParameter
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe.GetUserRecipesUseCase
@@ -16,7 +16,7 @@ fun Route.configureGetUserRecipesRoute(getUserRecipesUseCase: GetUserRecipesUseC
                     call.handleResource(
                         resource = getUserRecipesUseCase(
                             userId = userId,
-                            latestDateTime = getDateParameter()
+                            latestDateTime = getDateTimeParameter()
                         )
                     )
                 }

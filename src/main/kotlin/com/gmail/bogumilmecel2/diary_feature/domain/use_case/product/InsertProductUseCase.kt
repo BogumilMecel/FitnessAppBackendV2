@@ -11,10 +11,12 @@ import com.gmail.bogumilmecel2.common.util.extensions.isLengthInRange
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NewProductRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.AreNutritionValuesValidUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateNutritionValuesUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDiaryNameValidUseCase
+import org.bson.types.ObjectId
 
 class InsertProductUseCase(
     private val diaryRepository: DiaryRepository,
@@ -75,7 +77,8 @@ class InsertProductUseCase(
             }
 
             return diaryRepository.insertProduct(
-                product = Product(
+                product = ProductDto(
+                    _id = ObjectId(),
                     name = name,
                     barcode = barcode,
                     containerWeight = containerWeight,
@@ -84,10 +87,9 @@ class InsertProductUseCase(
                     measurementUnit = measurementUnit,
                     nutritionValues = nutritionValues,
                     username = username,
-                    userId = userId
-                ),
-                userId = userId,
-                country = country
+                    userId = userId,
+                    country = country
+                )
             )
         }
 }

@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry
 
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
-import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
@@ -16,31 +15,31 @@ import org.bson.types.ObjectId
 @Serializable
 data class ProductDiaryEntry(
     @SerialName("id")
-    override val id: String = "",
+    override val id: String? = null,
 
     @SerialName("nutrition_values")
-    override val nutritionValues: NutritionValues = NutritionValues(),
+    override val nutritionValues: NutritionValues? = null,
 
     @SerialName("date")
     override val date: LocalDate? = null,
 
     @SerialName("user_id")
-    override val userId: String = "",
+    override val userId: String? = null,
 
     @SerialName("meal_name")
-    override val mealName: MealName = MealName.BREAKFAST,
+    override val mealName: MealName? = null,
 
     @SerialName("product_measurement_unit")
-    val productMeasurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
+    val productMeasurementUnit: MeasurementUnit? = null,
 
     @SerialName("product_name")
-    val productName: String = "",
+    val productName: String? = null,
 
     @SerialName("product_id")
-    val productId: String = "",
+    val productId: String? = null,
 
     @SerialName("weight")
-    val weight: Int = 0,
+    val weight: Int? = null,
 
     // TODO: remove when deleting is handled with device id
     @SerialName("deleted")
@@ -54,7 +53,7 @@ data class ProductDiaryEntry(
 ) : DiaryItem
 
 data class ProductDiaryEntryDto(
-    @BsonId val _id: ObjectId = ObjectId(),
+    @BsonId val _id: ObjectId,
     val nutritionValues: NutritionValues,
     val date: String,
     val mealName: MealName,
@@ -63,25 +62,12 @@ data class ProductDiaryEntryDto(
     val productName: String,
     val productId: String,
     val weight: Int,
-    val creationDateTime: LocalDateTime? = null,
-    val changeDate: LocalDateTime? = null
+    val creationDateTime: LocalDateTime,
+    val changeDateTime: LocalDateTime,
+    val deleted: Boolean
 )
 
-fun ProductDiaryEntry.toDto(userId: String): ProductDiaryEntryDto = ProductDiaryEntryDto(
-    _id = id.toObjectId(),
-    userId = userId,
-    nutritionValues = nutritionValues,
-    date = date.toString(),
-    weight = weight,
-    mealName = mealName,
-    productName = productName,
-    measurementUnit = productMeasurementUnit,
-    productId = productId,
-    creationDateTime = creationDateTime,
-    changeDate = changeDateTime,
-)
-
-fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
+fun ProductDiaryEntryDto.toProductDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
     id = _id.toString(),
     nutritionValues = nutritionValues,
     date = LocalDate.parse(date),
@@ -92,7 +78,8 @@ fun ProductDiaryEntryDto.toDiaryEntry(): ProductDiaryEntry = ProductDiaryEntry(
     productName = productName,
     productMeasurementUnit = measurementUnit,
     creationDateTime = creationDateTime,
-    changeDateTime = changeDate,
+    changeDateTime = changeDateTime,
+    deleted = deleted
 )
 
 fun ProductDiaryEntryDto.toProductDiarySearchItem() = ProductDiaryHistoryItem(
@@ -101,5 +88,5 @@ fun ProductDiaryEntryDto.toProductDiarySearchItem() = ProductDiaryHistoryItem(
     productId = productId,
     productName = productName,
     weight = weight,
-    changeDate = changeDate
+    changeDate = changeDateTime
 )

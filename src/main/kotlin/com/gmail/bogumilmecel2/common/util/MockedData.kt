@@ -15,15 +15,15 @@ object MockedData {
             println(
                 insertProductUseCase(
                     newProductRequest = NewProductRequest(
-                        name = it.name,
-                        measurementUnit = it.measurementUnit,
+                        name = it.name!!,
+                        measurementUnit = it.measurementUnit!!,
                         containerWeight = it.containerWeight,
                         barcode = null,
-                        nutritionValuesIn = it.nutritionValuesIn,
-                        nutritionValues = it.nutritionValues
+                        nutritionValuesIn = it.nutritionValuesIn!!,
+                        nutritionValues = it.nutritionValues!!
                     ),
                     country = Country.POLAND,
-                    userId = it.userId
+                    userId = it.userId!!
                 )
             )
         }

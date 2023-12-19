@@ -6,10 +6,12 @@ import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
-import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.*
+import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
+import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toProductDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toProductDiarySearchItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
-import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toProduct
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.*
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
@@ -17,9 +19,9 @@ import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Sorts
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.litote.kmongo.MongoOperator
-import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.eq
 import org.litote.kmongo.gt
@@ -32,51 +34,45 @@ class DiaryRepositoryImp(
 ) : DiaryRepository, BaseRepository() {
 
     override suspend fun insertProductDiaryEntry(
-        productDiaryEntry: ProductDiaryEntry,
+        productDiaryEntry: ProductDiaryEntryDto,
         userId: String
     ): Resource<ProductDiaryEntry> {
         return handleRequest {
-            productDiaryEntry.copy(
-                id = productDiaryEntry.toDto(userId = userId)
-                    .apply { productDiaryCol.insertOne(this) }._id.toString()
-            )
+            productDiaryEntry.apply { productDiaryCol.insertOne(this) }.toProductDiaryEntry()
         }
     }
 
-    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<RecipeDiaryEntry> {
+    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntryDto, userId: String): Resource<RecipeDiaryEntry> {
         return handleRequest {
-            recipeDiaryEntry.copy(
-                id = recipeDiaryEntry.toDto(userId = userId)
-                    .apply { recipeDiaryCol.insertOne(this) }._id.toString()
-            )
+            recipeDiaryEntry.apply { recipeDiaryCol.insertOne(this) }.toRecipeDiaryEntry()
         }
     }
 
-    override suspend fun getProductDiaryEntries(date: String, userId: String): Resource<List<ProductDiaryEntry>> {
+    override suspend fun getProductDiaryEntries(date: LocalDate, userId: String): Resource<List<ProductDiaryEntry>> {
         return handleRequest {
             productDiaryCol.find(
                 ProductDiaryEntryDto::userId eq userId,
-                ProductDiaryEntryDto::date eq date
+                ProductDiaryEntryDto::date eq date.toString()
             ).toList().map {
-                it.toDiaryEntry()
+                it.toProductDiaryEntry()
             }
         }
     }
 
-    override suspend fun getRecipeDiaryEntries(date: String, userId: String): Resource<List<RecipeDiaryEntry>> {
+    override suspend fun getRecipeDiaryEntries(date: LocalDate, userId: String): Resource<List<RecipeDiaryEntry>> {
         return handleRequest {
             recipeDiaryCol.find(
                 RecipeDiaryEntryDto::userId eq userId,
-                RecipeDiaryEntryDto::date eq date,
+                RecipeDiaryEntryDto::date eq date.toString(),
             ).toList().map {
-                it.toObject()
+                it.toRecipeDiaryEntry()
             }
         }
     }
 
-    override suspend fun getProductDiaryEntry(id: String): Resource<ProductDiaryEntry?> {
+    override suspend fun getProductDiaryEntry(id: String): Resource<ProductDiaryEntryDto?> {
         return handleRequest {
-            productDiaryCol.findOne(ProductDiaryEntryDto::_id eq id.toObjectId())?.toDiaryEntry()
+            productDiaryCol.findOne(ProductDiaryEntryDto::_id eq id.toObjectId())
         }
     }
 
@@ -110,23 +106,17 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getRecipeDiaryEntry(id: String): Resource<RecipeDiaryEntry?> {
+    override suspend fun getRecipeDiaryEntry(id: String): Resource<RecipeDiaryEntryDto?> {
         return handleRequest {
-            recipeDiaryCol.findOne(RecipeDiaryEntryDto::_id eq id.toObjectId())?.toObject()
+            recipeDiaryCol.findOne(RecipeDiaryEntryDto::_id eq id.toObjectId())
         }
     }
 
-    override suspend fun editRecipeDiaryEntry(
-        recipeDiaryEntry: RecipeDiaryEntry,
-        userId: String,
-    ): Resource<Unit> {
+    override suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntryDto): Resource<Unit> {
         return handleRequest {
             recipeDiaryCol.updateOne(
-                and(
-                    RecipeDiaryEntryDto::_id eq recipeDiaryEntry.id.toObjectId(),
-                    RecipeDiaryEntryDto::userId eq userId
-                ),
-                recipeDiaryEntry.toDto(userId = userId)
+                RecipeDiaryEntryDto::_id eq recipeDiaryEntry._id,
+                recipeDiaryEntry
             ).wasAcknowledgedOrThrow()
         }
     }
@@ -143,30 +133,24 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getProduct(productId: String): Resource<Product?> {
+    override suspend fun getProduct(productId: String): Resource<ProductDto?> {
         return handleRequest {
-            productCol.findOne(ProductDto::_id eq productId.toObjectId())?.toProduct()
+            productCol.findOne(ProductDto::_id eq productId.toObjectId())
         }
     }
 
-    override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntry, userId: String): Resource<Unit> {
+    override suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntryDto): Resource<Unit> {
         return handleRequest {
             productDiaryCol.updateOne(
-                and(
-                    ProductDiaryEntryDto::_id eq productDiaryEntry.id.toObjectId(),
-                    ProductDiaryEntryDto::userId eq userId
-                ),
-                productDiaryEntry.toDto(userId = userId)
+                ProductDiaryEntryDto::_id eq productDiaryEntry._id,
+                productDiaryEntry
             ).wasAcknowledgedOrThrow()
         }
     }
 
-    override suspend fun insertProduct(product: Product, userId: String, country: Country): Resource<Product> {
+    override suspend fun insertProduct(product: ProductDto): Resource<Product> {
         return handleRequest {
-            product.copy(
-                id = product.toDto(userId = userId, country = country)
-                    .apply { productCol.insertOne(this) }._id.toString()
-            )
+            product.apply { productCol.insertOne(this) }.toProduct()
         }
     }
 
@@ -194,17 +178,15 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun addNewRecipe(recipe: Recipe): Resource<Recipe> {
+    override suspend fun insertRecipe(recipe: RecipeDto): Resource<Recipe> {
         return handleRequest {
-            recipe.copy(
-                id = recipe.toDto().apply { recipeCol.insertOne(this) }._id.toString()
-            )
+            recipe.apply { recipeCol.insertOne(this) }.toRecipeDiaryEntry()
         }
     }
 
     override suspend fun getRecipe(recipeId: String): Resource<Recipe?> {
         return handleRequest {
-            recipeCol.findOneById(id = recipeId.toObjectId())?.toObject()
+            recipeCol.findOneById(id = recipeId.toObjectId())?.toRecipeDiaryEntry()
         }
     }
 
@@ -213,7 +195,7 @@ class DiaryRepositoryImp(
             recipeCol.find("{'name': {'${MongoOperator.regex}': '$searchText', '${MongoOperator.options}': 'i'}}")
                 .toList()
                 .map {
-                    it.toObject()
+                    it.toRecipeDiaryEntry()
                 }
         }
     }
@@ -242,7 +224,7 @@ class DiaryRepositoryImp(
                 .filter(RecipeDto::creationDateTime gt latestDateTime)
                 .descendingSort(RecipeDto::creationDateTime)
                 .toList()
-                .map { it.toObject() }
+                .map { it.toRecipeDiaryEntry() }
         }
     }
 
@@ -251,7 +233,7 @@ class DiaryRepositoryImp(
             productDiaryCol
                 .find(ProductDiaryEntryDto::userId eq userId)
                 .toList()
-                .map { it.toDiaryEntry() }
+                .map { it.toProductDiaryEntry() }
         }
     }
 
@@ -260,7 +242,7 @@ class DiaryRepositoryImp(
             recipeDiaryCol
                 .find(RecipeDiaryEntryDto::userId eq userId)
                 .toList()
-                .map { it.toObject() }
+                .map { it.toRecipeDiaryEntry() }
         }
     }
 
@@ -268,10 +250,10 @@ class DiaryRepositoryImp(
         return handleRequest {
             productDiaryCol
                 .find(ProductDiaryEntryDto::userId eq userId)
-                .filter(ProductDiaryEntryDto::changeDate gt latestDateTime)
-                .descendingSort(ProductDiaryEntryDto::changeDate)
+                .filter(ProductDiaryEntryDto::changeDateTime gt latestDateTime)
+                .descendingSort(ProductDiaryEntryDto::changeDateTime)
                 .toList()
-                .map { it.toDiaryEntry() }
+                .map { it.toProductDiaryEntry() }
         }
     }
 
@@ -282,7 +264,7 @@ class DiaryRepositoryImp(
                 .filter(RecipeDiaryEntryDto::changeDateTime gt latestDateTime)
                 .descendingSort(RecipeDiaryEntryDto::changeDateTime)
                 .toList()
-                .map { it.toObject() }
+                .map { it.toRecipeDiaryEntry() }
         }
     }
 }

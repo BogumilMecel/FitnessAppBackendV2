@@ -6,9 +6,11 @@ import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.NewRecipeRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
+import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Ingredient
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDiaryNameValidUseCase
+import org.bson.types.ObjectId
 
 class InsertRecipeUseCase(
     private val diaryRepository: DiaryRepository,
@@ -30,15 +32,16 @@ class InsertRecipeUseCase(
             Resource.Error()
         } else {
             getUsernameUseCase(userId = userId)?.let { username ->
-                val recipe = Recipe(
+                val recipe = RecipeDto(
+                    _id = ObjectId(),
                     name = recipeName,
                     ingredients = ingredients,
                     creationDateTime = CustomDateUtils.getUtcDateTime(),
                     nutritionValues = NutritionValues(
-                        calories = newRecipeRequest.ingredients.sumOf { it.nutritionValues.calories },
-                        carbohydrates = newRecipeRequest.ingredients.sumOf { it.nutritionValues.carbohydrates },
-                        protein = newRecipeRequest.ingredients.sumOf { it.nutritionValues.protein },
-                        fat = newRecipeRequest.ingredients.sumOf { it.nutritionValues.fat },
+                        calories = ingredients.sumOf { it.nutritionValues.calories },
+                        carbohydrates = ingredients.sumOf { it.nutritionValues.carbohydrates },
+                        protein = ingredients.sumOf { it.nutritionValues.protein },
+                        fat = ingredients.sumOf { it.nutritionValues.fat },
                     ),
                     timeRequired = timeRequired,
                     difficulty = difficulty,
@@ -46,9 +49,10 @@ class InsertRecipeUseCase(
                     isPublic = isPublic,
                     username = username,
                     userId = userId,
-                    )
+                    imageUrl = null
+                )
 
-                diaryRepository.addNewRecipe(
+                diaryRepository.insertRecipe(
                     recipe = recipe
                 )
             } ?: Resource.Error()

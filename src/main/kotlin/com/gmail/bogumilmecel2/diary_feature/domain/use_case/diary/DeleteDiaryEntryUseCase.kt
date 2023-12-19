@@ -12,16 +12,11 @@ class DeleteDiaryEntryUseCase(
     private val isDateInValidRangeUseCaseUseCase: IsDateInValidRangeUseCaseUseCase
 ) {
 
-    suspend operator fun invoke(
-        deleteDiaryEntryRequest: DeleteDiaryEntryRequest,
-        userId: String
-    ): Resource<Unit> {
+    suspend operator fun invoke(deleteDiaryEntryRequest: DeleteDiaryEntryRequest): Resource<Unit> {
         return when (deleteDiaryEntryRequest.diaryEntryType) {
             DiaryEntryType.PRODUCT -> {
                 val productDiaryEntry = diaryRepository.getProductDiaryEntry(id = deleteDiaryEntryRequest.diaryEntryId).data ?: return Resource.Error()
-
-                val date = productDiaryEntry.creationDateTime?.date ?: return Resource.Error()
-                if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error()
+                if (!isDateInValidRangeUseCaseUseCase(productDiaryEntry.creationDateTime.date)) return Resource.Error()
 
                 // TODO: Revert changes when deleting is handled with device id
 //                diaryRepository.deleteProductDiaryEntry(
@@ -33,14 +28,11 @@ class DeleteDiaryEntryUseCase(
                         changeDateTime = CustomDateUtils.getUtcDateTime(),
                         deleted = true
                     ),
-                    userId = userId
                 )
             }
             DiaryEntryType.RECIPE -> {
                 val recipeDiaryEntry = diaryRepository.getRecipeDiaryEntry(id = deleteDiaryEntryRequest.diaryEntryId).data ?: return Resource.Error()
-
-                val date = recipeDiaryEntry.creationDateTime?.date ?: return Resource.Error()
-                if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error()
+                if (!isDateInValidRangeUseCaseUseCase(recipeDiaryEntry.creationDateTime.date)) return Resource.Error()
 
                 // TODO: Revert changes when deleting is handled with device id
 //                diaryRepository.deleteRecipeDiaryEntry(
@@ -52,7 +44,6 @@ class DeleteDiaryEntryUseCase(
                         changeDateTime = CustomDateUtils.getUtcDateTime(),
                         deleted = true
                     ),
-                    userId = userId
                 )
             }
         }

@@ -33,5 +33,6 @@ object Constants {
         const val COUNTRY = "country"
         const val DEVICE_ID = "device_id"
         const val LATEST_DATE_TIME = "latest_date_time"
+        const val DATE = "date"
     }
 }

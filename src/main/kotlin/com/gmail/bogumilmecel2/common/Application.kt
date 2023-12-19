@@ -109,7 +109,6 @@ fun Application.module() {
         updateUserLogStreakUseCase = UpdateUserLogStreakUseCase(userRepository)
     )
 
-    val getRecipeDiaryEntryUseCase = GetRecipeDiaryEntryUseCase(diaryRepository = diaryRepository)
     val getProductDiaryEntryUseCase = GetProductDiaryEntryUseCase(diaryRepository = diaryRepository)
     val getRecipeUseCase = GetRecipeUseCase(diaryRepository)
     val getProductDiaryHistoryUseCase = GetProductDiaryHistoryUseCase(diaryRepository = diaryRepository)
@@ -119,7 +118,6 @@ fun Application.module() {
         getDiaryEntries = GetDiaryEntries(diaryRepository),
         insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
             diaryRepository = diaryRepository,
-            getProductUseCase = getProductUseCase,
             isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase
         ),
         deleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(
@@ -133,7 +131,6 @@ fun Application.module() {
         ),
         editRecipeDiaryEntryUseCase = EditRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
-            getRecipeDiaryEntryUseCase = getRecipeDiaryEntryUseCase,
             isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase
         ),
         getProductDiaryHistoryUseCase = getProductDiaryHistoryUseCase

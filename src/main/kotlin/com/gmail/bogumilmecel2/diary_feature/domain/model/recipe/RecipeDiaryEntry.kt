@@ -1,6 +1,5 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.model.recipe
 
-import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
@@ -14,28 +13,28 @@ import org.bson.types.ObjectId
 @Serializable
 data class RecipeDiaryEntry(
     @SerialName("id")
-    override val id: String = "",
+    override val id: String? = null,
 
     @SerialName("nutrition_values")
-    override val nutritionValues: NutritionValues = NutritionValues(),
+    override val nutritionValues: NutritionValues? = null,
 
     @SerialName("date")
     override val date: LocalDate? = null,
 
     @SerialName("user_id")
-    override val userId: String = "",
+    override val userId: String? = null,
 
     @SerialName("meal_name")
-    override val mealName: MealName = MealName.BREAKFAST,
+    override val mealName: MealName? = null,
 
     @SerialName("recipe_name")
-    val recipeName: String = "",
+    val recipeName: String? = null,
 
     @SerialName("recipe_id")
-    val recipeId: String = "",
+    val recipeId: String? = null,
 
     @SerialName("servings")
-    val servings: Int = 0,
+    val servings: Int? = null,
 
     // TODO: remove when deleting is handled with device id
     @SerialName("deleted")
@@ -57,24 +56,12 @@ data class RecipeDiaryEntryDto(
     val userId: String,
     val date: String,
     val mealName: MealName,
-    val creationDateTime: LocalDateTime? = null,
-    val changeDateTime: LocalDateTime? = null
+    val creationDateTime: LocalDateTime,
+    val changeDateTime: LocalDateTime,
+    val deleted: Boolean
 )
 
-fun RecipeDiaryEntry.toDto(userId: String): RecipeDiaryEntryDto = RecipeDiaryEntryDto(
-    _id = id.toObjectId(),
-    servings = servings,
-    date = date.toString(),
-    userId = userId,
-    nutritionValues = nutritionValues,
-    mealName = mealName,
-    recipeId = recipeId,
-    recipeName = recipeName,
-    creationDateTime = creationDateTime,
-    changeDateTime = changeDateTime
-)
-
-fun RecipeDiaryEntryDto.toObject(): RecipeDiaryEntry = RecipeDiaryEntry(
+fun RecipeDiaryEntryDto.toRecipeDiaryEntry(): RecipeDiaryEntry = RecipeDiaryEntry(
     id = _id.toString(),
     servings = servings,
     userId = userId,
@@ -84,5 +71,6 @@ fun RecipeDiaryEntryDto.toObject(): RecipeDiaryEntry = RecipeDiaryEntry(
     recipeName = recipeName,
     recipeId = recipeId,
     creationDateTime = creationDateTime,
-    changeDateTime = changeDateTime
+    changeDateTime = changeDateTime,
+    deleted = deleted
 )

@@ -25,7 +25,7 @@ object CustomDateUtils {
 
     private fun getClockNow() = Clock.System.now()
 
-    fun dateInDay(
+    fun dateTimeInDay(
         kProperty1: KProperty1<*, LocalDateTime?>,
         date: LocalDate
     ): Bson {
@@ -37,11 +37,17 @@ object CustomDateUtils {
         )
     }
 
-    @Suppress("unused")
     fun dateInDay(
-        kProperty1: KProperty1<*, LocalDateTime?>,
-        date: String
-    ) = dateInDay(kProperty1, LocalDate.parse(date))
+        kProperty1: KProperty1<*, LocalDate?>,
+        date: LocalDate
+    ): Bson {
+        val nextDayDate = date.plus(DatePeriod(days = 1))
+
+        return and(
+            kProperty1 gte LocalDate.parse("${date}T00:00:00.000"),
+            kProperty1 lt LocalDate.parse("${nextDayDate}T00:00:00.000")
+        )
+    }
 
     fun LocalDate.minusDays(days: Int) = this.minus(DatePeriod(days = days))
 }

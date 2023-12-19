@@ -71,13 +71,13 @@ class AddNewPriceUseCase(
                         } ?: kotlin.run {
                             val newPriceDto = PriceDto(
                                 _id = ObjectId(),
-                                productId = product.id,
+                                productId = product._id.toString(),
                                 country = country,
                                 valueFor100gInUSD = priceFor100gInUSD.round(2)
                             )
 
                             val addNewPriceResource = priceRepository.addPrice(
-                                productId = product.id,
+                                productId = product._id.toString(),
                                 price = newPriceDto
                             )
 

@@ -3,14 +3,14 @@ package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryPostRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDateInValidRangeUseCaseUseCase
+import org.bson.types.ObjectId
 
 class InsertProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
-    private val getProductUseCase: GetProductUseCase,
     private val isDateInValidRangeUseCaseUseCase: IsDateInValidRangeUseCaseUseCase
 ) {
 
@@ -18,7 +18,13 @@ class InsertProductDiaryEntryUseCase(
         productDiaryEntryPostRequest: ProductDiaryEntryPostRequest,
         userId: String
     ): Resource<ProductDiaryEntry> = with(productDiaryEntryPostRequest) {
-        val product = getProductUseCase(productId = productDiaryEntryPostRequest.productId).data ?: return Resource.Error()
+        productId ?: return Resource.Error()
+        date ?: return Resource.Error()
+        weight ?: return Resource.Error()
+        mealName ?: return Resource.Error()
+        nutritionValues ?: return Resource.Error()
+
+        val product = diaryRepository.getProduct(productId = productId).data ?: return Resource.Error()
 
         if (weight <= 0) return Resource.Error()
         if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error()
@@ -26,17 +32,19 @@ class InsertProductDiaryEntryUseCase(
         val currentDate = CustomDateUtils.getUtcDateTime()
 
         diaryRepository.insertProductDiaryEntry(
-            productDiaryEntry = ProductDiaryEntry(
+            productDiaryEntry = ProductDiaryEntryDto(
+                _id = ObjectId(),
                 weight = weight,
                 mealName = mealName,
-                date = date,
+                date = date.toString(),
                 userId = userId,
                 nutritionValues = nutritionValues,
-                productId = product.id,
+                productId = productId,
                 productName = product.name,
-                productMeasurementUnit = product.measurementUnit,
+                measurementUnit = product.measurementUnit,
                 creationDateTime = currentDate,
-                changeDateTime = currentDate
+                changeDateTime = currentDate,
+                deleted = false
             ),
             userId = userId
         )
