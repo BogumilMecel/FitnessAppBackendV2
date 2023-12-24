@@ -98,7 +98,7 @@ object MockConstants {
 
         fun getRecipeDiaryEntry() = RecipeDiaryEntryDto(
             _id = RECIPE_DIARY_ENTRY_ID.toObjectId(),
-            nutritionValues = getNutritionValues2(),
+            nutritionValues = getNutritionValues(),
             recipeName = RECIPE_NAME,
             recipeId = RECIPE_ID,
             servings = CORRECT_RECIPE_SERVINGS_1,

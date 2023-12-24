@@ -1,6 +1,5 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 
-import com.github.aymanizz.ktori18n.R
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
@@ -40,5 +39,3 @@ class EditProductDiaryEntryUseCase(
         }
     }
 }
-
-data object DiaryEntryNotFoundException: NotFoundException(resource = R("diary_entry_not_found"))

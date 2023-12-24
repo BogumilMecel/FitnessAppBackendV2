@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe
 
+import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
@@ -15,15 +16,17 @@ class EditRecipeDiaryEntryUseCase(
         recipeDiaryEntry: RecipeDiaryEntry,
         userId: String
     ): Resource<RecipeDiaryEntry> = with(recipeDiaryEntry) {
-        id ?: return Resource.Error()
-        nutritionValues ?: return Resource.Error()
-        servings ?: return Resource.Error()
+        id ?: return Resource.Error(InvalidIdException)
+        nutritionValues ?: return Resource.Error(InvalidNutritionValuesException)
+        servings ?: return Resource.Error(InvalidServingsException)
 
-        val originalRecipeDiaryEntry = diaryRepository.getRecipeDiaryEntry(id = id).data ?: return Resource.Error()
+        if (servings <= 0) return Resource.Error(InvalidServingsException)
 
-        if (originalRecipeDiaryEntry.userId != userId) return Resource.Error()
-        if (servings == originalRecipeDiaryEntry.servings) return Resource.Error()
-        if (!isDateInValidRangeUseCaseUseCase(originalRecipeDiaryEntry.creationDateTime.date)) return Resource.Error()
+        val originalRecipeDiaryEntry = diaryRepository.getRecipeDiaryEntry(id = id).data ?: return Resource.Error(DiaryEntryNotFoundException)
+
+        if (originalRecipeDiaryEntry.userId != userId) return Resource.Error(ForbiddenException)
+        if (servings == originalRecipeDiaryEntry.servings) return Resource.Error(InvalidServingsException)
+        if (!isDateInValidRangeUseCaseUseCase(originalRecipeDiaryEntry.creationDateTime.date)) return Resource.Error(InvalidDateException)
 
         val newRecipeDiaryEntry = originalRecipeDiaryEntry.copy(
             changeDateTime = CustomDateUtils.getUtcDateTime(),
