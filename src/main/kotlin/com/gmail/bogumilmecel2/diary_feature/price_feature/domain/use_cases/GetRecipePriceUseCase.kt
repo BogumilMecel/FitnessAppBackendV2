@@ -2,13 +2,11 @@ package com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases
 
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.Currency
-import com.gmail.bogumilmecel2.common.domain.model.CustomException
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Ingredient
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.RecipePriceResponse
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.getIngredientPriceValue
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.repository.PriceRepository
-import io.ktor.http.*
 
 class GetRecipePriceUseCase(private val priceRepository: PriceRepository) {
     suspend operator fun invoke(
@@ -46,11 +44,7 @@ class GetRecipePriceUseCase(private val priceRepository: PriceRepository) {
         }
 
         if (totalPrice == 0.0) {
-            return Resource.Error(
-                error = CustomException(
-                    httpStatusCode = HttpStatusCode.NoContent
-                )
-            )
+            return Resource.Error()
         }
 
         return Resource.Success(

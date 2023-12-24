@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.data.repository
 
 import com.gmail.bogumilmecel2.common.domain.constants.Constants.DEFAULT_PAGE_SIZE
-import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
@@ -33,12 +32,9 @@ class DiaryRepositoryImp(
     private val recipeCol: CoroutineCollection<RecipeDto>
 ) : DiaryRepository, BaseRepository() {
 
-    override suspend fun insertProductDiaryEntry(
-        productDiaryEntry: ProductDiaryEntryDto,
-        userId: String
-    ): Resource<ProductDiaryEntry> {
+    override suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntryDto): Resource<ProductDiaryEntryDto> {
         return handleRequest {
-            productDiaryEntry.apply { productDiaryCol.insertOne(this) }.toProductDiaryEntry()
+            productDiaryEntry.apply { productDiaryCol.insertOne(this) }
         }
     }
 

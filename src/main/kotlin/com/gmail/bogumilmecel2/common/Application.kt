@@ -115,7 +115,7 @@ fun Application.module() {
     val isDateInValidRangeUseCaseUseCase = IsDateInValidRangeUseCaseUseCase()
 
     val diaryUseCases = DiaryUseCases(
-        getDiaryEntries = GetDiaryEntries(diaryRepository),
+        getDiaryEntriesUseCase = GetDiaryEntriesUseCase(diaryRepository),
         insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
             diaryRepository = diaryRepository,
             isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase

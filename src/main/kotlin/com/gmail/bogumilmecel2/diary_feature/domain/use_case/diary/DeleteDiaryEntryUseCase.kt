@@ -12,10 +12,15 @@ class DeleteDiaryEntryUseCase(
     private val isDateInValidRangeUseCaseUseCase: IsDateInValidRangeUseCaseUseCase
 ) {
 
-    suspend operator fun invoke(deleteDiaryEntryRequest: DeleteDiaryEntryRequest): Resource<Unit> {
+    suspend operator fun invoke(
+        deleteDiaryEntryRequest: DeleteDiaryEntryRequest,
+        userId: String
+    ): Resource<Unit> {
         return when (deleteDiaryEntryRequest.diaryEntryType) {
             DiaryEntryType.PRODUCT -> {
                 val productDiaryEntry = diaryRepository.getProductDiaryEntry(id = deleteDiaryEntryRequest.diaryEntryId).data ?: return Resource.Error()
+
+                if (productDiaryEntry.userId != userId) return Resource.Error()
                 if (!isDateInValidRangeUseCaseUseCase(productDiaryEntry.creationDateTime.date)) return Resource.Error()
 
                 // TODO: Revert changes when deleting is handled with device id
@@ -32,6 +37,8 @@ class DeleteDiaryEntryUseCase(
             }
             DiaryEntryType.RECIPE -> {
                 val recipeDiaryEntry = diaryRepository.getRecipeDiaryEntry(id = deleteDiaryEntryRequest.diaryEntryId).data ?: return Resource.Error()
+
+                if (recipeDiaryEntry.userId != userId) return Resource.Error()
                 if (!isDateInValidRangeUseCaseUseCase(recipeDiaryEntry.creationDateTime.date)) return Resource.Error()
 
                 // TODO: Revert changes when deleting is handled with device id

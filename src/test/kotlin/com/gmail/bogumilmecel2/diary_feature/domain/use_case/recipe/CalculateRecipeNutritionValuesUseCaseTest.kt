@@ -27,7 +27,7 @@ class CalculateRecipeNutritionValuesUseCaseTest {
     fun `Check if values are correct and resource success is returned 1`() = runTest {
         val resource = callTestedMethod(
             recipe = Recipe(
-                nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
+                nutritionValues = MockConstants.Diary.getNutritionValues(),
                 servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2
             )
         )
@@ -48,7 +48,7 @@ class CalculateRecipeNutritionValuesUseCaseTest {
         val resource = callTestedMethod(
             servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
             recipe = Recipe(
-                nutritionValues = MockConstants.Diary.getSampleNutritionValues2(),
+                nutritionValues = MockConstants.Diary.getNutritionValues2(),
                 servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1
             )
         )
@@ -65,10 +65,11 @@ class CalculateRecipeNutritionValuesUseCaseTest {
     }
 
     private fun callTestedMethod(
-        recipe: Recipe = MockConstants.Diary.getSampleRecipe(),
+        recipe: Recipe = MockConstants.Diary.getRecipe(),
         servings: Int = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1
     ) = calculateRecipeNutritionValuesUseCase(
-        recipe = recipe,
-        servings = servings
+        servings = servings,
+        nutritionValues = recipe.nutritionValues!!,
+        recipeServings = recipe.servings!!
     )
 }

@@ -50,7 +50,7 @@ class GetUserByUsername(
                 } ?: Resource.Error()
             }
             is Resource.Error -> {
-                Resource.Error(resource.error)
+                Resource.Error(resource.exception)
             }
         }
     }

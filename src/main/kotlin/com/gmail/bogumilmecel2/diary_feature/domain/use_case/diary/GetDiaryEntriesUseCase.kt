@@ -5,9 +5,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.DiaryEntriesResponse
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import kotlinx.datetime.LocalDate
 
-class GetDiaryEntries(
-    private val diaryRepository: DiaryRepository
-) {
+class GetDiaryEntriesUseCase(private val diaryRepository: DiaryRepository) {
 
     suspend operator fun invoke(
         date: LocalDate,
