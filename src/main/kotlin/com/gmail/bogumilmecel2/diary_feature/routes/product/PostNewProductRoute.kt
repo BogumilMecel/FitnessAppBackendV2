@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.common.util.extensions.getCountryHeader
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
 import com.gmail.bogumilmecel2.common.util.extensions.receiveOrRespond
-import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NewProductRequest
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.InsertProductUseCase
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -16,12 +16,12 @@ fun Route.configurePostNewProductRoute(
     authenticate {
         post {
             call.run {
-                receiveOrRespond<NewProductRequest>()?.let { newProductRequest ->
+                receiveOrRespond<Product>()?.let { product ->
                     getUserId()?.let { userId ->
                         getCountryHeader()?.let { country ->
                             handleResource(
                                 resource = insertNewProduct(
-                                    newProductRequest = newProductRequest,
+                                    product = product,
                                     userId = userId,
                                     country = country
                                 )

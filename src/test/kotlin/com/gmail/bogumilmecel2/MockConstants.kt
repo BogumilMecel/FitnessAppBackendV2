@@ -55,12 +55,12 @@ object MockConstants {
         fun getProduct() = ProductDto(
             _id = ObjectId(PRODUCT_ID),
             name = PRODUCT_NAME,
-            containerWeight = null,
+            containerWeight = CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
             nutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
             measurementUnit = MeasurementUnit.GRAMS,
             nutritionValues = getNutritionValues(),
-            barcode = null,
-            username = "abc",
+            barcode = BARCODE,
+            username = USERNAME,
             userId = USER_ID_1,
             creationDateTime = DATE_TIME.toLocalDateTime(),
             country = Country.POLAND

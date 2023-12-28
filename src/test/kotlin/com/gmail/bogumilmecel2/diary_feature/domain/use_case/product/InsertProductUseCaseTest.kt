@@ -5,13 +5,14 @@ import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.domain.constants.Constants
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
+import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
-import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NewProductRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toProduct
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.AreNutritionValuesValidUseCase
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.CalculateNutritionValuesUseCase
@@ -19,7 +20,8 @@ import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDiaryNameV
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import kotlin.test.assertIs
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 
 class InsertProductUseCaseTest : BaseTest() {
 
@@ -37,169 +39,114 @@ class InsertProductUseCaseTest : BaseTest() {
     )
 
     @Test
-    fun `Check if username is not valid, resource error is returned`() = runTest {
+    fun `Check if name is null resource error is returned`() = runTest {
+        callTestedMethod(name = null).assertIsError(InvalidProductNameException)
+    }
+
+    @Test
+    fun `Check if nutrition values are null resource error is returned`() = runTest {
+        callTestedMethod(nutritionValues = null).assertIsError(InvalidNutritionValuesException)
+    }
+
+    @Test
+    fun `Check if measurement unit is null resource error is returned`() = runTest {
+        callTestedMethod(measurementUnit = null).assertIsError(InvalidMeasurementUnit)
+    }
+
+    @Test
+    fun `Check if nutrition values in is null resource error is returned`() = runTest {
+        callTestedMethod(nutritionValuesIn = null).assertIsError(InvalidNutritionValuesInException)
+    }
+
+    @Test
+    fun `Check if product name is not valid, resource error is returned`() = runTest {
         mockClasses(isDiaryNameValid = false)
-        assertIs<Resource.Error<Product>>(callTestedUseCase())
+        callTestedMethod().assertIsError(InvalidProductNameException)
     }
 
     @Test
     fun `Check if nutrition values are in 100g and container weight is not null but is less than 0, resource error is returned`() =
         runTest {
             mockClasses()
-            assertIs<Resource.Error<Product>>(
-                callTestedUseCase(
-                    request = mockNewProductRequest(
-                        containerWeight = MockConstants.Diary.NEGATIVE_VALUE
-                    )
-                )
-            )
+            callTestedMethod(containerWeight = MockConstants.Diary.NEGATIVE_VALUE).assertIsError(InvalidWeightException)
         }
 
     @Test
     fun `Check if nutrition values are in 100g and container weight is not null but is 0, resource error is returned`() = runTest {
         mockClasses()
-        assertIs<Resource.Error<Product>>(
-            callTestedUseCase(
-                request = mockNewProductRequest(
-                    containerWeight = MockConstants.Diary.ZERO_PRODUCT_DIARY_ENTRY_WEIGHT
-                )
-            )
-        )
+        callTestedMethod(containerWeight = MockConstants.Diary.ZERO_PRODUCT_DIARY_ENTRY_WEIGHT).assertIsError(InvalidWeightException)
     }
 
     @Test
     fun `Check if nutrition values are in container and container weight is null, resource error is returned`() = runTest {
         mockClasses()
-        assertIs<Resource.Error<Product>>(
-            callTestedUseCase(
-                request = mockNewProductRequest(
-                    containerWeight = null,
-                    nutritionValuesIn = NutritionValuesIn.CONTAINER
-                )
-            )
-        )
+        callTestedMethod(containerWeight = null, nutritionValuesIn = NutritionValuesIn.CONTAINER).assertIsError(InvalidWeightException)
     }
 
     @Test
     fun `Check if nutrition values are in average and serving weight is null, resource error is returned`() = runTest {
         mockClasses()
-        assertIs<Resource.Error<Product>>(
-            callTestedUseCase(
-                request = mockNewProductRequest(
-                    containerWeight = null,
-                    nutritionValuesIn = NutritionValuesIn.AVERAGE
-                )
-            )
-        )
+        callTestedMethod(containerWeight = null, nutritionValuesIn = NutritionValuesIn.AVERAGE).assertIsError(InvalidWeightException)
     }
 
-    @Test
-    fun `Check if nutrition values are not in 100g and container weight is less than 0, resource error is returned`() = runTest {
+    @ParameterizedTest
+    @EnumSource(NutritionValuesIn::class)
+    fun `Check if nutrition values are not in 100g and container weight is less than 0, resource error is returned`(nutritionValuesIn: NutritionValuesIn) = runTest {
         mockClasses()
-        listOf(NutritionValuesIn.CONTAINER, NutritionValuesIn.AVERAGE).forEach {
-            assertIs<Resource.Error<Product>>(
-                callTestedUseCase(
-                    request = mockNewProductRequest(
-                        containerWeight = MockConstants.Diary.NEGATIVE_VALUE,
-                        nutritionValuesIn = it
-                    )
-                )
-            )
+        callTestedMethod(containerWeight = MockConstants.Diary.NEGATIVE_VALUE, nutritionValuesIn = nutritionValuesIn).run {
+            when(nutritionValuesIn) {
+                NutritionValuesIn.AVERAGE -> assertIsError(InvalidWeightException)
+                NutritionValuesIn.CONTAINER -> assertIsError(InvalidWeightException)
+                NutritionValuesIn.HUNDRED_GRAMS -> assertIsSuccess()
+            }
         }
     }
 
-    @Test
-    fun `Check if nutrition values are not in 100g and container weight is 0, resource error is returned`() = runTest {
+    @ParameterizedTest
+    @EnumSource(NutritionValuesIn::class)
+    fun `Check if nutrition values are not in 100g and container weight is 0, resource error is returned`(nutritionValuesIn: NutritionValuesIn) = runTest {
         mockClasses()
-        listOf(NutritionValuesIn.CONTAINER, NutritionValuesIn.AVERAGE).forEach {
-            assertIs<Resource.Error<Product>>(
-                callTestedUseCase(
-                    request = mockNewProductRequest(
-                        containerWeight = MockConstants.Diary.ZERO_PRODUCT_DIARY_ENTRY_WEIGHT,
-                        nutritionValuesIn = it
-                    )
-                )
-            )
+        callTestedMethod(containerWeight = MockConstants.Diary.ZERO_PRODUCT_DIARY_ENTRY_WEIGHT, nutritionValuesIn = nutritionValuesIn).run {
+            when(nutritionValuesIn) {
+                NutritionValuesIn.AVERAGE -> assertIsError(InvalidWeightException)
+                NutritionValuesIn.CONTAINER -> assertIsError(InvalidWeightException)
+                NutritionValuesIn.HUNDRED_GRAMS -> assertIsSuccess()
+            }
         }
     }
 
     @Test
     fun `Check if nutrition values are not valid, resource error is returned`() = runTest {
         mockClasses(areNutritionValuesValid = false)
-        assertIs<Resource.Error<Product>>(callTestedUseCase())
+        callTestedMethod().assertIsError(InvalidNutritionValuesException)
     }
 
     @Test
     fun `Check if barcode is not null and is longer than maximum, resource error is returned`() = runTest {
         mockClasses()
-        assertIs<Resource.Error<Product>>(
-            callTestedUseCase(
-                request = mockNewProductRequest(
-                    barcode = "A".repeat(Constants.Diary.BARCODE_MAX_LENGTH + 1)
-                )
-            )
-        )
+        callTestedMethod(barcode = "A".repeat(Constants.Diary.BARCODE_MAX_LENGTH + 1)).assertIsError(InvalidBarcodeLengthException)
     }
 
     @Test
     fun `Check if barcode is not null and is empty, resource error is returned`() = runTest {
         mockClasses()
-        assertIs<Resource.Error<Product>>(
-            callTestedUseCase(
-                request = mockNewProductRequest(
-                    barcode = ""
-                )
-            )
-        )
+        callTestedMethod(barcode = "").assertIsError(InvalidBarcodeLengthException)
     }
 
     @Test
     fun `Check if get username returns null, resource error is returned`() = runTest {
         mockClasses(username = null)
-        assertIs<Resource.Error<Product>>(callTestedUseCase())
+        callTestedMethod().assertIsError(CouldNotFindUserException)
     }
 
-    @Test
-    fun `Check if nutrition values are not calculated if weight is in 100g`() = runTest {
+    @ParameterizedTest
+    @EnumSource(NutritionValuesIn::class)
+    fun `Check if nutrition values are calculated correctly`(nutritionValuesIn: NutritionValuesIn) = runTest {
         mockClasses()
-        callTestedUseCase()
-        verify(exactly = 0) {
+        callTestedMethod(nutritionValuesIn = nutritionValuesIn, containerWeight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1)
+        verify(exactly = if (nutritionValuesIn == NutritionValuesIn.HUNDRED_GRAMS) 0 else 1) {
             calculateNutritionValuesUseCase(
-                nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
-                weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
-            )
-        }
-    }
-
-    @Test
-    fun `Check if nutrition values are calculated if weight is in average`() = runTest {
-        mockClasses()
-        callTestedUseCase(
-            request = mockNewProductRequest(
-                nutritionValuesIn = NutritionValuesIn.AVERAGE,
-                containerWeight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
-            )
-        )
-        verify(exactly = 1) {
-            calculateNutritionValuesUseCase(
-                nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
-                weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
-            )
-        }
-    }
-
-    @Test
-    fun `Check if nutrition values are calculated if weight is in container`() = runTest {
-        mockClasses()
-        callTestedUseCase(
-            request = mockNewProductRequest(
-                nutritionValuesIn = NutritionValuesIn.CONTAINER,
-                containerWeight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
-            )
-        )
-        verify(exactly = 1) {
-            calculateNutritionValuesUseCase(
-                nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
+                nutritionValues = MockConstants.Diary.getNutritionValues(),
                 weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
             )
         }
@@ -208,92 +155,59 @@ class InsertProductUseCaseTest : BaseTest() {
     @Test
     fun `Check if request is correct, and repository return resource error, resource error is returned`() = runTest {
         mockClasses(repositoryResource = Resource.Error())
-        assertIs<Resource.Error<Product>>(callTestedUseCase())
+        callTestedMethod().assertIsError()
     }
 
     @Test
     fun `Check if request is correct, and repository return resource success, resource success is returned`() = runTest {
         mockClasses()
-        val nutritionValuesIn = NutritionValuesIn.CONTAINER
-        val containerWeight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
         mockDateTime(dateTime = MockConstants.DATE_TIME.toLocalDateTime()!!)
-        val resource = callTestedUseCase(
-            request = mockNewProductRequest(
-                nutritionValuesIn = nutritionValuesIn,
-                containerWeight = containerWeight,
-            )
-        )
+        callTestedMethod(nutritionValuesIn = NutritionValuesIn.CONTAINER).assertIsSuccess()
         verify(exactly = 1) {
             calculateNutritionValuesUseCase(
-                nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
-                weight = containerWeight
+                nutritionValues = MockConstants.Diary.getNutritionValues(),
+                weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
             )
         }
-        assertIs<Resource.Success<Product>>(resource)
-        coVerify(exactly = 1) {
-            diaryRepository.insertProduct(
-                country = Country.POLAND,
-                userId = MockConstants.USER_ID_1,
-                product = Product(
-                    name = MockConstants.Diary.PRODUCT_NAME_1,
-                    barcode = MockConstants.Diary.BARCODE,
-                    containerWeight = containerWeight,
-                    creationDateTime = MockConstants.DATE_TIME.toLocalDateTime(),
-                    nutritionValuesIn = nutritionValuesIn,
-                    measurementUnit = MeasurementUnit.GRAMS,
-                    nutritionValues = MockConstants.Diary.getSampleNutritionValues2(),
-                    username = MockConstants.USERNAME,
-                    userId = MockConstants.USER_ID_1
-                )
-            )
-        }
-        assertIs<Resource.Success<Product>>(callTestedUseCase())
+        coVerify(exactly = 1) { diaryRepository.insertProduct(product = any()) }
     }
 
     private fun mockClasses(
         isDiaryNameValid: Boolean = true,
         areNutritionValuesValid: Boolean = true,
         username: String? = MockConstants.USERNAME,
-        nutritionValuesResource: Resource<NutritionValues> = Resource.Success(MockConstants.Diary.getSampleNutritionValues2()),
-        repositoryResource: Resource<Product> = Resource.Success(data = MockConstants.Diary.getSampleProduct())
+        nutritionValuesResource: Resource<NutritionValues> = Resource.Success(MockConstants.Diary.getNutritionValues2()),
+        repositoryResource: Resource<Product> = Resource.Success(data = MockConstants.Diary.getProduct().toProduct())
     ) {
-        every { isDiaryNameValidUseCase(MockConstants.Diary.PRODUCT_NAME_1) } returns isDiaryNameValid
-        every { areNutritionValuesValidUseCase(MockConstants.Diary.getSampleNutritionValues()) } returns areNutritionValuesValid
+        every { isDiaryNameValidUseCase(MockConstants.Diary.PRODUCT_NAME) } returns isDiaryNameValid
+        every { areNutritionValuesValidUseCase(MockConstants.Diary.getNutritionValues()) } returns areNutritionValuesValid
         coEvery { getUsernameUseCase(userId = MockConstants.USER_ID_1) } returns username
         every {
             calculateNutritionValuesUseCase(
-                nutritionValues = MockConstants.Diary.getSampleNutritionValues(),
+                nutritionValues = MockConstants.Diary.getNutritionValues(),
                 weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1
             )
         } returns nutritionValuesResource
-        coEvery {
-            diaryRepository.insertProduct(
-                country = Country.POLAND,
-                userId = MockConstants.USER_ID_1,
-                product = any()
-            )
-        } returns repositoryResource
+        coEvery { diaryRepository.insertProduct(product = any()) } returns repositoryResource
     }
 
-    private suspend fun callTestedUseCase(
-        request: NewProductRequest = mockNewProductRequest()
+    private suspend fun callTestedMethod(
+        name: String? = MockConstants.Diary.PRODUCT_NAME,
+        nutritionValues: NutritionValues? = MockConstants.Diary.getNutritionValues(),
+        nutritionValuesIn: NutritionValuesIn? = NutritionValuesIn.HUNDRED_GRAMS,
+        measurementUnit: MeasurementUnit? = MeasurementUnit.GRAMS,
+        containerWeight: Int? = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
+        barcode: String? = MockConstants.Diary.BARCODE
     ) = insertProductUseCase(
-        newProductRequest = request,
+        product = MockConstants.Diary.getProduct().toProduct().copy(
+            containerWeight = containerWeight,
+            name = name,
+            nutritionValues = nutritionValues,
+            nutritionValuesIn = nutritionValuesIn,
+            measurementUnit = measurementUnit,
+            barcode = barcode
+        ),
         country = Country.POLAND,
         userId = MockConstants.USER_ID_1
-    )
-
-    private fun mockNewProductRequest(
-        name: String = MockConstants.Diary.PRODUCT_NAME_1,
-        nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
-        containerWeight: Int? = null,
-        barcode: String? = MockConstants.Diary.BARCODE
-    ) = NewProductRequest(
-        name = name,
-        measurementUnit = MeasurementUnit.GRAMS,
-        containerWeight = containerWeight,
-        barcode = barcode,
-        nutritionValuesIn = nutritionValuesIn,
-        nutritionValues = MockConstants.Diary.getSampleNutritionValues()
     )
 }
