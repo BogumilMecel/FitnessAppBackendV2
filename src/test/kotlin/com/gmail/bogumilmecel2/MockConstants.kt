@@ -9,8 +9,8 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDia
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
-import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryDto
+import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.TimeRequired
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsQuestion
@@ -66,8 +66,8 @@ object MockConstants {
             country = Country.POLAND
         )
 
-        fun getRecipe() = Recipe(
-            id = RECIPE_ID,
+        fun getRecipe() = RecipeDto(
+            _id = RECIPE_ID.toObjectId(),
             name = RECIPE_NAME,
             ingredients = emptyList(),
             imageUrl = null,

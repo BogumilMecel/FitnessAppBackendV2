@@ -8,7 +8,7 @@ import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryDto
-import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.toRecipeDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.toRecipe
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDateInValidRangeUseCaseUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -101,7 +101,7 @@ class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
             assertIsSuccess()
             assertEquals(
                 actual = data,
-                expected = expectedRecipeDiaryEntry.toRecipeDiaryEntry()
+                expected = expectedRecipeDiaryEntry.toRecipe()
             )
         }
         coVerify(exactly = 1) { diaryRepository.editRecipeDiaryEntry(recipeDiaryEntry = expectedRecipeDiaryEntry) }
@@ -123,7 +123,7 @@ class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
         nutritionValues: NutritionValues? = MockConstants.Diary.getNutritionValues2(),
         userId: String = MockConstants.USER_ID_1
     ) = editRecipeDiaryEntryUseCase(
-        recipeDiaryEntry = MockConstants.Diary.getRecipeDiaryEntry().toRecipeDiaryEntry().copy(
+        recipeDiaryEntry = MockConstants.Diary.getRecipeDiaryEntry().toRecipe().copy(
             id = recipeDiaryEntryId,
             nutritionValues = nutritionValues,
             servings = servings,

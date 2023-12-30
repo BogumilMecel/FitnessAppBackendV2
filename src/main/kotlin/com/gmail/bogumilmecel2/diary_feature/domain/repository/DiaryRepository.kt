@@ -23,7 +23,7 @@ interface DiaryRepository {
     suspend fun getProductDiaryEntry(id: String): Resource<ProductDiaryEntryDto?>
     suspend fun getRecipeDiaryEntry(id: String): Resource<RecipeDiaryEntryDto?>
     suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntryDto): Resource<ProductDiaryEntryDto>
-    suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntryDto, userId: String): Resource<RecipeDiaryEntry>
+    suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntryDto): Resource<RecipeDiaryEntry>
     suspend fun getProducts(
         text: String,
         skip: Int
@@ -36,7 +36,7 @@ interface DiaryRepository {
     suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Unit>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun insertRecipe(recipe: RecipeDto): Resource<Recipe>
-    suspend fun getRecipe(recipeId: String): Resource<Recipe?>
+    suspend fun getRecipe(recipeId: String): Resource<RecipeDto?>
     suspend fun searchForRecipes(searchText: String): Resource<List<Recipe>>
     suspend fun getProductDiaryHistory(
         userId: String,

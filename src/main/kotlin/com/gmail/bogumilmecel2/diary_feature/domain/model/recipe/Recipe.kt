@@ -63,7 +63,7 @@ data class RecipeDto(
     val creationDateTime: LocalDateTime
 )
 
-fun RecipeDto.toRecipeDiaryEntry(): Recipe = Recipe(
+fun RecipeDto.toRecipe(): Recipe = Recipe(
     id = _id.toString(),
     name = name,
     ingredients = ingredients,

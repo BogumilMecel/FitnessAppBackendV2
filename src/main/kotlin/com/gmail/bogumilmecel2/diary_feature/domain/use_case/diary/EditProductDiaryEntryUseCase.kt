@@ -25,7 +25,7 @@ class EditProductDiaryEntryUseCase(
         val originalProductDiaryEntry = getProductDiaryEntryUseCase(productDiaryEntryId = id).data ?: return Resource.Error(exception = DiaryEntryNotFoundException)
         if (originalProductDiaryEntry.userId != userId) return Resource.Error(exception = ForbiddenException)
         if (weight == originalProductDiaryEntry.weight) return Resource.Error(InvalidWeightException)
-        if (!isDateInValidRangeUseCaseUseCase(originalProductDiaryEntry.creationDateTime.date)) return Resource.Error(InvalidDateException)
+        if (!isDateInValidRangeUseCaseUseCase(originalProductDiaryEntry.creationDateTime.date)) return Resource.Error(DateNotInRangeException)
 
         val newProductDiaryEntry = originalProductDiaryEntry.copy(
             changeDateTime = CustomDateUtils.getUtcDateTime(),

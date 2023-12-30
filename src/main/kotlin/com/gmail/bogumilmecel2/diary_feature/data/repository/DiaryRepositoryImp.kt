@@ -38,9 +38,9 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntryDto, userId: String): Resource<RecipeDiaryEntry> {
+    override suspend fun insertRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntryDto): Resource<RecipeDiaryEntry> {
         return handleRequest {
-            recipeDiaryEntry.apply { recipeDiaryCol.insertOne(this) }.toRecipeDiaryEntry()
+            recipeDiaryEntry.apply { recipeDiaryCol.insertOne(this) }.toRecipe()
         }
     }
 
@@ -61,7 +61,7 @@ class DiaryRepositoryImp(
                 RecipeDiaryEntryDto::userId eq userId,
                 RecipeDiaryEntryDto::date eq date.toString(),
             ).toList().map {
-                it.toRecipeDiaryEntry()
+                it.toRecipe()
             }
         }
     }
@@ -176,13 +176,13 @@ class DiaryRepositoryImp(
 
     override suspend fun insertRecipe(recipe: RecipeDto): Resource<Recipe> {
         return handleRequest {
-            recipe.apply { recipeCol.insertOne(this) }.toRecipeDiaryEntry()
+            recipe.apply { recipeCol.insertOne(this) }.toRecipe()
         }
     }
 
-    override suspend fun getRecipe(recipeId: String): Resource<Recipe?> {
+    override suspend fun getRecipe(recipeId: String): Resource<RecipeDto?> {
         return handleRequest {
-            recipeCol.findOneById(id = recipeId.toObjectId())?.toRecipeDiaryEntry()
+            recipeCol.findOneById(id = recipeId.toObjectId())
         }
     }
 
@@ -191,7 +191,7 @@ class DiaryRepositoryImp(
             recipeCol.find("{'name': {'${MongoOperator.regex}': '$searchText', '${MongoOperator.options}': 'i'}}")
                 .toList()
                 .map {
-                    it.toRecipeDiaryEntry()
+                    it.toRecipe()
                 }
         }
     }
@@ -220,7 +220,7 @@ class DiaryRepositoryImp(
                 .filter(RecipeDto::creationDateTime gt latestDateTime)
                 .descendingSort(RecipeDto::creationDateTime)
                 .toList()
-                .map { it.toRecipeDiaryEntry() }
+                .map { it.toRecipe() }
         }
     }
 
@@ -238,7 +238,7 @@ class DiaryRepositoryImp(
             recipeDiaryCol
                 .find(RecipeDiaryEntryDto::userId eq userId)
                 .toList()
-                .map { it.toRecipeDiaryEntry() }
+                .map { it.toRecipe() }
         }
     }
 
@@ -260,7 +260,7 @@ class DiaryRepositoryImp(
                 .filter(RecipeDiaryEntryDto::changeDateTime gt latestDateTime)
                 .descendingSort(RecipeDiaryEntryDto::changeDateTime)
                 .toList()
-                .map { it.toRecipeDiaryEntry() }
+                .map { it.toRecipe() }
         }
     }
 }

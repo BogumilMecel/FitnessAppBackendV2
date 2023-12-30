@@ -82,7 +82,7 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     @Test
     fun `Check if entry date is not in valid range, resource error is returned`() = runTest {
         mockData(isDateInValidRange = false)
-        callTestedMethod().assertIsError(InvalidDateException)
+        callTestedMethod().assertIsError(DateNotInRangeException)
     }
 
     @Test

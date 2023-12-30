@@ -61,7 +61,7 @@ data class RecipeDiaryEntryDto(
     val deleted: Boolean
 )
 
-fun RecipeDiaryEntryDto.toRecipeDiaryEntry(): RecipeDiaryEntry = RecipeDiaryEntry(
+fun RecipeDiaryEntryDto.toRecipe(): RecipeDiaryEntry = RecipeDiaryEntry(
     id = _id.toString(),
     servings = servings,
     userId = userId,

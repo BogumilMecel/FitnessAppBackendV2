@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
-import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.toRecipeDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.toRecipe
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDateInValidRangeUseCaseUseCase
 
@@ -36,7 +36,7 @@ class EditRecipeDiaryEntryUseCase(
 
         return when(diaryRepository.editRecipeDiaryEntry(recipeDiaryEntry = newRecipeDiaryEntry)) {
             is Resource.Error -> Resource.Error()
-            is Resource.Success -> Resource.Success(newRecipeDiaryEntry.toRecipeDiaryEntry())
+            is Resource.Success -> Resource.Success(newRecipeDiaryEntry.toRecipe())
         }
     }
 }

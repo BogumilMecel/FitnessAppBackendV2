@@ -1,10 +1,10 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe
 
+import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
-import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.NewRecipeRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Ingredient
@@ -19,10 +19,16 @@ class InsertRecipeUseCase(
 ) {
 
     suspend operator fun invoke(
-        newRecipeRequest: NewRecipeRequest,
+        recipe: Recipe,
         userId: String,
-    ): Resource<Recipe> = with(newRecipeRequest) {
-        return if (!isDiaryNameValidUseCase(name = recipeName)) {
+    ): Resource<Recipe> = with(recipe) {
+        name ?: return Resource.Error(InvalidRecipeNameException)
+        ingredients ?: return Resource.Error(InvalidIngredientsException)
+        timeRequired ?: return Resource.Error(InvalidRecipeTimeException)
+        difficulty ?: return Resource.Error(InvalidRecipeDifficultyException)
+        servings ?: return Resource.Error(InvalidServingsException)
+
+        return if (!isDiaryNameValidUseCase(name = name)) {
             Resource.Error()
         } else if (servings <= 0) {
             Resource.Error()
@@ -32,28 +38,26 @@ class InsertRecipeUseCase(
             Resource.Error()
         } else {
             getUsernameUseCase(userId = userId)?.let { username ->
-                val recipe = RecipeDto(
-                    _id = ObjectId(),
-                    name = recipeName,
-                    ingredients = ingredients,
-                    creationDateTime = CustomDateUtils.getUtcDateTime(),
-                    nutritionValues = NutritionValues(
-                        calories = ingredients.sumOf { it.nutritionValues.calories },
-                        carbohydrates = ingredients.sumOf { it.nutritionValues.carbohydrates },
-                        protein = ingredients.sumOf { it.nutritionValues.protein },
-                        fat = ingredients.sumOf { it.nutritionValues.fat },
-                    ),
-                    timeRequired = timeRequired,
-                    difficulty = difficulty,
-                    servings = servings,
-                    isPublic = isPublic,
-                    username = username,
-                    userId = userId,
-                    imageUrl = null
-                )
-
                 diaryRepository.insertRecipe(
-                    recipe = recipe
+                    recipe = RecipeDto(
+                        _id = ObjectId(),
+                        name = name,
+                        ingredients = ingredients,
+                        creationDateTime = CustomDateUtils.getUtcDateTime(),
+                        nutritionValues = NutritionValues(
+                            calories = ingredients.sumOf { it.nutritionValues.calories },
+                            carbohydrates = ingredients.sumOf { it.nutritionValues.carbohydrates },
+                            protein = ingredients.sumOf { it.nutritionValues.protein },
+                            fat = ingredients.sumOf { it.nutritionValues.fat },
+                        ),
+                        timeRequired = timeRequired,
+                        difficulty = difficulty,
+                        servings = servings,
+                        isPublic = isPublic,
+                        username = username,
+                        userId = userId,
+                        imageUrl = null
+                    )
                 )
             } ?: Resource.Error()
         }

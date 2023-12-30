@@ -4,6 +4,7 @@ import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
+import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.toRecipe
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -65,7 +66,7 @@ class CalculateRecipeNutritionValuesUseCaseTest {
     }
 
     private fun callTestedMethod(
-        recipe: Recipe = MockConstants.Diary.getRecipe(),
+        recipe: Recipe = MockConstants.Diary.getRecipe().toRecipe(),
         servings: Int = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1
     ) = calculateRecipeNutritionValuesUseCase(
         servings = servings,

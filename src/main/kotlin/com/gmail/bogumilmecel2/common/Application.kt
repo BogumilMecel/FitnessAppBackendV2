@@ -184,7 +184,6 @@ fun Application.module() {
         searchForRecipes = SearchForRecipes(diaryRepository = diaryRepository),
         insertRecipeDiaryEntryUseCase = InsertRecipeDiaryEntryUseCase(
             diaryRepository = diaryRepository,
-            getRecipeUseCase = getRecipeUseCase,
             isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase
         ),
         getRecipePriceUseCase = GetRecipePriceUseCase(priceRepository = priceRepository),

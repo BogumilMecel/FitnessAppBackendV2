@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 
+import com.gmail.bogumilmecel2.common.domain.model.exceptions.DateNotInRangeException
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.DeleteDiaryEntryRequest
@@ -21,7 +22,7 @@ class DeleteDiaryEntryUseCase(
                 val productDiaryEntry = diaryRepository.getProductDiaryEntry(id = deleteDiaryEntryRequest.diaryEntryId).data ?: return Resource.Error()
 
                 if (productDiaryEntry.userId != userId) return Resource.Error()
-                if (!isDateInValidRangeUseCaseUseCase(productDiaryEntry.creationDateTime.date)) return Resource.Error()
+                if (!isDateInValidRangeUseCaseUseCase(productDiaryEntry.creationDateTime.date)) return Resource.Error(DateNotInRangeException)
 
                 // TODO: Revert changes when deleting is handled with device id
 //                diaryRepository.deleteProductDiaryEntry(

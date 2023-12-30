@@ -1,25 +1,30 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe
 
+import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryDto
-import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDateInValidRangeUseCaseUseCase
 import org.bson.types.ObjectId
 
 class InsertRecipeDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
-    private val getRecipeUseCase: GetRecipeUseCase,
     private val isDateInValidRangeUseCaseUseCase: IsDateInValidRangeUseCaseUseCase
 ) {
 
-    suspend operator fun invoke(request: RecipeDiaryEntryRequest, userId: String): Resource<RecipeDiaryEntry> = with(request) {
-        val recipe = getRecipeUseCase(recipeId = request.recipeId).data ?: return Resource.Error()
+    suspend operator fun invoke(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<RecipeDiaryEntry> = with(recipeDiaryEntry) {
+        recipeId ?: return Resource.Error(InvalidIdException)
+        servings ?: return Resource.Error(InvalidServingsException)
+        date ?: return Resource.Error(InvalidDateException)
+        nutritionValues ?: return Resource.Error(InvalidNutritionValuesException)
+        mealName ?: return Resource.Error(InvalidMealNameException)
 
-        if (servings <= 0) return Resource.Error()
-        if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error()
+        val recipe = diaryRepository.getRecipe(recipeId).data ?: return Resource.Error(RecipeNotFoundException)
+
+        if (servings <= 0) return Resource.Error(InvalidServingsException)
+        if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error(DateNotInRangeException)
 
         val currentDateTime = CustomDateUtils.getUtcDateTime()
 
@@ -32,12 +37,11 @@ class InsertRecipeDiaryEntryUseCase(
                 userId = userId,
                 mealName = mealName,
                 servings = servings,
-                recipeName = recipe.name ?: return Resource.Error(),
-                recipeId = recipe.id ?: return Resource.Error(),
+                recipeName = recipe.name,
+                recipeId = recipe._id.toString(),
                 changeDateTime = currentDateTime,
                 deleted = false
-            ),
-            userId = userId
+            )
         )
     }
 }
