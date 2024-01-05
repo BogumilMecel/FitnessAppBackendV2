@@ -26,7 +26,7 @@ class DatabaseManager {
         connectionString = "mongodb+srv://FitnessApp:$password@cluster0.e8iazl3.mongodb.net/fitness_app?retryWrites=true&w=majority"
     ).coroutine.getDatabase(databaseName)
 
-    fun getProductDiaryCollection(): CoroutineCollection<ProductDiaryEntryDto> = client.getCollection("diary_collection")
+    fun getProductDiaryCollection(): CoroutineCollection<ProductDiaryEntryDto> = client.getCollection("product_diary_collection")
     fun getRecipeDiaryCollection(): CoroutineCollection<RecipeDiaryEntryDto> = client.getCollection("recipe_diary_collection")
     fun getRecipeCollection(): CoroutineCollection<RecipeDto> = client.getCollection("recipe_collection")
     fun getProductCollection(): CoroutineCollection<ProductDto> = client.getCollection("product_collection")
