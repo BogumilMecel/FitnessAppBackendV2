@@ -2,12 +2,12 @@ package com.gmail.bogumilmecel2.user.weight.domain.use_case
 
 import com.gmail.bogumilmecel2.common.util.extensions.round
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
-import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
 
 class CalculateWeightProgressUseCase(private val userRepository: UserRepository) {
     suspend operator fun invoke(
         userId: String,
-        weightEntries: List<WeightEntry>
+        weightEntries: List<WeightEntryDto>
     ): Double? {
         if (weightEntries.size < 2) return null
 

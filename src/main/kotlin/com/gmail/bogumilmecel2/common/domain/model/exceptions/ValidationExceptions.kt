@@ -1,3 +1,4 @@
+@file:Suppress("JavaIoSerializableObjectMustHaveReadResolve")
 package com.gmail.bogumilmecel2.common.domain.model.exceptions
 
 import com.github.aymanizz.ktori18n.R
@@ -17,6 +18,7 @@ data object InvalidDateException : BadRequestException(resource = R("invalid_dat
 data object InvalidMealNameException : BadRequestException(resource = R("invalid_meal_name"))
 data object InvalidServingsException : BadRequestException(resource = R("invalid_servings"))
 data object DateNotInRangeException : BadRequestException(resource = R("dat_not_in_range"))
+data object InvalidWeightValueException : BadRequestException(resource = R("invalid_weight_value"))
 
 data object CouldNotFindUserException : NotFoundException(resource = R("could_not_find_username"))
 data object DiaryEntryNotFoundException: NotFoundException(resource = R("diary_entry_not_found"))

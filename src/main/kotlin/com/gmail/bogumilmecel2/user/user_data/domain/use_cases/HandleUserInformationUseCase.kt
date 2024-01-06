@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.user.user_data.domain.model.IntroductionRequest
 import com.gmail.bogumilmecel2.user.user_data.domain.model.IntroductionResponse
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
-import com.gmail.bogumilmecel2.user.weight.domain.model.NewWeightEntryRequest
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
 import com.gmail.bogumilmecel2.user.weight.domain.use_case.AddWeightEntryUseCase
 import kotlinx.datetime.TimeZone
 
@@ -48,9 +48,7 @@ class HandleUserInformationUseCase(
             if (nutritionValuesResource is Resource.Error) return Resource.Error()
 
             addWeightEntryUseCase(
-                newWeightEntryRequest = NewWeightEntryRequest(
-                    value = weight,
-                ),
+                weightEntry = WeightEntry(value = weight),
                 userId = userId,
                 timeZone = timezone
             )

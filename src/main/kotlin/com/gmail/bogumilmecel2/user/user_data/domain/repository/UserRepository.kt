@@ -7,7 +7,7 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.Nutri
 import com.gmail.bogumilmecel2.user.log.domain.model.LogEntry
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsQuestion
-import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
 
 interface UserRepository {
     suspend fun saveUserNutritionValues(nutritionValues: NutritionValues, userId: String): Resource<Boolean>
@@ -17,12 +17,12 @@ interface UserRepository {
     suspend fun getLogEntries(limit: Int, userId: String): Resource<List<LogEntry>>
     suspend fun getUserByEmail(email: String): Resource<UserDto?>
     suspend fun registerNewUser(user: UserDto): Resource<Boolean>
-    suspend fun addWeightEntry(weightEntry: WeightEntry, userId: String): Resource<Boolean>
+    suspend fun addWeightEntry(weightEntry: WeightEntryDto): Resource<Unit>
     suspend fun checkIfUsernameExists(username: String): Resource<Boolean>
     suspend fun getUser(userId: String): Resource<User?>
     suspend fun getUsername(userId: String): Resource<String?>
-    suspend fun getWeightEntries(userId: String, limit: Int): Resource<List<WeightEntry>>
-    suspend fun getLatestWeightEntry(userId: String): Resource<WeightEntry?>
+    suspend fun getWeightEntries(userId: String, limit: Int): Resource<List<WeightEntryDto>>
+    suspend fun getLatestWeightEntry(userId: String): Resource<WeightEntryDto?>
     suspend fun updateAskForWeightDaily(accepted: Boolean, userId: String): Resource<Unit>
     suspend fun updateWeightProgress(userId: String, weightProgress: Double): Resource<Unit>
     suspend fun insertWeightDialogsQuestion(weightDialogsQuestion: WeightDialogsQuestion): Resource<Unit>

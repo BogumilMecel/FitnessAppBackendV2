@@ -90,9 +90,9 @@ class UserRepositoryImp(
         }
     }
 
-    override suspend fun addWeightEntry(weightEntry: WeightEntry, userId: String): Resource<Boolean> {
+    override suspend fun addWeightEntry(weightEntry: WeightEntryDto): Resource<Unit> {
         return handleRequest {
-            weightCol.insertOne(weightEntry.toDto(userId = userId)).wasAcknowledged()
+            weightCol.insertOne(weightEntry).wasAcknowledgedOrThrow()
         }
     }
 
@@ -114,7 +114,7 @@ class UserRepositoryImp(
         }
     }
 
-    override suspend fun getWeightEntries(userId: String, limit: Int): Resource<List<WeightEntry>> {
+    override suspend fun getWeightEntries(userId: String, limit: Int): Resource<List<WeightEntryDto>> {
         return handleRequest {
             weightCol.find(WeightEntryDto::userId eq userId)
                 .limit(limit)
@@ -124,7 +124,6 @@ class UserRepositoryImp(
                     )
                 )
                 .toList()
-                .map { it.toObject() }
         }
     }
 
@@ -160,14 +159,13 @@ class UserRepositoryImp(
         }
     }
 
-    override suspend fun getLatestWeightEntry(userId: String): Resource<WeightEntry?> {
+    override suspend fun getLatestWeightEntry(userId: String): Resource<WeightEntryDto?> {
         return handleRequest {
             weightCol
                 .find(WeightEntryDto::userId eq userId)
                 .descendingSort(WeightEntryDto::creationDateTime)
                 .limit(1)
                 .first()
-                ?.toObject()
         }
     }
 }

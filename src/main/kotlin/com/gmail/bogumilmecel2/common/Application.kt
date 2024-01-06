@@ -142,7 +142,6 @@ fun Application.module() {
     val addWeightEntryUseCase = AddWeightEntryUseCase(
         userRepository = userRepository,
         calculateWeightProgressUseCase = calculateWeightEntriesUseCase,
-        getWeightEntriesUseCase = getWeightEntriesUseCase,
         checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
         getLatestWeightEntryUseCase = GetLatestWeightEntryUseCase(userRepository)
     )

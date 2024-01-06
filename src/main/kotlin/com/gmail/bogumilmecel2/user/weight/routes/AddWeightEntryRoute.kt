@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.common.util.extensions.getTimezoneHeader
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
 import com.gmail.bogumilmecel2.common.util.extensions.receiveOrRespond
-import com.gmail.bogumilmecel2.user.weight.domain.model.NewWeightEntryRequest
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
 import com.gmail.bogumilmecel2.user.weight.domain.use_case.AddWeightEntryUseCase
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -14,12 +14,12 @@ fun Route.configureAddWeightEntryRoute(addWeightEntryUseCase: AddWeightEntryUseC
     authenticate {
         post("") {
             call.run {
-                receiveOrRespond<NewWeightEntryRequest>()?.let { request ->
+                receiveOrRespond<WeightEntry>()?.let { weightEntry ->
                     getUserId()?.let { userId ->
                         getTimezoneHeader()?.let { timeZone ->
                             handleResource(
                                 resource = addWeightEntryUseCase(
-                                    newWeightEntryRequest = request,
+                                    weightEntry = weightEntry,
                                     userId = userId,
                                     timeZone = timeZone
                                 )
