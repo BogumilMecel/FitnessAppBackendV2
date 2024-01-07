@@ -2,7 +2,6 @@ package com.gmail.bogumilmecel2
 
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
-import com.gmail.bogumilmecel2.common.util.extensions.toLocalDate
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
@@ -14,6 +13,9 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Difficulty
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.TimeRequired
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsQuestion
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toLocalDate
 import kotlinx.datetime.toLocalDateTime
 import org.bson.types.ObjectId
 
@@ -27,7 +29,7 @@ object MockConstants {
     const val DATE_TIME_TWO_WEEKS_LATER = "2023-12-21T00:00:00.000"
     private const val MOCK_DATE_WITH_PLACEHOLDER = "202%s-12-12"
 
-    fun getFormattedDate(value: Int) = MOCK_DATE_WITH_PLACEHOLDER.format(value).toLocalDate()!!
+    fun getFormattedDate(value: Int) = MOCK_DATE_WITH_PLACEHOLDER.format(value).toLocalDate()
 
     object Diary {
         const val PRODUCT_NAME = "Rice"
@@ -112,8 +114,30 @@ object MockConstants {
     }
 
     object Weight {
+
+        const val WEIGHT_ENTRY_ID_1 = "223456789012345678901111"
+        const val WEIGHT_ENTRY_ID_2 = "223456789012345678902222"
+        const val VALUE = 80.0
+
         fun getWeightDialogsQuestions(count: Int = 3) = (1..count).map {
             WeightDialogsQuestion(date = getFormattedDate(it), userId = USER_ID_1)
+        }
+
+        fun getWeightEntry(
+            id: String = WEIGHT_ENTRY_ID_1,
+            value: Double = VALUE,
+            creationDateTime: LocalDateTime = DATE_TIME.toLocalDateTime()
+        ) = WeightEntryDto(
+            _id = ObjectId(id),
+            creationDateTime = creationDateTime,
+            userId = USER_ID_1,
+            date = DATE,
+            value = value
+        )
+
+        fun getWeightEntries(count: Int) = (1..count).map {
+            val number = if (it > 9) "$it" else "0$it"
+            getWeightEntry(id = "2234567890123456789011%s".format(number))
         }
     }
 }

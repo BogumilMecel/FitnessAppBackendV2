@@ -12,6 +12,7 @@ import com.gmail.bogumilmecel2.authentication.domain.use_case.RegisterNewUserUse
 import com.gmail.bogumilmecel2.authentication.routes.configureAuthRoutes
 import com.gmail.bogumilmecel2.authentication.routes.configureIsReachableRoute
 import com.gmail.bogumilmecel2.common.data.database.DatabaseManager
+import com.gmail.bogumilmecel2.common.domain.use_case.CheckIfUserExistsUseCase
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.plugins.*
 import com.gmail.bogumilmecel2.diary_feature.data.repository.DiaryRepositoryImp
@@ -36,7 +37,9 @@ import com.gmail.bogumilmecel2.user.weight.domain.use_case.*
 import com.gmail.bogumilmecel2.user.weight.routes.configureWeightRoutes
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -113,6 +116,7 @@ fun Application.module() {
     val getRecipeUseCase = GetRecipeUseCase(diaryRepository)
     val getProductDiaryHistoryUseCase = GetProductDiaryHistoryUseCase(diaryRepository = diaryRepository)
     val isDateInValidRangeUseCaseUseCase = IsDateInValidRangeUseCaseUseCase()
+    val checkIfUserExistsUseCase = CheckIfUserExistsUseCase(userRepository = userRepository)
 
     val diaryUseCases = DiaryUseCases(
         getDiaryEntriesUseCase = GetDiaryEntriesUseCase(diaryRepository),
@@ -143,7 +147,8 @@ fun Application.module() {
         userRepository = userRepository,
         calculateWeightProgressUseCase = calculateWeightEntriesUseCase,
         checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
-        getLatestWeightEntryUseCase = GetLatestWeightEntryUseCase(userRepository)
+        isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase,
+        checkIfUserExistsUseCase = checkIfUserExistsUseCase
     )
 
     val checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(

@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
-import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -32,7 +32,7 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
     fun `Check if null is returned when there is only 1 entry`() = runTest {
         assertNull(
             callTestedMethod(
-                weightEntries = listOf(WeightEntry())
+                weightEntries = listOf( MockConstants.Weight.getWeightEntry())
             )
         )
     }
@@ -43,11 +43,11 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
             expected = 50.0,
             actual = callTestedMethod(
                 weightEntries = listOf(
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 100.0,
                         creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
                     ),
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 150.0,
                         creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
                     )
@@ -64,11 +64,11 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
             expected = -50.0,
             actual = callTestedMethod(
                 weightEntries = listOf(
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 150.0,
                         creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
                     ),
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 100.0,
                         creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
                     ),
@@ -85,15 +85,15 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
             expected = 100.0,
             actual = callTestedMethod(
                 weightEntries = listOf(
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 100.0,
                         creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
                     ),
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 150.0,
                         creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
                     ),
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 200.0,
                         creationDateTime = MockConstants.DATE_TIME_TWO_WEEKS_LATER.toLocalDateTime()!!
                     )
@@ -110,15 +110,15 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
             expected = -100.0,
             actual = callTestedMethod(
                 weightEntries = listOf(
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 100.0,
                         creationDateTime = MockConstants.DATE_TIME_TWO_WEEKS_LATER.toLocalDateTime()!!
                     ),
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 150.0,
                         creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
                     ),
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 200.0,
                         creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
                     )
@@ -135,11 +135,11 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
             expected = 0.0,
             actual = callTestedMethod(
                 weightEntries = listOf(
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 100.0,
                         creationDateTime = MockConstants.DATE_TIME_TWO_WEEKS_LATER.toLocalDateTime()!!
                     ),
-                    WeightEntry(
+                    MockConstants.Weight.getWeightEntry(
                         value = 100.0,
                         creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
                     ),
@@ -162,7 +162,7 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
         }
     }
 
-    private suspend fun callTestedMethod(weightEntries: List<WeightEntry>): Double? {
+    private suspend fun callTestedMethod(weightEntries: List<WeightEntryDto>): Double? {
         coEvery {
             userRepository.updateWeightProgress(
                 userId = MockConstants.USER_ID_1,

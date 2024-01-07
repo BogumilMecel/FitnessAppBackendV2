@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.user.weight.domain.model
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toLocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
@@ -24,11 +25,11 @@ data class WeightEntryDto(
     val userId: String,
     val value: Double,
     val creationDateTime: LocalDateTime,
-    val date: LocalDate
+    val date: String
 )
 
 fun WeightEntryDto.toWeightEntry(): WeightEntry = WeightEntry(
     value = value,
     creationDateTime = creationDateTime,
-    date = date
+    date = date.toLocalDate()
 )

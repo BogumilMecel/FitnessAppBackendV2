@@ -1,5 +1,6 @@
 package com.gmail.bogumilmecel2.user.user_data.domain.use_cases
 
+import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.user_data.domain.model.IntroductionRequest
 import com.gmail.bogumilmecel2.user.user_data.domain.model.IntroductionResponse
@@ -48,9 +49,11 @@ class HandleUserInformationUseCase(
             if (nutritionValuesResource is Resource.Error) return Resource.Error()
 
             addWeightEntryUseCase(
-                weightEntry = WeightEntry(value = weight),
+                weightEntry = WeightEntry(
+                    value = weight,
+                    date = CustomDateUtils.getTimeZoneDate(timeZone = timezone)
+                ),
                 userId = userId,
-                timeZone = timezone
             )
 
             val userInformation = UserInformation(

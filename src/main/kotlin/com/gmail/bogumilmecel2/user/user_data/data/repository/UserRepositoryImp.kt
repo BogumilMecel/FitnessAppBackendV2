@@ -14,6 +14,8 @@ import com.gmail.bogumilmecel2.user.log.domain.model.toLogEntry
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.weight.domain.model.*
+import kotlinx.datetime.LocalDate
+import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.descending
 import org.litote.kmongo.eq
@@ -166,6 +168,12 @@ class UserRepositoryImp(
                 .descendingSort(WeightEntryDto::creationDateTime)
                 .limit(1)
                 .first()
+        }
+    }
+
+    override suspend fun removeWeightEntries(userId: String, date: LocalDate): Resource<Unit> {
+        return handleRequest {
+            weightCol.deleteMany(and(WeightEntryDto::userId eq userId, WeightEntryDto::date eq date.toString()))
         }
     }
 }

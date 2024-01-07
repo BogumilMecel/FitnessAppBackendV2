@@ -51,7 +51,7 @@ class InsertProductUseCase(
                 )
             ) return Resource.Error(exception = InvalidBarcodeLengthException)
 
-            val username = getUsernameUseCase(userId = userId) ?: return Resource.Error(exception = CouldNotFindUserException)
+            val username = getUsernameUseCase(userId = userId) ?: return Resource.Error(exception = UserNotFoundException)
 
             val nutritionValues = when (nutritionValuesIn) {
                 NutritionValuesIn.HUNDRED_GRAMS -> nutritionValues

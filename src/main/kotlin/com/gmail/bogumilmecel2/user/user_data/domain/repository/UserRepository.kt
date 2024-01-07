@@ -8,6 +8,7 @@ import com.gmail.bogumilmecel2.user.log.domain.model.LogEntry
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsQuestion
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
+import kotlinx.datetime.LocalDate
 
 interface UserRepository {
     suspend fun saveUserNutritionValues(nutritionValues: NutritionValues, userId: String): Resource<Boolean>
@@ -22,6 +23,7 @@ interface UserRepository {
     suspend fun getUser(userId: String): Resource<User?>
     suspend fun getUsername(userId: String): Resource<String?>
     suspend fun getWeightEntries(userId: String, limit: Int): Resource<List<WeightEntryDto>>
+    suspend fun removeWeightEntries(userId: String, date: LocalDate): Resource<Unit>
     suspend fun getLatestWeightEntry(userId: String): Resource<WeightEntryDto?>
     suspend fun updateAskForWeightDaily(accepted: Boolean, userId: String): Resource<Unit>
     suspend fun updateWeightProgress(userId: String, weightProgress: Double): Resource<Unit>

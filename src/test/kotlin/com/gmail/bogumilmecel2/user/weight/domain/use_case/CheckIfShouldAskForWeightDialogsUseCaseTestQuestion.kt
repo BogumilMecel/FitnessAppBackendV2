@@ -9,7 +9,7 @@ import com.gmail.bogumilmecel2.user.log.domain.model.LogEntry
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLogEntriesUseCase
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsQuestion
-import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntry
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.mockkClass
@@ -111,7 +111,7 @@ class CheckIfShouldAskForWeightDialogsUseCaseTestQuestion: BaseTest() {
     private fun mockClasses(
         userResource: Resource<User?> = Resource.Success(data = User(askForWeightDaily = null)),
         logEntriesResource: Resource<List<LogEntry>> = Resource.Success(data = getSampleLogEntries()),
-        weightEntriesResource: Resource<List<WeightEntry>> = Resource.Success(data = getSampleWeightEntries()),
+        weightEntriesResource: Resource<List<WeightEntryDto>> = Resource.Success(data = MockConstants.Weight.getWeightEntries(count = 14)),
         getWeightDialogsQuestionsResource: Resource<List<WeightDialogsQuestion>> = Resource.Success(data = MockConstants.Weight.getWeightDialogsQuestions())
     ) {
         coEvery { userRepository.getUser(MockConstants.USER_ID_1) } returns userResource
@@ -133,10 +133,5 @@ class CheckIfShouldAskForWeightDialogsUseCaseTestQuestion: BaseTest() {
     private fun getSampleLogEntries() = listOf(
         LogEntry(),
         LogEntry()
-    )
-
-    private fun getSampleWeightEntries() = listOf(
-        WeightEntry(),
-        WeightEntry()
     )
 }

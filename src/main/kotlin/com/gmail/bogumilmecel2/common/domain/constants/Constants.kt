@@ -23,6 +23,9 @@ object Constants {
 
     object Weight {
         const val MINIMUM_ENTRIES_COUNT = 2
+
+        const val MIN_WEIGHT_VALUE = 0
+        const val MAX_WEIGHT_VALUE = 400
     }
 
     object Api {

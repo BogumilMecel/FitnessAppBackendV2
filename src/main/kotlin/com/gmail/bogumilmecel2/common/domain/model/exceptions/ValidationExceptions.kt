@@ -20,6 +20,6 @@ data object InvalidServingsException : BadRequestException(resource = R("invalid
 data object DateNotInRangeException : BadRequestException(resource = R("dat_not_in_range"))
 data object InvalidWeightValueException : BadRequestException(resource = R("invalid_weight_value"))
 
-data object CouldNotFindUserException : NotFoundException(resource = R("could_not_find_username"))
+data object UserNotFoundException : NotFoundException(resource = R("could_not_find_username"))
 data object DiaryEntryNotFoundException: NotFoundException(resource = R("diary_entry_not_found"))
 data object RecipeNotFoundException: NotFoundException(resource = R("recipe_not_found"))

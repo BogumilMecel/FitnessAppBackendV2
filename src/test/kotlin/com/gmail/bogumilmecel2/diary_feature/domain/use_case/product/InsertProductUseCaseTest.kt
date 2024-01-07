@@ -136,7 +136,7 @@ class InsertProductUseCaseTest : BaseTest() {
     @Test
     fun `Check if get username returns null, resource error is returned`() = runTest {
         mockClasses(username = null)
-        callTestedMethod().assertIsError(CouldNotFindUserException)
+        callTestedMethod().assertIsError(UserNotFoundException)
     }
 
     @ParameterizedTest

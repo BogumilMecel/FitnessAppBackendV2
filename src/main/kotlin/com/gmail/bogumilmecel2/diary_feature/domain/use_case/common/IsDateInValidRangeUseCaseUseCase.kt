@@ -6,7 +6,10 @@ import com.gmail.bogumilmecel2.common.util.CustomDateUtils.minusDays
 import kotlinx.datetime.LocalDate
 
 class IsDateInValidRangeUseCaseUseCase {
-    operator fun invoke(date: LocalDate): Boolean {
-        return date > CustomDateUtils.getUtcDate().minusDays(days = MAXIMUM_MODIFY_DATE)
+    operator fun invoke(
+        date: LocalDate,
+        range: Int = MAXIMUM_MODIFY_DATE
+    ): Boolean {
+        return date > CustomDateUtils.getUtcDate().minusDays(days = range)
     }
 }
