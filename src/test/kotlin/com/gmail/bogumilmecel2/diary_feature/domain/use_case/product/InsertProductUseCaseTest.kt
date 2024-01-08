@@ -8,7 +8,6 @@ import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
@@ -161,7 +160,7 @@ class InsertProductUseCaseTest : BaseTest() {
     @Test
     fun `Check if request is correct, and repository return resource success, resource success is returned`() = runTest {
         mockClasses()
-        mockDateTime(dateTime = MockConstants.DATE_TIME.toLocalDateTime()!!)
+        mockDateTime(dateTime = MockConstants.getDateTime())
         callTestedMethod(nutritionValuesIn = NutritionValuesIn.CONTAINER).assertIsSuccess()
         verify(exactly = 1) {
             calculateNutritionValuesUseCase(

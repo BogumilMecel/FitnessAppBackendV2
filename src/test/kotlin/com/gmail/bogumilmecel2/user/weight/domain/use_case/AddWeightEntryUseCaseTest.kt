@@ -16,7 +16,6 @@ import com.gmail.bogumilmecel2.user.weight.domain.model.toWeightEntry
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toLocalDate
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -112,10 +111,10 @@ class AddWeightEntryUseCaseTest: BaseTest() {
         weightEntryResource: Resource<Unit> = Resource.Success(Unit),
         weightEntriesResource: Resource<List<WeightEntryDto>> = Resource.Success(data = MockConstants.Weight.getWeightEntries(14))
     ) {
-        every { isDateInvValidRangeUseCaseUseCase(date = MockConstants.DATE.toLocalDate()) } returns dateInRange
+        every { isDateInvValidRangeUseCaseUseCase(date = MockConstants.getDate()) } returns dateInRange
         every { checkIfWeightIsValidUseCase(value = MockConstants.Weight.VALUE) } returns valueValid
         coEvery { checkIfUserExistsUseCase(userId = MockConstants.USER_ID_1) } returns userExists
-        coEvery { userRepository.removeWeightEntries(userId = MockConstants.USER_ID_1, date = MockConstants.DATE.toLocalDate()) } returns removalResource
+        coEvery { userRepository.removeWeightEntries(userId = MockConstants.USER_ID_1, date = MockConstants.getDate()) } returns removalResource
         coEvery { userRepository.addWeightEntry(weightEntry = any()) } returns weightEntryResource
         coEvery { userRepository.getWeightEntries(userId = MockConstants.USER_ID_1, limit = 14) } returns weightEntriesResource
         coEvery { calculateWeightProgressUseCase(userId = MockConstants.USER_ID_1, weightEntries = any()) } returns progress
@@ -123,7 +122,7 @@ class AddWeightEntryUseCaseTest: BaseTest() {
 
     private suspend fun callTestedMethod(
         value: Double? = MockConstants.Weight.VALUE,
-        date: LocalDate? = MockConstants.DATE.toLocalDate()
+        date: LocalDate? = MockConstants.getDate()
     ) = addWeightEntryUseCase(
         userId = MockConstants.USER_ID_1,
         weightEntry = MockConstants.Weight.getWeightEntry().toWeightEntry().copy(

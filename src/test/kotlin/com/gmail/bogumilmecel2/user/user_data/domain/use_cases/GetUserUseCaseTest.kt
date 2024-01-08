@@ -17,7 +17,6 @@ import io.mockk.mockk
 import io.mockk.mockkClass
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.junit.Test
 
 class GetUserUseCaseTest : BaseTest() {
@@ -59,13 +58,13 @@ class GetUserUseCaseTest : BaseTest() {
 
     @Test
     fun `check if all methods are called and resource success is returned if user is not null`() = runTest {
-        mockDateTime(dateTime = MockConstants.DATE_TIME.toLocalDateTime())
+        mockDateTime(dateTime = MockConstants.getDateTime())
         mockData()
         callTestedMethod().assertIsSuccess()
         coVerify(exactly = 1) {
             deviceRepository.updateLastLoggedInDateTime(
                 userId = MockConstants.USER_ID_1,
-                date = MockConstants.DATE_TIME.toLocalDateTime(),
+                date = MockConstants.getDateTime(),
                 deviceId = any()
             )
             checkLatestLogEntryAndGetLogStreakUseCase(userId = MockConstants.USER_ID_1, timeZone = TimeZone.UTC, userStreak = 1)
@@ -87,7 +86,7 @@ class GetUserUseCaseTest : BaseTest() {
             deviceRepository.updateLastLoggedInDateTime(
                 userId = MockConstants.USER_ID_1,
                 deviceId = MockConstants.DEVICE_ID,
-                date = MockConstants.DATE_TIME.toLocalDateTime()
+                date = MockConstants.getDateTime()
             )
         } returns updateDeviceResource
         coEvery {

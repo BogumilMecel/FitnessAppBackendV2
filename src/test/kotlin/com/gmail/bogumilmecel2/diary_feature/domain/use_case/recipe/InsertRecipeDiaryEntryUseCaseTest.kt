@@ -4,8 +4,6 @@ import com.gmail.bogumilmecel2.BaseDiaryTest
 import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.common.util.extensions.toLocalDate
-import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
@@ -92,7 +90,7 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     @Test
     fun `Check if data is correct and repository returns resource success, resource success is returned`() = runTest {
-        mockDateTime(dateTime = MockConstants.DATE_TIME.toLocalDateTime()!!)
+        mockDateTime(dateTime = MockConstants.getDateTime())
         mockData()
         callTestedMethod().assertIsSuccess()
         coVerify(exactly = 1) { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntry = any()) }
@@ -105,13 +103,13 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     ) {
         coEvery { diaryRepository.getRecipe(recipeId = MockConstants.Diary.RECIPE_ID) } returns recipeResource
         coEvery { diaryRepository.insertRecipeDiaryEntry(recipeDiaryEntry = any()) } returns repositoryResource
-        every { isDateInValidRangeUseCaseUseCase(date = MockConstants.DATE.toLocalDate()!!) } returns isDateInValidRange
+        every { isDateInValidRangeUseCaseUseCase(date = MockConstants.getDate()) } returns isDateInValidRange
     }
 
     private suspend fun callTestedMethod(
         recipeId: String? = MockConstants.Diary.RECIPE_ID,
         servings: Int? = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1,
-        date: LocalDate? = MockConstants.DATE.toLocalDate(),
+        date: LocalDate? = MockConstants.getDate(),
         nutritionValues: NutritionValues? = MockConstants.Diary.getNutritionValues(),
         mealName: MealName? = MealName.BREAKFAST
     ) = insertRecipeDiaryEntryUseCase(

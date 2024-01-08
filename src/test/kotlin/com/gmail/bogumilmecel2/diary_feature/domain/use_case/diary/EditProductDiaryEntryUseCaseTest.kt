@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.BaseDiaryTest
 import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
@@ -94,11 +93,11 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     @Test
     fun `Check if called with correct data and repository returns resource success, resource success is returned`() = runTest {
         mockData()
-        mockDateTime(dateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!)
+        mockDateTime(dateTime = MockConstants.getDateTimeOneWeekLater())
         val expectedProductDiaryEntry = MockConstants.Diary.getProductDiaryEntry().copy(
             weight = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_2,
             userId = MockConstants.USER_ID_1,
-            changeDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+            changeDateTime = MockConstants.getDateTimeOneWeekLater()
         )
         callTestedMethod().run {
             assertIsSuccess()
@@ -117,7 +116,7 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     ) {
         coEvery { getProductDiaryEntryUseCase(MockConstants.Diary.PRODUCT_DIARY_ENTRY_ID) } returns productDiaryEntryResource
         coEvery { diaryRepository.editProductDiaryEntry(productDiaryEntry = any()) } returns repositoryResource
-        coEvery { isDateInValidRangeUseCaseUseCase(date = MockConstants.DATE_TIME.toLocalDateTime()!!.date) } returns isDateInValidRange
+        coEvery { isDateInValidRangeUseCaseUseCase(date = MockConstants.getDateTime().date) } returns isDateInValidRange
     }
 
     private suspend fun callTestedMethod(

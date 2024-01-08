@@ -3,7 +3,6 @@ package com.gmail.bogumilmecel2.user.weight.domain.use_case
 import com.gmail.bogumilmecel2.BaseTest
 import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
 import io.mockk.coEvery
@@ -45,11 +44,11 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
                 weightEntries = listOf(
                     MockConstants.Weight.getWeightEntry(
                         value = 100.0,
-                        creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTime()
                     ),
                     MockConstants.Weight.getWeightEntry(
                         value = 150.0,
-                        creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTimeOneWeekLater()
                     )
                 )
             ).also {
@@ -66,11 +65,11 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
                 weightEntries = listOf(
                     MockConstants.Weight.getWeightEntry(
                         value = 150.0,
-                        creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTime()
                     ),
                     MockConstants.Weight.getWeightEntry(
                         value = 100.0,
-                        creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTimeOneWeekLater()
                     ),
                 )
             ).also {
@@ -87,15 +86,15 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
                 weightEntries = listOf(
                     MockConstants.Weight.getWeightEntry(
                         value = 100.0,
-                        creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTime()
                     ),
                     MockConstants.Weight.getWeightEntry(
                         value = 150.0,
-                        creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTimeOneWeekLater()
                     ),
                     MockConstants.Weight.getWeightEntry(
                         value = 200.0,
-                        creationDateTime = MockConstants.DATE_TIME_TWO_WEEKS_LATER.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTimeTwoWeeksLater()
                     )
                 )
             ).also {
@@ -112,15 +111,15 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
                 weightEntries = listOf(
                     MockConstants.Weight.getWeightEntry(
                         value = 100.0,
-                        creationDateTime = MockConstants.DATE_TIME_TWO_WEEKS_LATER.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTimeTwoWeeksLater()
                     ),
                     MockConstants.Weight.getWeightEntry(
                         value = 150.0,
-                        creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTimeOneWeekLater()
                     ),
                     MockConstants.Weight.getWeightEntry(
                         value = 200.0,
-                        creationDateTime = MockConstants.DATE_TIME.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTime()
                     )
                 )
             ).also {
@@ -137,11 +136,11 @@ class CalculateWeightProgressUseCaseTest : BaseTest() {
                 weightEntries = listOf(
                     MockConstants.Weight.getWeightEntry(
                         value = 100.0,
-                        creationDateTime = MockConstants.DATE_TIME_TWO_WEEKS_LATER.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTimeTwoWeeksLater()
                     ),
                     MockConstants.Weight.getWeightEntry(
                         value = 100.0,
-                        creationDateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!
+                        creationDateTime = MockConstants.getDateTimeOneWeekLater()
                     ),
                 )
             ).also {

@@ -28,12 +28,16 @@ object MockConstants {
     const val USER_ID_2 = "123456789012345678902222"
     const val DEVICE_ID = "123456789012345678903333"
     const val USERNAME = "username"
-    const val DATE = "2021-12-12"
-    const val DATE_TIME = "2023-12-07T00:00:00.000"
-    const val DATE_TIME_ONE_WEEK_LATER = "2023-12-14T00:00:00.000"
-    const val DATE_TIME_TWO_WEEKS_LATER = "2023-12-21T00:00:00.000"
+    private const val DATE = "2021-12-12"
+    private const val DATE_TIME = "2023-12-07T00:00:00.000"
+    private const val DATE_TIME_ONE_WEEK_LATER = "2023-12-14T00:00:00.000"
+    private const val DATE_TIME_TWO_WEEKS_LATER = "2023-12-21T00:00:00.000"
     private const val MOCK_DATE_WITH_PLACEHOLDER = "202%s-12-12"
 
+    fun getDate() = DATE.toLocalDate()
+    fun getDateTime() = DATE_TIME.toLocalDateTime()
+    fun getDateTimeOneWeekLater() = DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()
+    fun getDateTimeTwoWeeksLater() = DATE_TIME_TWO_WEEKS_LATER.toLocalDateTime()
     fun getFormattedDate(value: Int) = MOCK_DATE_WITH_PLACEHOLDER.format(value).toLocalDate()
 
     fun getUser(askForWeightDaily: Boolean? = null) = UserDto(
@@ -53,7 +57,8 @@ object MockConstants {
         _id = ObjectId(DEVICE_ID),
         userId = USER_ID_1,
         creationDate = DATE_TIME.toLocalDateTime(),
-        lastLoggedInDate = DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()
+        lastLoggedInDate = DATE_TIME_ONE_WEEK_LATER.toLocalDateTime(),
+        deviceId = DEVICE_ID
     )
 
     object Diary {

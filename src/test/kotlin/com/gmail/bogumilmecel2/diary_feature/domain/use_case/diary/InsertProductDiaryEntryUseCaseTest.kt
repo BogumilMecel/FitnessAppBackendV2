@@ -4,8 +4,6 @@ import com.gmail.bogumilmecel2.BaseDiaryTest
 import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.common.util.extensions.toLocalDate
-import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toProductDiaryEntry
@@ -92,7 +90,7 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     @Test
     fun `Check if repository returns success, resource success is returned and correct data is used`() = runTest {
-        mockDateTime(dateTime = MockConstants.DATE_TIME.toLocalDateTime()!!)
+        mockDateTime(dateTime = MockConstants.getDateTime())
         mockData()
         callTestedMethod().run {
             assertIsSuccess()
@@ -111,14 +109,14 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     ) {
         coEvery { diaryRepository.getProduct(productId = MockConstants.Diary.PRODUCT_ID) } returns productResource
         coEvery { diaryRepository.insertProductDiaryEntry(productDiaryEntry = any()) } returns insertResource
-        every { isDateInValidRangeUseCaseUseCase(date = MockConstants.DATE.toLocalDate()!!) } returns isDateInValidRange
+        every { isDateInValidRangeUseCaseUseCase(date = MockConstants.getDate()) } returns isDateInValidRange
     }
 
     private suspend fun callTestedMethod(
         productId: String? = MockConstants.Diary.PRODUCT_ID,
         weight: Int? = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
         mealName: MealName? = MealName.BREAKFAST,
-        date: LocalDate? = MockConstants.DATE.toLocalDate(),
+        date: LocalDate? = MockConstants.getDate(),
         nutritionValues: NutritionValues? = MockConstants.Diary.getNutritionValues(),
     ) = insertProductDiaryEntryUseCase(
         productDiaryEntry = MockConstants.Diary.getProductDiaryEntry().toProductDiaryEntry().copy(

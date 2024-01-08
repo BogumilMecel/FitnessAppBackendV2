@@ -4,7 +4,6 @@ import com.gmail.bogumilmecel2.BaseDiaryTest
 import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.common.util.extensions.toLocalDateTime
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryDto
@@ -95,7 +94,7 @@ class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
             nutritionValues = MockConstants.Diary.getNutritionValues2(),
             servings = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2
         )
-        mockDateTime(dateTime = MockConstants.DATE_TIME_ONE_WEEK_LATER.toLocalDateTime()!!)
+        mockDateTime(dateTime = MockConstants.getDateTimeOneWeekLater())
         mockData()
         callTestedMethod().run {
             assertIsSuccess()
@@ -114,7 +113,7 @@ class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     ) {
         coEvery { diaryRepository.getRecipeDiaryEntry(id = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID) } returns recipeDiaryEntryResource
         coEvery { diaryRepository.editRecipeDiaryEntry(recipeDiaryEntry = any()) } returns diaryResource
-        coEvery { isDateInValidRangeUseCaseUseCase(date = MockConstants.DATE_TIME.toLocalDateTime()?.date!!) } returns isDateInValidRange
+        coEvery { isDateInValidRangeUseCaseUseCase(date = MockConstants.getDateTime().date) } returns isDateInValidRange
     }
 
     private suspend fun callTestedMethod(
