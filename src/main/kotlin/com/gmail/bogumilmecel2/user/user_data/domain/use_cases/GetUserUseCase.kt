@@ -43,6 +43,7 @@ class GetUserUseCase(
                     userId = userId,
                     device = Device(
                         _id = ObjectId(),
+                        deviceId = deviceId,
                         creationDate = currentDate,
                         userId = userId,
                         lastLoggedInDate = currentDate,

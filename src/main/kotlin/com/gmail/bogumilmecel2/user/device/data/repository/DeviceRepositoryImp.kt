@@ -2,7 +2,6 @@ package com.gmail.bogumilmecel2.user.device.data.repository
 
 import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
 import com.gmail.bogumilmecel2.diary_feature.domain.model.Device
 import com.gmail.bogumilmecel2.user.device.domain.repository.DeviceRepository
 import com.mongodb.client.model.UpdateOptions
@@ -23,7 +22,7 @@ class DeviceRepositoryImp(private val deviceCollection: CoroutineCollection<Devi
         return handleRequest {
             deviceCollection.findOne(
                 filter = and(
-                    Device::_id eq deviceId.toObjectId(),
+                    Device::deviceId eq deviceId,
                     Device::userId eq userId
                 )
             )
@@ -40,7 +39,7 @@ class DeviceRepositoryImp(private val deviceCollection: CoroutineCollection<Devi
         return handleRequest {
             deviceCollection.updateOne(
                 filter = and(
-                    Device::_id eq deviceId.toObjectId(),
+                    Device::deviceId eq deviceId,
                     Device::userId eq userId
                 ),
                 update = setValue(Device::lastLoggedInDate, date),

@@ -6,6 +6,7 @@ import org.bson.types.ObjectId
 
 data class Device(
     @BsonId val _id: ObjectId,
+    val deviceId: String,
     val userId: String,
     val creationDate: LocalDateTime,
     val lastLoggedInDate: LocalDateTime,
