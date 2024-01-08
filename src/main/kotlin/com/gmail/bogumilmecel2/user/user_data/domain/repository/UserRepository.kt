@@ -1,6 +1,5 @@
 package com.gmail.bogumilmecel2.user.user_data.domain.repository
 
-import com.gmail.bogumilmecel2.authentication.domain.model.user.User
 import com.gmail.bogumilmecel2.authentication.domain.model.user.UserDto
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
@@ -20,7 +19,7 @@ interface UserRepository {
     suspend fun registerNewUser(user: UserDto): Resource<Boolean>
     suspend fun addWeightEntry(weightEntry: WeightEntryDto): Resource<Unit>
     suspend fun checkIfUsernameExists(username: String): Resource<Boolean>
-    suspend fun getUser(userId: String): Resource<User?>
+    suspend fun getUser(userId: String): Resource<UserDto?>
     suspend fun getUsername(userId: String): Resource<String?>
     suspend fun getWeightEntries(userId: String, limit: Int): Resource<List<WeightEntryDto>>
     suspend fun removeWeightEntries(userId: String, date: LocalDate): Resource<Unit>

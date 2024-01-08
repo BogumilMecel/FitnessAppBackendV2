@@ -2,7 +2,6 @@ package com.gmail.bogumilmecel2.user.user_data.data.repository
 
 import com.gmail.bogumilmecel2.authentication.domain.model.user.User
 import com.gmail.bogumilmecel2.authentication.domain.model.user.UserDto
-import com.gmail.bogumilmecel2.authentication.domain.model.user.toUser
 import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
@@ -13,7 +12,8 @@ import com.gmail.bogumilmecel2.user.log.domain.model.toDto
 import com.gmail.bogumilmecel2.user.log.domain.model.toLogEntry
 import com.gmail.bogumilmecel2.user.user_data.domain.model.UserInformation
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
-import com.gmail.bogumilmecel2.user.weight.domain.model.*
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightDialogsQuestion
+import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
 import kotlinx.datetime.LocalDate
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
@@ -104,9 +104,9 @@ class UserRepositoryImp(
         }
     }
 
-    override suspend fun getUser(userId: String): Resource<User?> {
+    override suspend fun getUser(userId: String): Resource<UserDto?> {
         return handleRequest {
-            userCol.findOneById(userId.toObjectId())?.toUser()
+            userCol.findOneById(userId.toObjectId())
         }
     }
 

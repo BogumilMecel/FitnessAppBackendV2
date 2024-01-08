@@ -2,7 +2,7 @@ package com.gmail.bogumilmecel2.user.weight.domain.use_case
 
 import com.gmail.bogumilmecel2.BaseTest
 import com.gmail.bogumilmecel2.MockConstants
-import com.gmail.bogumilmecel2.authentication.domain.model.user.User
+import com.gmail.bogumilmecel2.authentication.domain.model.user.UserDto
 import com.gmail.bogumilmecel2.common.domain.constants.Constants
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.user.log.domain.model.LogEntry
@@ -39,14 +39,14 @@ class CheckIfShouldAskForWeightDialogsUseCaseTestQuestion: BaseTest() {
     @Test
     fun `check if get user returns user with accepted daily weight dialogs, resource error is returned`() =
         runTest {
-            mockClasses(userResource = Resource.Success(data = User(askForWeightDaily = true)))
+            mockClasses(userResource = Resource.Success(data = MockConstants.getUser(askForWeightDaily = true)))
             callTestesUseCase().assertIsError()
         }
 
     @Test
     fun `check if get user returns user with declined daily weight dialogs, resource error is returned`() =
         runTest {
-            mockClasses(userResource = Resource.Success(data = User(askForWeightDaily = false)))
+            mockClasses(userResource = Resource.Success(data = MockConstants.getUser(askForWeightDaily = false)))
             callTestesUseCase().assertIsError()
         }
 
@@ -109,7 +109,7 @@ class CheckIfShouldAskForWeightDialogsUseCaseTestQuestion: BaseTest() {
     )
 
     private fun mockClasses(
-        userResource: Resource<User?> = Resource.Success(data = User(askForWeightDaily = null)),
+        userResource: Resource<UserDto?> = Resource.Success(data = MockConstants.getUser()),
         logEntriesResource: Resource<List<LogEntry>> = Resource.Success(data = getSampleLogEntries()),
         weightEntriesResource: Resource<List<WeightEntryDto>> = Resource.Success(data = MockConstants.Weight.getWeightEntries(count = 14)),
         getWeightDialogsQuestionsResource: Resource<List<WeightDialogsQuestion>> = Resource.Success(data = MockConstants.Weight.getWeightDialogsQuestions())

@@ -239,10 +239,10 @@ fun Application.module() {
                     tokenService = tokenService,
                 ),
                 getUserUseCase = GetUserUseCase(
-                    getUserObjectUseCase = GetUserObjectUseCase(userRepository = userRepository),
                     checkLatestLogEntryAndGetLogStreakUseCase = checkLatestLogEntryAndGetLogStreakUseCase,
                     getWeightEntriesUseCase = getWeightEntriesUseCase,
-                    deviceRepository = deviceRepository
+                    deviceRepository = deviceRepository,
+                    userRepository = userRepository
                 )
             )
         )
