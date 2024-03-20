@@ -2,6 +2,7 @@ package com.gmail.bogumilmecel2.diary_feature.domain.model.product
 
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
+import com.gmail.bogumilmecel2.diary.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
