@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.common.domain.model.convertFromDefaultCurrency
 import com.gmail.bogumilmecel2.common.util.extensions.round
-import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
+import com.gmail.bogumilmecel2.diary.domain.model.common.NutritionValues
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId

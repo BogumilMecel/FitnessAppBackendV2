@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.diary_feature.domain.use_case.common
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.InvalidWeightException
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.round
-import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
+import com.gmail.bogumilmecel2.diary.domain.model.common.NutritionValues
 
 class CalculateNutritionValuesUseCase {
     operator fun invoke(

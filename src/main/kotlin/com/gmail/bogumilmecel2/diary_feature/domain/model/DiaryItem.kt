@@ -1,6 +1,6 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.model
 
-import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
+import com.gmail.bogumilmecel2.diary.domain.model.common.NutritionValues
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 

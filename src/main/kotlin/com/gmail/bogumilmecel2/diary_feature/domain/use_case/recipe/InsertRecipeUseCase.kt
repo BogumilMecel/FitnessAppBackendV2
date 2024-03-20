@@ -4,7 +4,7 @@ import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
+import com.gmail.bogumilmecel2.diary.domain.model.common.NutritionValues
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils.Ingredient
