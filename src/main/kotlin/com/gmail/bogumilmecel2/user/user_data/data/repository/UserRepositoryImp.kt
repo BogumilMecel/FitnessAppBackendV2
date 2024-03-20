@@ -5,7 +5,7 @@ import com.gmail.bogumilmecel2.authentication.domain.model.user.UserDto
 import com.gmail.bogumilmecel2.common.domain.util.BaseRepository
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
-import com.gmail.bogumilmecel2.diary.domain.model.common.NutritionValues
+import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.user.log.domain.model.LogEntry
 import com.gmail.bogumilmecel2.user.log.domain.model.LogEntryDto
 import com.gmail.bogumilmecel2.user.log.domain.model.toDto

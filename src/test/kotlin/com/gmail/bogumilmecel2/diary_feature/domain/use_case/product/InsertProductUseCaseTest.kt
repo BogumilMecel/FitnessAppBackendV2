@@ -8,8 +8,8 @@ import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.diary.domain.model.product.NutritionValuesIn
-import com.gmail.bogumilmecel2.diary.domain.model.common.NutritionValues
+import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toProduct
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
@@ -21,7 +21,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
-import kotlin.test.assertTrue
 
 class InsertProductUseCaseTest : BaseTest() {
 
@@ -98,7 +97,6 @@ class InsertProductUseCaseTest : BaseTest() {
                 NutritionValuesIn.AVERAGE -> assertIsError(InvalidWeightException)
                 NutritionValuesIn.CONTAINER -> assertIsError(InvalidWeightException)
                 NutritionValuesIn.HUNDRED_GRAMS -> assertIsSuccess()
-                NutritionValuesIn.HUNDRED_MILLILITERS -> assertTrue(true)
             }
         }
     }
@@ -112,7 +110,6 @@ class InsertProductUseCaseTest : BaseTest() {
                 NutritionValuesIn.AVERAGE -> assertIsError(InvalidWeightException)
                 NutritionValuesIn.CONTAINER -> assertIsError(InvalidWeightException)
                 NutritionValuesIn.HUNDRED_GRAMS -> assertIsSuccess()
-                NutritionValuesIn.HUNDRED_MILLILITERS -> assertTrue(true)
             }
         }
     }

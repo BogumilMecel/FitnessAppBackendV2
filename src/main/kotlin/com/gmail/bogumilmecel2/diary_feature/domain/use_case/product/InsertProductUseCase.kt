@@ -8,7 +8,7 @@ import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.copyType
 import com.gmail.bogumilmecel2.common.util.extensions.isLengthInRange
-import com.gmail.bogumilmecel2.diary.domain.model.product.NutritionValuesIn
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository

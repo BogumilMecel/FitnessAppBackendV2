@@ -4,11 +4,11 @@ import com.gmail.bogumilmecel2.authentication.domain.model.user.UserDto
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.MeasurementUnit
 import com.gmail.bogumilmecel2.common.util.extensions.toObjectId
-import com.gmail.bogumilmecel2.diary.domain.model.common.NutritionValues
-import com.gmail.bogumilmecel2.diary.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.Device
 import com.gmail.bogumilmecel2.diary_feature.domain.model.MealName
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
+import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NutritionValuesIn
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDto

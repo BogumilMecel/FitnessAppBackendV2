@@ -1,7 +1,7 @@
 package com.gmail.bogumilmecel2.user.user_data.domain.use_cases
 
 import com.gmail.bogumilmecel2.common.util.extensions.round
-import com.gmail.bogumilmecel2.diary.domain.model.common.NutritionValues
+import com.gmail.bogumilmecel2.diary_feature.domain.model.nutrition_values.NutritionValues
 import com.gmail.bogumilmecel2.user.user_data.domain.model.*
 
 class CalculateNutritionValuesFromIntroductionUseCase {
