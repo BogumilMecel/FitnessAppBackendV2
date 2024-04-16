@@ -14,9 +14,9 @@ open class BaseRepository() {
         }
     }
 
-    fun <T> handleExceptionWithResource(exception: Exception, data: T? = null): Resource<T> {
+    fun <T> handleExceptionWithResource(exception: Exception): Resource<T> {
         exception.printStackTrace()
-        return Resource.Error(data = data)
+        return Resource.Error()
     }
 
     protected fun InsertOneResult.wasAcknowledgedOrThrow() = if (this.wasAcknowledged()) true else throw Exception()
