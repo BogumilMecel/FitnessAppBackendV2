@@ -7,9 +7,10 @@ import com.gmail.bogumilmecel2.authentication.domain.model.token.TokenConfig
 import com.gmail.bogumilmecel2.authentication.domain.service.HashingService
 import com.gmail.bogumilmecel2.authentication.domain.service.TokenService
 import com.gmail.bogumilmecel2.common.util.Resource
+import com.gmail.bogumilmecel2.common.util.copyType
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 
-class GetUserByUsername(
+class GetUserByUsernameUseCase(
     private val userRepository: UserRepository,
     private val hashingService: HashingService,
     private val tokenService: TokenService
@@ -18,7 +19,7 @@ class GetUserByUsername(
     suspend operator fun invoke(
         email:String,
         password:String,
-        tokenConfig: TokenConfig
+        tokenConfig: TokenConfig,
     ):Resource<AuthResponse>{
         val resource = userRepository.getUserByEmail(
             email = email
@@ -49,9 +50,7 @@ class GetUserByUsername(
                     Resource.Success(AuthResponse(token))
                 } ?: Resource.Error()
             }
-            is Resource.Error -> {
-                Resource.Error(resource.exception)
-            }
+            is Resource.Error -> resource.copyType()
         }
     }
 }

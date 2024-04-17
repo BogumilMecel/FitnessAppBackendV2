@@ -7,7 +7,7 @@ import com.gmail.bogumilmecel2.authentication.data.service.SHA256HashingService
 import com.gmail.bogumilmecel2.authentication.domain.model.token.TokenConfig
 import com.gmail.bogumilmecel2.authentication.domain.use_case.AuthUseCases
 import com.gmail.bogumilmecel2.authentication.domain.use_case.CheckIfUsernameExists
-import com.gmail.bogumilmecel2.authentication.domain.use_case.GetUserByUsername
+import com.gmail.bogumilmecel2.authentication.domain.use_case.GetUserByUsernameUseCase
 import com.gmail.bogumilmecel2.authentication.domain.use_case.RegisterNewUserUseCase
 import com.gmail.bogumilmecel2.authentication.routes.configureAuthRoutes
 import com.gmail.bogumilmecel2.common.data.database.DatabaseManager
@@ -230,7 +230,7 @@ fun Application.module() {
                     hashingService = hashingService,
                     checkIfUsernameExists = CheckIfUsernameExists(userRepository = userRepository)
                 ),
-                getUserByUsername = GetUserByUsername(
+                getUserByUsernameUseCase = GetUserByUsernameUseCase(
                     userRepository = userRepository,
                     hashingService = hashingService,
                     tokenService = tokenService,

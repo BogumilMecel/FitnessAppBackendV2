@@ -29,10 +29,10 @@ suspend inline fun <reified T> ApplicationCall.handleResource(resource: Resource
         }
 
         is Resource.Error -> {
-            println("Exception in ${this.request.path()} " + resource.exception.httpStatusCode)
-            this.respond(
-                status = (resource as? Resource.Error)?.exception?.httpStatusCode ?: HttpStatusCode.BadRequest,
-                message = (resource as? Resource.Error)?.exception?.resource?.let { t(it) }.orEmpty()
+            println("Exception in ${request.path()} " + resource.httpStatusCode)
+            this.respondNullable(
+                status = resource.httpStatusCode,
+                message = resource.exception?.resource?.let { t(it) } ?: resource.errorMessage
             )
         }
     }

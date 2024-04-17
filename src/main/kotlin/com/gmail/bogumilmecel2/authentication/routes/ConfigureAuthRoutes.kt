@@ -11,7 +11,7 @@ fun Route.configureAuthRoutes(
     route("/authentication/"){
         configureSignUpRoute(authUseCases.registerNewUserUseCase)
         configureSignInRoute(
-            getUserByUsername = authUseCases.getUserByUsername,
+            getUserByUsernameUseCase = authUseCases.getUserByUsernameUseCase,
             tokenConfig = tokenConfig
         )
         configureAuthenticateRoute(authUseCases.getUserUseCase)
