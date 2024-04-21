@@ -1,6 +1,5 @@
 package com.gmail.bogumilmecel2.authentication.routes
 
-import com.gmail.bogumilmecel2.common.util.extensions.getDeviceIdHeader
 import com.gmail.bogumilmecel2.common.util.extensions.getTimezoneHeader
 import com.gmail.bogumilmecel2.common.util.extensions.getUserId
 import com.gmail.bogumilmecel2.common.util.extensions.handleResource
@@ -15,15 +14,15 @@ fun Route.configureAuthenticateRoute(getUserUseCase: GetUserUseCase) {
             call.run {
                 getUserId()?.let { userId ->
                     getTimezoneHeader()?.let { timezone ->
-                        getDeviceIdHeader()?.let { deviceId ->
+//                        getDeviceIdHeader()?.let { deviceId ->
                             handleResource(
                                 resource = getUserUseCase(
                                     timezone = timezone,
                                     userId = userId,
-                                    deviceId = deviceId
+//                                    deviceId = deviceId
                                 )
                             )
-                        }
+//                        }
                     }
                 }
             }

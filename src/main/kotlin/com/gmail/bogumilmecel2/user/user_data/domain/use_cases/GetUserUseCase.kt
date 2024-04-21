@@ -23,34 +23,34 @@ class GetUserUseCase(
     suspend operator fun invoke(
         userId: String,
         timezone: TimeZone,
-        deviceId: String
+//        deviceId: String
     ): Resource<User> {
         val user = userRepository.getUser(userId = userId).data ?: return Resource.Error(UserNotFoundException)
 
-        val deviceResource = deviceRepository.getDevice(userId = userId, deviceId = deviceId)
+//        val deviceResource = deviceRepository.getDevice(userId = userId, deviceId = deviceId)
 
         val currentDate = CustomDateUtils.getUtcDateTime()
 
-        if (deviceResource is Resource.Success) {
-            if (deviceResource.data != null) {
-                deviceRepository.updateLastLoggedInDateTime(
-                    deviceId = deviceId,
-                    userId = userId,
-                    date = currentDate
-                )
-            } else {
-                deviceRepository.insertDevice(
-                    userId = userId,
-                    device = Device(
-                        _id = ObjectId(),
-                        deviceId = deviceId,
-                        creationDate = currentDate,
-                        userId = userId,
-                        lastLoggedInDate = currentDate,
-                    )
-                )
-            }
-        }
+//        if (deviceResource is Resource.Success) {
+//            if (deviceResource.data != null) {
+//                deviceRepository.updateLastLoggedInDateTime(
+//                    deviceId = deviceId,
+//                    userId = userId,
+//                    date = currentDate
+//                )
+//            } else {
+//                deviceRepository.insertDevice(
+//                    userId = userId,
+//                    device = Device(
+//                        _id = ObjectId(),
+//                        deviceId = deviceId,
+//                        creationDate = currentDate,
+//                        userId = userId,
+//                        lastLoggedInDate = currentDate,
+//                    )
+//                )
+//            }
+//        }
 
         val logEntryResource = checkLatestLogEntryAndGetLogStreakUseCase(
             userId = userId,
