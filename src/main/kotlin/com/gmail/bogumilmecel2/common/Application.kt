@@ -203,6 +203,12 @@ fun Application.module() {
 
     val hashingService = SHA256HashingService()
 
+    val getUserByUsernameUseCase = GetUserByUsernameUseCase(
+        userRepository = userRepository,
+        hashingService = hashingService,
+        tokenService = tokenService,
+    )
+
     configureAuthentication(tokenConfig = tokenConfig)
     configureMonitoring()
     configureSerialization()
@@ -228,13 +234,10 @@ fun Application.module() {
                 registerNewUserUseCase = RegisterNewUserUseCase(
                     userRepository = userRepository,
                     hashingService = hashingService,
-                    checkIfUsernameExists = CheckIfUsernameExists(userRepository = userRepository)
+                    checkIfUsernameExists = CheckIfUsernameExists(userRepository = userRepository),
+                    getUserByUsernameUseCase = getUserByUsernameUseCase
                 ),
-                getUserByUsernameUseCase = GetUserByUsernameUseCase(
-                    userRepository = userRepository,
-                    hashingService = hashingService,
-                    tokenService = tokenService,
-                ),
+                getUserByUsernameUseCase = getUserByUsernameUseCase,
                 getUserUseCase = GetUserUseCase(
                     checkLatestLogEntryAndGetLogStreakUseCase = checkLatestLogEntryAndGetLogStreakUseCase,
                     getWeightEntriesUseCase = getWeightEntriesUseCase,
