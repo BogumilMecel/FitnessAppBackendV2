@@ -13,38 +13,38 @@ import org.bson.types.ObjectId
 @Serializable
 data class RecipeDiaryEntry(
     @SerialName("id")
-    override val id: String? = null,
+    override val id: String,
 
     @SerialName("nutrition_values")
-    override val nutritionValues: NutritionValues? = null,
+    override val nutritionValues: NutritionValues,
 
     @SerialName("date")
-    override val date: LocalDate? = null,
+    override val date: LocalDate,
 
     @SerialName("user_id")
-    override val userId: String? = null,
+    override val userId: String,
 
     @SerialName("meal_name")
-    override val mealName: MealName? = null,
+    override val mealName: MealName,
 
     @SerialName("recipe_name")
-    val recipeName: String? = null,
+    val recipeName: String,
 
     @SerialName("recipe_id")
-    val recipeId: String? = null,
+    val recipeId: String,
 
     @SerialName("servings")
-    val servings: Int? = null,
+    val servings: Int,
 
     // TODO: remove when deleting is handled with device id
     @SerialName("deleted")
-    val deleted: Boolean = false,
+    val deleted: Boolean,
 
     @SerialName("creation_date")
-    override val creationDateTime: LocalDateTime? = null,
+    override val creationDateTime: LocalDateTime,
 
     @SerialName("change_date")
-    override val changeDateTime: LocalDateTime? = null
+    override val changeDateTime: LocalDateTime
 ) : DiaryItem
 
 data class RecipeDiaryEntryDto(

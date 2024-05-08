@@ -12,34 +12,34 @@ import org.bson.types.ObjectId
 @Serializable
 data class Product(
     @SerialName("id")
-    val id: String? = null,
+    val id: String,
 
     @SerialName("name")
-    val name: String? = null,
+    val name: String,
 
     @SerialName("container_weight")
-    val containerWeight: Int? = null,
+    val containerWeight: Int?,
 
     @SerialName("nutrition_values_in")
-    val nutritionValuesIn: NutritionValuesIn? = null,
+    val nutritionValuesIn: NutritionValuesIn,
 
     @SerialName("measurement_unit")
-    val measurementUnit: MeasurementUnit? = null,
+    val measurementUnit: MeasurementUnit,
 
     @SerialName("nutrition_values")
-    val nutritionValues: NutritionValues? = null,
+    val nutritionValues: NutritionValues,
 
     @SerialName("barcode")
-    val barcode: String? = null,
+    val barcode: String?,
 
     @SerialName("username")
-    val username: String? = null,
+    val username: String,
 
     @SerialName("user_id")
-    val userId: String? = null,
+    val userId: String,
 
     @SerialName("creation_date")
-    val creationDateTime: LocalDateTime? = null
+    val creationDateTime: LocalDateTime
 )
 
 data class ProductDto(

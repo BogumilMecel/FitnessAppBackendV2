@@ -28,31 +28,6 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     )
 
     @Test
-    fun `Check if recipe id is null resource error is returned`() = runTest {
-        callTestedMethod(recipeId = null).assertIsError(InvalidIdException)
-    }
-
-    @Test
-    fun `Check if servings are null resource error is returned`() = runTest {
-        callTestedMethod(servings = null).assertIsError(InvalidServingsException)
-    }
-
-    @Test
-    fun `Check if nutrition values are null resource error is returned`() = runTest {
-        callTestedMethod(nutritionValues = null).assertIsError(InvalidNutritionValuesException)
-    }
-
-    @Test
-    fun `Check if date is null resource error is returned`() = runTest {
-        callTestedMethod(date = null).assertIsError(InvalidDateException)
-    }
-
-    @Test
-    fun `Check if meal name is null resource error is returned`() = runTest {
-        callTestedMethod(mealName = null).assertIsError(InvalidMealNameException)
-    }
-
-    @Test
     fun `Check if getRecipe returns resource error, resource error is returned`() = runTest {
         mockData(recipeResource = Resource.Error())
         assertIs<Resource.Error<Unit>>(callTestedMethod())
@@ -107,11 +82,11 @@ class InsertRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     }
 
     private suspend fun callTestedMethod(
-        recipeId: String? = MockConstants.Diary.RECIPE_ID,
-        servings: Int? = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1,
-        date: LocalDate? = MockConstants.getDate(),
-        nutritionValues: NutritionValues? = MockConstants.Diary.getNutritionValues(),
-        mealName: MealName? = MealName.BREAKFAST
+        recipeId: String = MockConstants.Diary.RECIPE_ID,
+        servings: Int = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_1,
+        date: LocalDate = MockConstants.getDate(),
+        nutritionValues: NutritionValues = MockConstants.Diary.getNutritionValues(),
+        mealName: MealName = MealName.BREAKFAST
     ) = insertRecipeDiaryEntryUseCase(
         recipeDiaryEntry = MockConstants.Diary.getRecipeDiaryEntry().toRecipe().copy(
             recipeId = recipeId,

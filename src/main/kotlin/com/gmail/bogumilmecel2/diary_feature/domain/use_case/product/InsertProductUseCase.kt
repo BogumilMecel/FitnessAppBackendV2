@@ -26,11 +26,6 @@ class InsertProductUseCase(
 ) {
     suspend operator fun invoke(product: Product, userId: String, country: Country): Resource<Product> =
         with(product) {
-            name ?: return Resource.Error(InvalidProductNameException)
-            nutritionValues ?: return Resource.Error(InvalidNutritionValuesException)
-            nutritionValuesIn ?: return Resource.Error(InvalidNutritionValuesInException)
-            measurementUnit ?: return Resource.Error(InvalidMeasurementUnit)
-
             if (!isDiaryNameValidUseCase(name = name)) return Resource.Error(exception = InvalidProductNameException)
 
             when (nutritionValuesIn) {

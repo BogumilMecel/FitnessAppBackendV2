@@ -1,12 +1,23 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.utils
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Suppress("unused")
 @Serializable
-enum class Difficulty(val displayValue: String) {
-    VERY_LOW(displayValue = "1"),
-    LOW(displayValue = "2"),
-    AVERAGE(displayValue = "3"),
-    HIGH(displayValue = "4"),
-    VERY_HIGH(displayValue = "5"),
+enum class Difficulty {
+    @SerialName("very_low")
+    VERY_LOW,
+
+    @SerialName("low")
+    LOW,
+
+    @SerialName("average")
+    AVERAGE,
+
+    @SerialName("high")
+    HIGH,
+
+    @SerialName("very_high")
+    VERY_HIGH,
 }

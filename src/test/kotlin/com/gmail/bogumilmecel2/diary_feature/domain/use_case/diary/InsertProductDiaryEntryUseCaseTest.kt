@@ -28,31 +28,6 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     )
 
     @Test
-    fun `Check if product id is null resource error is returned`() = runTest {
-        callTestedMethod(productId = null).assertIsError(InvalidIdException)
-    }
-
-    @Test
-    fun `Check if date is null resource error is returned`() = runTest {
-        callTestedMethod(date = null).assertIsError(InvalidDateException)
-    }
-
-    @Test
-    fun `Check if weight is null resource error is returned`() = runTest {
-        callTestedMethod(weight = null).assertIsError(InvalidWeightException)
-    }
-
-    @Test
-    fun `Check if meal name is null resource error is returned`() = runTest {
-        callTestedMethod(mealName = null).assertIsError(InvalidMealNameException)
-    }
-
-    @Test
-    fun `Check if nutrition values are null resource error is returned`() = runTest {
-        callTestedMethod(nutritionValues = null).assertIsError(InvalidNutritionValuesException)
-    }
-
-    @Test
     fun `Check if getProduct returns resource error, resource error is returned`() = runTest {
         mockData(productResource = Resource.Error())
         callTestedMethod().assertIsError(ProductNotFoundException)
@@ -113,11 +88,11 @@ class InsertProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     }
 
     private suspend fun callTestedMethod(
-        productId: String? = MockConstants.Diary.PRODUCT_ID,
-        weight: Int? = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
-        mealName: MealName? = MealName.BREAKFAST,
-        date: LocalDate? = MockConstants.getDate(),
-        nutritionValues: NutritionValues? = MockConstants.Diary.getNutritionValues(),
+        productId: String = MockConstants.Diary.PRODUCT_ID,
+        weight: Int = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
+        mealName: MealName = MealName.BREAKFAST,
+        date: LocalDate = MockConstants.getDate(),
+        nutritionValues: NutritionValues = MockConstants.Diary.getNutritionValues(),
     ) = insertProductDiaryEntryUseCase(
         productDiaryEntry = MockConstants.Diary.getProductDiaryEntry().toProductDiaryEntry().copy(
             productId = productId,

@@ -17,10 +17,6 @@ class EditProductDiaryEntryUseCase(
         productDiaryEntry: ProductDiaryEntry,
         userId: String
     ): Resource<ProductDiaryEntry> = with(productDiaryEntry) {
-        id ?: return Resource.Error(exception = InvalidIdException)
-        nutritionValues ?: return Resource.Error(exception = InvalidNutritionValuesException)
-        weight ?: return Resource.Error(exception = InvalidWeightException)
-
         if (weight <= 0) return Resource.Error(InvalidWeightException)
         val originalProductDiaryEntry = getProductDiaryEntryUseCase(productDiaryEntryId = id).data ?: return Resource.Error(exception = DiaryEntryNotFoundException)
         if (originalProductDiaryEntry.userId != userId) return Resource.Error(exception = ForbiddenException)

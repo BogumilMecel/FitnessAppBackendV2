@@ -26,21 +26,6 @@ class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     )
 
     @Test
-    fun `Check if id is null resource error is returned`() = runTest {
-        callTestedMethod(recipeDiaryEntryId = null).assertIsError(InvalidIdException)
-    }
-
-    @Test
-    fun `Check if nutrition values are null resource error is returned`() = runTest {
-        callTestedMethod(nutritionValues = null).assertIsError(InvalidNutritionValuesException)
-    }
-
-    @Test
-    fun `Check if servings are null resource error is returned`() = runTest {
-        callTestedMethod(servings = null).assertIsError(InvalidServingsException)
-    }
-
-    @Test
     fun `Check if getRecipeDiaryEntry returns resource error, resource error is returned`() = runTest {
         mockData(recipeDiaryEntryResource = Resource.Error())
         callTestedMethod().assertIsError(DiaryEntryNotFoundException)
@@ -117,9 +102,9 @@ class EditRecipeDiaryEntryUseCaseTest : BaseDiaryTest() {
     }
 
     private suspend fun callTestedMethod(
-        recipeDiaryEntryId: String? = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID,
-        servings: Int? = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
-        nutritionValues: NutritionValues? = MockConstants.Diary.getNutritionValues2(),
+        recipeDiaryEntryId: String = MockConstants.Diary.RECIPE_DIARY_ENTRY_ID,
+        servings: Int = MockConstants.Diary.CORRECT_RECIPE_SERVINGS_2,
+        nutritionValues: NutritionValues = MockConstants.Diary.getNutritionValues2(),
         userId: String = MockConstants.USER_ID_1
     ) = editRecipeDiaryEntryUseCase(
         recipeDiaryEntry = MockConstants.Diary.getRecipeDiaryEntry().toRecipe().copy(

@@ -38,26 +38,6 @@ class InsertProductUseCaseTest : BaseTest() {
     )
 
     @Test
-    fun `Check if name is null resource error is returned`() = runTest {
-        callTestedMethod(name = null).assertIsError(InvalidProductNameException)
-    }
-
-    @Test
-    fun `Check if nutrition values are null resource error is returned`() = runTest {
-        callTestedMethod(nutritionValues = null).assertIsError(InvalidNutritionValuesException)
-    }
-
-    @Test
-    fun `Check if measurement unit is null resource error is returned`() = runTest {
-        callTestedMethod(measurementUnit = null).assertIsError(InvalidMeasurementUnit)
-    }
-
-    @Test
-    fun `Check if nutrition values in is null resource error is returned`() = runTest {
-        callTestedMethod(nutritionValuesIn = null).assertIsError(InvalidNutritionValuesInException)
-    }
-
-    @Test
     fun `Check if product name is not valid, resource error is returned`() = runTest {
         mockClasses(isDiaryNameValid = false)
         callTestedMethod().assertIsError(InvalidProductNameException)
@@ -191,12 +171,12 @@ class InsertProductUseCaseTest : BaseTest() {
     }
 
     private suspend fun callTestedMethod(
-        name: String? = MockConstants.Diary.PRODUCT_NAME,
-        nutritionValues: NutritionValues? = MockConstants.Diary.getNutritionValues(),
-        nutritionValuesIn: NutritionValuesIn? = NutritionValuesIn.HUNDRED_GRAMS,
-        measurementUnit: MeasurementUnit? = MeasurementUnit.GRAMS,
+        name: String = MockConstants.Diary.PRODUCT_NAME,
+        nutritionValues: NutritionValues = MockConstants.Diary.getNutritionValues(),
+        nutritionValuesIn: NutritionValuesIn = NutritionValuesIn.HUNDRED_GRAMS,
+        measurementUnit: MeasurementUnit = MeasurementUnit.GRAMS,
         containerWeight: Int? = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_1,
-        barcode: String? = MockConstants.Diary.BARCODE
+        barcode: String = MockConstants.Diary.BARCODE
     ) = insertProductUseCase(
         product = MockConstants.Diary.getProduct().toProduct().copy(
             containerWeight = containerWeight,

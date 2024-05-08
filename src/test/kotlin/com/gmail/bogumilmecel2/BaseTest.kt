@@ -1,7 +1,6 @@
 package com.gmail.bogumilmecel2
 
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.BaseException
-import com.gmail.bogumilmecel2.common.domain.model.exceptions.UnknownException
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import io.mockk.every
@@ -30,9 +29,11 @@ open class BaseTest {
         every { CustomDateUtils.getTimeZoneDate(timeZone = timeZone) } returns date
     }
 
-    fun <T> Resource<T>.assertIsError(exception: BaseException = UnknownException) {
+    fun <T> Resource<T>.assertIsError(exception: BaseException? = null) {
         assertIs<Resource.Error<T>>(this)
-        assertTrue(message = "Checking for $exception") { exception::class.isInstance(this.exception) }
+        exception?.let {
+            assertTrue(message = "Checking for $exception") { exception::class.isInstance(this.exception) }
+        }
     }
 
     fun <T> Resource<T>.assertIsSuccess() {

@@ -11,15 +11,16 @@ import org.bson.types.ObjectId
 @Serializable
 data class WeightEntry(
     @SerialName("value")
-    val value: Double? = null,
+    val value: Double,
 
     @SerialName("creation_date_time")
-    val creationDateTime: LocalDateTime? = null,
+    val creationDateTime: LocalDateTime,
 
     @SerialName("date")
-    val date: LocalDate? = null
+    val date: LocalDate
 )
 
+@Suppress("PropertyName")
 data class WeightEntryDto(
     @BsonId val _id: ObjectId,
     val userId: String,

@@ -12,40 +12,40 @@ import org.bson.types.ObjectId
 @Serializable
 data class Recipe(
     @SerialName("id")
-    val id: String? = null,
+    val id: String,
 
     @SerialName("name")
-    val name: String? = null,
+    val name: String,
 
     @SerialName("ingredients")
-    val ingredients: List<Ingredient>? = null,
+    val ingredients: List<Ingredient>,
 
     @SerialName("image_url")
-    val imageUrl: String? = null,
+    val imageUrl: String?,
 
     @SerialName("nutrition_values")
-    val nutritionValues: NutritionValues? = null,
+    val nutritionValues: NutritionValues,
 
     @SerialName("time_required")
-    val timeRequired: TimeRequired? = null,
+    val timeRequired: TimeRequired,
 
     @SerialName("difficulty")
-    val difficulty: Difficulty? = null,
+    val difficulty: Difficulty,
 
     @SerialName("servings")
-    val servings: Int? = null,
+    val servings: Int,
 
     @SerialName("is_public")
-    val isPublic: Boolean = false,
+    val isPublic: Boolean,
 
     @SerialName("username")
-    val username: String? = null,
+    val username: String,
 
     @SerialName("user_id")
-    val userId: String? = null,
+    val userId: String,
 
     @SerialName("creation_date")
-    val creationDateTime: LocalDateTime? = null
+    val creationDateTime: LocalDateTime
 )
 
 data class RecipeDto(

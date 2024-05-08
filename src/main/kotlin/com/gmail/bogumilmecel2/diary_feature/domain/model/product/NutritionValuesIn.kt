@@ -11,7 +11,6 @@ enum class NutritionValuesIn {
     @SerialName("container")
     CONTAINER,
 
-
     @SerialName("average")
     AVERAGE;
 }

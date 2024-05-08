@@ -17,7 +17,8 @@ fun Route.configureAddWeightEntryRoute(addWeightEntryUseCase: AddWeightEntryUseC
                     getUserId()?.let { userId ->
                         handleResource(
                             resource = addWeightEntryUseCase(
-                                weightEntry = weightEntry,
+                                value = weightEntry.value,
+                                date = weightEntry.date,
                                 userId = userId,
                             )
                         )

@@ -16,10 +16,6 @@ class EditRecipeDiaryEntryUseCase(
         recipeDiaryEntry: RecipeDiaryEntry,
         userId: String
     ): Resource<RecipeDiaryEntry> = with(recipeDiaryEntry) {
-        id ?: return Resource.Error(InvalidIdException)
-        nutritionValues ?: return Resource.Error(InvalidNutritionValuesException)
-        servings ?: return Resource.Error(InvalidServingsException)
-
         if (servings <= 0) return Resource.Error(InvalidServingsException)
 
         val originalRecipeDiaryEntry = diaryRepository.getRecipeDiaryEntry(id = id).data ?: return Resource.Error(DiaryEntryNotFoundException)

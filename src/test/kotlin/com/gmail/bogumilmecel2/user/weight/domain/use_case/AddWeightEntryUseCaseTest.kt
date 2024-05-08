@@ -3,16 +3,13 @@ package com.gmail.bogumilmecel2.user.weight.domain.use_case
 import com.gmail.bogumilmecel2.BaseTest
 import com.gmail.bogumilmecel2.MockConstants
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.DateNotInRangeException
-import com.gmail.bogumilmecel2.common.domain.model.exceptions.InvalidDateException
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.InvalidWeightValueException
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.UserNotFoundException
-import com.gmail.bogumilmecel2.common.domain.use_case.CheckIfUserExistsUseCase
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDateInValidRangeUseCaseUseCase
 import com.gmail.bogumilmecel2.user.user_data.domain.repository.UserRepository
 import com.gmail.bogumilmecel2.user.user_data.domain.use_cases.CheckIfWeightIsValidUseCase
 import com.gmail.bogumilmecel2.user.weight.domain.model.WeightEntryDto
-import com.gmail.bogumilmecel2.user.weight.domain.model.toWeightEntry
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
@@ -25,24 +22,12 @@ class AddWeightEntryUseCaseTest: BaseTest() {
     private val calculateWeightProgressUseCase = mockkClass(CalculateWeightProgressUseCase::class)
     private val checkIfWeightIsValidUseCase = mockkClass(CheckIfWeightIsValidUseCase::class)
     private val isDateInvValidRangeUseCaseUseCase = mockkClass(IsDateInValidRangeUseCaseUseCase::class)
-    private val checkIfUserExistsUseCase = mockkClass(CheckIfUserExistsUseCase::class)
     private val addWeightEntryUseCase = AddWeightEntryUseCase(
         userRepository = userRepository,
         calculateWeightProgressUseCase = calculateWeightProgressUseCase,
         checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
         isDateInValidRangeUseCaseUseCase = isDateInvValidRangeUseCaseUseCase,
-        checkIfUserExistsUseCase = checkIfUserExistsUseCase
     )
-
-    @Test
-    fun `Check if value is null, resource error is returned`() = runTest {
-        callTestedMethod(value = null).assertIsError(InvalidWeightValueException)
-    }
-
-    @Test
-    fun `Check if date is null, resource error is returned`() = runTest {
-        callTestedMethod(date = null).assertIsError(InvalidDateException)
-    }
 
     @Test
     fun `Check if user does not exist, resource error is returned`() = runTest {
@@ -113,7 +98,9 @@ class AddWeightEntryUseCaseTest: BaseTest() {
     ) {
         every { isDateInvValidRangeUseCaseUseCase(date = MockConstants.getDate()) } returns dateInRange
         every { checkIfWeightIsValidUseCase(value = MockConstants.Weight.VALUE) } returns valueValid
-        coEvery { checkIfUserExistsUseCase(userId = MockConstants.USER_ID_1) } returns userExists
+        coEvery { userRepository.getUser(userId = MockConstants.USER_ID_1) } returns Resource.Success(
+            data = if (userExists) MockConstants.getUser() else null
+        )
         coEvery { userRepository.removeWeightEntries(userId = MockConstants.USER_ID_1, date = MockConstants.getDate()) } returns removalResource
         coEvery { userRepository.addWeightEntry(weightEntry = any()) } returns weightEntryResource
         coEvery { userRepository.getWeightEntries(userId = MockConstants.USER_ID_1, limit = 14) } returns weightEntriesResource
@@ -121,13 +108,11 @@ class AddWeightEntryUseCaseTest: BaseTest() {
     }
 
     private suspend fun callTestedMethod(
-        value: Double? = MockConstants.Weight.VALUE,
-        date: LocalDate? = MockConstants.getDate()
+        value: Double = MockConstants.Weight.VALUE,
+        date: LocalDate = MockConstants.getDate()
     ) = addWeightEntryUseCase(
         userId = MockConstants.USER_ID_1,
-        weightEntry = MockConstants.Weight.getWeightEntry().toWeightEntry().copy(
-            value = value,
-            date = date
-        )
+        value = value,
+        date = date,
     )
 }

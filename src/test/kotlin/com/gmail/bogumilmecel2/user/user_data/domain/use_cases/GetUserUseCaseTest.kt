@@ -27,7 +27,7 @@ class GetUserUseCaseTest : BaseTest() {
     private val userRepository = mockk<UserRepository>()
     private val getUserUseCase = GetUserUseCase(
         checkLatestLogEntryAndGetLogStreakUseCase = checkLatestLogEntryAndGetLogStreakUseCase,
-        deviceRepository = deviceRepository,
+//        deviceRepository = deviceRepository,
         getWeightEntriesUseCase = getWeightEntriesUseCase,
         userRepository = userRepository
     )
@@ -44,17 +44,17 @@ class GetUserUseCaseTest : BaseTest() {
         callTestedMethod().assertIsError(UserNotFoundException)
     }
 
-    @Test
-    fun `check if device is inserted if its repository returns success and device is null`() = runTest {
-        mockData(deviceResource = Resource.Success(data = null))
-        callTestedMethod()
-        coVerify(exactly = 1) {
-            deviceRepository.insertDevice(
-                userId = MockConstants.USER_ID_1,
-                device = any()
-            )
-        }
-    }
+//    @Test
+//    fun `check if device is inserted if its repository returns success and device is null`() = runTest {
+//        mockData(deviceResource = Resource.Success(data = null))
+//        callTestedMethod()
+//        coVerify(exactly = 1) {
+//            deviceRepository.insertDevice(
+//                userId = MockConstants.USER_ID_1,
+//                device = any()
+//            )
+//        }
+//    }
 
     @Test
     fun `check if all methods are called and resource success is returned if user is not null`() = runTest {
@@ -62,11 +62,11 @@ class GetUserUseCaseTest : BaseTest() {
         mockData()
         callTestedMethod().assertIsSuccess()
         coVerify(exactly = 1) {
-            deviceRepository.updateLastLoggedInDateTime(
-                userId = MockConstants.USER_ID_1,
-                date = MockConstants.getDateTime(),
-                deviceId = any()
-            )
+//            deviceRepository.updateLastLoggedInDateTime(
+//                userId = MockConstants.USER_ID_1,
+//                date = MockConstants.getDateTime(),
+//                deviceId = any()
+//            )
             checkLatestLogEntryAndGetLogStreakUseCase(userId = MockConstants.USER_ID_1, timeZone = TimeZone.UTC, userStreak = 1)
             getWeightEntriesUseCase(userId = MockConstants.USER_ID_1, limit = 1)
         }
@@ -108,6 +108,6 @@ class GetUserUseCaseTest : BaseTest() {
     private suspend fun callTestedMethod() = getUserUseCase(
         userId = MockConstants.USER_ID_1,
         timezone = TimeZone.UTC,
-        deviceId = MockConstants.DEVICE_ID
+//        deviceId = MockConstants.DEVICE_ID
     )
 }

@@ -26,21 +26,6 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
     )
 
     @Test
-    fun `Check if id is null resource error is returned`() = runTest {
-        callTestedMethod(productDiaryEntryId = null).assertIsError(InvalidIdException)
-    }
-
-    @Test
-    fun `Check if nutrition values are null resource error is returned`() = runTest {
-        callTestedMethod(productNutritionValues = null).assertIsError(InvalidNutritionValuesException)
-    }
-
-    @Test
-    fun `Check if weight is null resource error is returned`() = runTest {
-        callTestedMethod(productDiaryEntryWeight = null).assertIsError(InvalidWeightException)
-    }
-
-    @Test
     fun `Check if getProductDiaryEntry returns resource error, resource error is returned`() = runTest {
         mockData(productDiaryEntryResource = Resource.Error())
         callTestedMethod().assertIsError(DiaryEntryNotFoundException)
@@ -121,9 +106,9 @@ class EditProductDiaryEntryUseCaseTest : BaseDiaryTest() {
 
     private suspend fun callTestedMethod(
         userId: String = MockConstants.USER_ID_1,
-        productDiaryEntryId: String? = MockConstants.Diary.PRODUCT_DIARY_ENTRY_ID,
-        productNutritionValues: NutritionValues? = MockConstants.Diary.getNutritionValues(),
-        productDiaryEntryWeight: Int? = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_2,
+        productDiaryEntryId: String = MockConstants.Diary.PRODUCT_DIARY_ENTRY_ID,
+        productNutritionValues: NutritionValues = MockConstants.Diary.getNutritionValues(),
+        productDiaryEntryWeight: Int = MockConstants.Diary.CORRECT_PRODUCT_DIARY_ENTRY_WEIGHT_2,
     ) = editProductDiaryEntryUseCase(
         productDiaryEntry = MockConstants.Diary.getProductDiaryEntry()
             .toProductDiaryEntry()

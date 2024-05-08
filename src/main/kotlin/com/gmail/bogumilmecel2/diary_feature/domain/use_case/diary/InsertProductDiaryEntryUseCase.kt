@@ -20,12 +20,6 @@ class InsertProductDiaryEntryUseCase(
         productDiaryEntry: ProductDiaryEntry,
         userId: String
     ): Resource<ProductDiaryEntry> = with(productDiaryEntry) {
-        productId ?: return Resource.Error(InvalidIdException)
-        date ?: return Resource.Error(InvalidDateException)
-        weight ?: return Resource.Error(InvalidWeightException)
-        mealName ?: return Resource.Error(InvalidMealNameException)
-        nutritionValues ?: return Resource.Error(InvalidNutritionValuesException)
-
         if (weight <= 0) return Resource.Error(InvalidWeightException)
         val product = diaryRepository.getProduct(productId = productId).data ?: return Resource.Error(ProductNotFoundException)
         if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error(InvalidDateException)
@@ -56,4 +50,6 @@ class InsertProductDiaryEntryUseCase(
     }
 }
 
-data object ProductNotFoundException: NotFoundException(R("product_not_found"))
+data object ProductNotFoundException: NotFoundException(R("product_not_found")) {
+    private fun readResolve(): Any = ProductNotFoundException
+}

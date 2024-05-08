@@ -1,6 +1,5 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.recipe
 
-import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
@@ -22,12 +21,6 @@ class InsertRecipeUseCase(
         recipe: Recipe,
         userId: String,
     ): Resource<Recipe> = with(recipe) {
-        name ?: return Resource.Error(InvalidRecipeNameException)
-        ingredients ?: return Resource.Error(InvalidIngredientsException)
-        timeRequired ?: return Resource.Error(InvalidRecipeTimeException)
-        difficulty ?: return Resource.Error(InvalidRecipeDifficultyException)
-        servings ?: return Resource.Error(InvalidServingsException)
-
         return if (!isDiaryNameValidUseCase(name = name)) {
             Resource.Error()
         } else if (servings <= 0) {

@@ -11,7 +11,6 @@ import com.gmail.bogumilmecel2.authentication.domain.use_case.GetUserByUsernameU
 import com.gmail.bogumilmecel2.authentication.domain.use_case.RegisterNewUserUseCase
 import com.gmail.bogumilmecel2.authentication.routes.configureAuthRoutes
 import com.gmail.bogumilmecel2.common.data.database.DatabaseManager
-import com.gmail.bogumilmecel2.common.domain.use_case.CheckIfUserExistsUseCase
 import com.gmail.bogumilmecel2.common.domain.use_case.GetUsernameUseCase
 import com.gmail.bogumilmecel2.common.plugins.*
 import com.gmail.bogumilmecel2.diary_feature.data.repository.DiaryRepositoryImp
@@ -24,7 +23,7 @@ import com.gmail.bogumilmecel2.diary_feature.price_feature.data.repository.Price
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetProductPriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetRecipePriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.routes.configureDiaryRoutes
-import com.gmail.bogumilmecel2.user.device.data.repository.DeviceRepositoryImp
+//import com.gmail.bogumilmecel2.user.device.data.repository.DeviceRepositoryImp
 import com.gmail.bogumilmecel2.user.log.domain.use_case.CheckLatestLogEntryAndGetLogStreakUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLogEntriesUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.InsertLogEntryUseCase
@@ -66,7 +65,7 @@ fun Application.module() {
         weightDialogsQuestionCol = databaseManager.getWeightDialogsQuestionCol()
     )
 
-    val deviceRepository = DeviceRepositoryImp(deviceCollection = databaseManager.getDeviceCollection())
+//    val deviceRepository = DeviceRepositoryImp(deviceCollection = databaseManager.getDeviceCollection())
 
     val getUsernameUseCase = GetUsernameUseCase(userRepository = userRepository)
     val isDiaryNameValidUseCase = IsDiaryNameValidUseCase()
@@ -115,7 +114,6 @@ fun Application.module() {
     val getRecipeUseCase = GetRecipeUseCase(diaryRepository)
     val getProductDiaryHistoryUseCase = GetProductDiaryHistoryUseCase(diaryRepository = diaryRepository)
     val isDateInValidRangeUseCaseUseCase = IsDateInValidRangeUseCaseUseCase()
-    val checkIfUserExistsUseCase = CheckIfUserExistsUseCase(userRepository = userRepository)
 
     val diaryUseCases = DiaryUseCases(
         getDiaryEntriesUseCase = GetDiaryEntriesUseCase(diaryRepository),
@@ -147,7 +145,6 @@ fun Application.module() {
         calculateWeightProgressUseCase = calculateWeightEntriesUseCase,
         checkIfWeightIsValidUseCase = checkIfWeightIsValidUseCase,
         isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase,
-        checkIfUserExistsUseCase = checkIfUserExistsUseCase
     )
 
     val checkIfShouldAskForWeightDialogsUseCase = CheckIfShouldAskForWeightDialogsUseCase(
@@ -241,7 +238,7 @@ fun Application.module() {
                 getUserUseCase = GetUserUseCase(
                     checkLatestLogEntryAndGetLogStreakUseCase = checkLatestLogEntryAndGetLogStreakUseCase,
                     getWeightEntriesUseCase = getWeightEntriesUseCase,
-                    deviceRepository = deviceRepository,
+//                    deviceRepository = deviceRepository,
                     userRepository = userRepository
                 )
             )

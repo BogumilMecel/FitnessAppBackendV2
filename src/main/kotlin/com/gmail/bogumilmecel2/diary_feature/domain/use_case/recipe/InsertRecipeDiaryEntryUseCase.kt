@@ -15,12 +15,6 @@ class InsertRecipeDiaryEntryUseCase(
 ) {
 
     suspend operator fun invoke(recipeDiaryEntry: RecipeDiaryEntry, userId: String): Resource<RecipeDiaryEntry> = with(recipeDiaryEntry) {
-        recipeId ?: return Resource.Error(InvalidIdException)
-        servings ?: return Resource.Error(InvalidServingsException)
-        date ?: return Resource.Error(InvalidDateException)
-        nutritionValues ?: return Resource.Error(InvalidNutritionValuesException)
-        mealName ?: return Resource.Error(InvalidMealNameException)
-
         val recipe = diaryRepository.getRecipe(recipeId).data ?: return Resource.Error(RecipeNotFoundException)
 
         if (servings <= 0) return Resource.Error(InvalidServingsException)

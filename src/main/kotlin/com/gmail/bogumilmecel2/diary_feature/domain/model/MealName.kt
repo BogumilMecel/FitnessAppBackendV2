@@ -1,8 +1,20 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Suppress("unused")
 @Serializable
 enum class MealName {
-    BREAKFAST, LUNCH, DINNER, SUPPER;
+    @SerialName("breakfast")
+    BREAKFAST,
+
+    @SerialName("lunch")
+    LUNCH,
+
+    @SerialName("dinner")
+    DINNER,
+
+    @SerialName("supper")
+    SUPPER;
 }
