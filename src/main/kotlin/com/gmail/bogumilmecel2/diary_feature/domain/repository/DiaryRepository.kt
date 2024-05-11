@@ -46,10 +46,10 @@ interface DiaryRepository {
     ): Resource<List<ProductDiaryHistoryItem>>
     suspend fun getUserProducts(
         userId: String,
-        latestDateTime: LocalDateTime,
+        latestDateTime: LocalDateTime?,
     ): Resource<List<Product>>
     suspend fun getUserRecipes(
         userId: String,
-        latestDateTime: LocalDateTime,
+        latestDateTime: LocalDateTime?,
     ): Resource<List<Recipe>>
 }

@@ -198,12 +198,12 @@ class DiaryRepositoryImp(
 
     override suspend fun getUserProducts(
         userId: String,
-        latestDateTime: LocalDateTime,
+        latestDateTime: LocalDateTime?,
     ): Resource<List<Product>> {
         return handleRequest {
             productCol
                 .find(ProductDto::userId eq userId)
-                .filter(ProductDto::creationDateTime gt latestDateTime)
+                .optionalFilter(optionalParameter = latestDateTime) { filter(RecipeDto::creationDateTime gt it) }
                 .descendingSort(ProductDto::creationDateTime)
                 .toList()
                 .map { it.toProduct() }
@@ -212,12 +212,12 @@ class DiaryRepositoryImp(
 
     override suspend fun getUserRecipes(
         userId: String,
-        latestDateTime: LocalDateTime,
+        latestDateTime: LocalDateTime?,
     ): Resource<List<Recipe>> {
         return handleRequest {
             recipeCol
                 .find(RecipeDto::userId eq userId)
-                .filter(RecipeDto::creationDateTime gt latestDateTime)
+                .optionalFilter(optionalParameter = latestDateTime) { filter(RecipeDto::creationDateTime gt it) }
                 .descendingSort(RecipeDto::creationDateTime)
                 .toList()
                 .map { it.toRecipe() }
