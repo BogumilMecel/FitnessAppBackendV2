@@ -172,7 +172,8 @@ fun Application.module() {
         getUserProductDiaryEntriesUseCase = GetUserProductDiaryEntriesUseCase(diaryRepository),
         getUserRecipeDiaryEntriesUseCase = GetUserRecipeDiaryEntriesUseCase(diaryRepository),
         getUserProductsUseCase = GetUserProductsUseCase(diaryRepository),
-        getUserRecipesUseCase = GetUserRecipesUseCase(diaryRepository)
+        getUserRecipesUseCase = GetUserRecipesUseCase(diaryRepository),
+        getDiaryCacheUseCase = GetDiaryCacheUseCase(diaryRepository, userRepository)
     )
 
     val recipeUseCases = RecipeUseCases(

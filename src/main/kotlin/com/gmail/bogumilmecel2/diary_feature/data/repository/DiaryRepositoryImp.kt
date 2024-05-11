@@ -242,7 +242,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getProductDiaryEntries(latestDateTime: LocalDateTime, userId: String): Resource<List<ProductDiaryEntry>> {
+    override suspend fun getProductDiaryEntries(latestDateTime: LocalDateTime?, userId: String): Resource<List<ProductDiaryEntry>> {
         return handleRequest {
             productDiaryCol
                 .find(ProductDiaryEntryDto::userId eq userId)
@@ -253,7 +253,7 @@ class DiaryRepositoryImp(
         }
     }
 
-    override suspend fun getRecipeDiaryEntries(latestDateTime: LocalDateTime, userId: String): Resource<List<RecipeDiaryEntry>> {
+    override suspend fun getRecipeDiaryEntries(latestDateTime: LocalDateTime?, userId: String): Resource<List<RecipeDiaryEntry>> {
         return handleRequest {
             recipeDiaryCol
                 .find(RecipeDiaryEntryDto::userId eq userId)
