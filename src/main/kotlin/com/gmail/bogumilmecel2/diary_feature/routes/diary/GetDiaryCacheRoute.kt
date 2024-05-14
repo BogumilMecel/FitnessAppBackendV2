@@ -11,7 +11,7 @@ import io.ktor.server.routing.*
 
 fun Route.configureGetDiaryCacheRoute(getDiaryCacheUseCase: GetDiaryCacheUseCase) {
     authenticate {
-        get("/diary-cache") {
+        post("/diary-cache") {
             call.run {
                 getUserId()?.let { userId ->
                     receiveOrRespond<DiaryCacheRequest>()?.let { diaryCacheRequest ->
