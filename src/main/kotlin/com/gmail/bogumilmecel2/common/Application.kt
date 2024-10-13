@@ -1,7 +1,5 @@
 package com.gmail.bogumilmecel2.common
 
-import ch.qos.logback.classic.Level
-import ch.qos.logback.classic.LoggerContext
 import com.gmail.bogumilmecel2.authentication.data.service.JwtTokenService
 import com.gmail.bogumilmecel2.authentication.data.service.SHA256HashingService
 import com.gmail.bogumilmecel2.authentication.domain.model.token.TokenConfig
@@ -23,7 +21,6 @@ import com.gmail.bogumilmecel2.diary_feature.price_feature.data.repository.Price
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetProductPriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetRecipePriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.routes.configureDiaryRoutes
-//import com.gmail.bogumilmecel2.user.device.data.repository.DeviceRepositoryImp
 import com.gmail.bogumilmecel2.user.log.domain.use_case.CheckLatestLogEntryAndGetLogStreakUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLogEntriesUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.InsertLogEntryUseCase
@@ -38,17 +35,12 @@ import io.ktor.server.routing.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.slf4j.LoggerFactory
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused")
 @OptIn(DelicateCoroutinesApi::class)
 fun Application.module() {
-    val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
-    val rootLogger = loggerContext.getLogger("org.mongodb.driver")
-    rootLogger.level = Level.OFF
-
     val databaseManager = DatabaseManager()
 
     val diaryRepository = DiaryRepositoryImp(
