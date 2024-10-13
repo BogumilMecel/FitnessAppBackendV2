@@ -1,6 +1,8 @@
 package com.gmail.bogumilmecel2.user.dates.domain.use_cases
 
 import com.gmail.bogumilmecel2.BaseTest
+import com.gmail.bogumilmecel2.common.domain.constants.Constants
+import com.gmail.bogumilmecel2.user.dates.utils.createAvailableDiaryDates
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.junit.jupiter.api.Test
@@ -34,12 +36,10 @@ class CreateAvailableDiaryDatesUseCaseTest: BaseTest() {
     @Test
     fun `Check if correct data is returned`() {
         mockTimeZoneDate(date = LocalDate(year = 2024, monthNumber = 1, dayOfMonth = 15))
-        callTestedMethod(availableDaysCount = 29).run {
+        callTestedMethod(availableDaysCount = Constants.Diary.AVAILABLE_DIARY_DATES_COUNT).run {
             assertIsSuccess()
             assertEquals(
-                expected = (1..29).map { dayOfMonth ->
-                    LocalDate(year = 2024, monthNumber = 1, dayOfMonth = dayOfMonth)
-                },
+                expected = createAvailableDiaryDates(daysCount = Constants.Diary.AVAILABLE_DIARY_DATES_COUNT),
                 actual = data,
             )
         }

@@ -13,6 +13,8 @@ object Constants {
     }
 
     object Diary {
+        const val AVAILABLE_DIARY_DATES_COUNT = 29
+
         const val DIARY_NAME_MAX_LENGTH = 48
         const val DIARY_NAME_MIN_LENGTH = 4
 
