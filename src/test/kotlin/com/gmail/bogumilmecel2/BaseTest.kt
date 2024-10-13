@@ -38,7 +38,7 @@ open class BaseTest {
         every { CustomDateUtils.getUtcDate() } returns date
     }
 
-    fun mockTimeZoneDate(date: LocalDate) {
+    fun mockTimeZoneDate(date: LocalDate?) {
         mockkObject(CustomDateUtils)
         every { CustomDateUtils.getTimeZoneDate(timeZone = timeZone) } returns date
     }
