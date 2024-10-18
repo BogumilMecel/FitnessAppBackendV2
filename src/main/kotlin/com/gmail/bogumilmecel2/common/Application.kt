@@ -21,6 +21,8 @@ import com.gmail.bogumilmecel2.diary_feature.price_feature.data.repository.Price
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetProductPriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.use_cases.GetRecipePriceUseCase
 import com.gmail.bogumilmecel2.diary_feature.routes.configureDiaryRoutes
+import com.gmail.bogumilmecel2.user.dates.domain.use_cases.GetAvailableDiaryDatesUseCase
+import com.gmail.bogumilmecel2.user.dates.routes.configureGetAvailableDiaryDatesRoute
 import com.gmail.bogumilmecel2.user.log.domain.use_case.CheckLatestLogEntryAndGetLogStreakUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.GetLogEntriesUseCase
 import com.gmail.bogumilmecel2.user.log.domain.use_case.InsertLogEntryUseCase
@@ -168,6 +170,8 @@ fun Application.module() {
         getDiaryCacheUseCase = GetDiaryCacheUseCase(diaryRepository, userRepository)
     )
 
+    val getAvailableDiaryDatesUseCase = GetAvailableDiaryDatesUseCase(userRepository = userRepository)
+
     val recipeUseCases = RecipeUseCases(
         insertRecipeUseCase = InsertRecipeUseCase(
             diaryRepository = diaryRepository,
@@ -240,5 +244,6 @@ fun Application.module() {
         configureWeightRoutes(weightUseCases = weightUseCases)
 
         configureUserDataRoutes(userDataUseCases = userDataUseCases)
+        configureGetAvailableDiaryDatesRoute(getAvailableDiaryDatesUseCase = getAvailableDiaryDatesUseCase)
     }
 }
