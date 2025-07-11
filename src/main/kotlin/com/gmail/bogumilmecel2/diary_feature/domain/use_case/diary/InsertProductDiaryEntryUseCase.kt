@@ -15,7 +15,6 @@ class InsertProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
     private val isDateInValidRangeUseCaseUseCase: IsDateInValidRangeUseCaseUseCase
 ) {
-
     suspend operator fun invoke(
         productDiaryEntry: ProductDiaryEntry,
         userId: String
