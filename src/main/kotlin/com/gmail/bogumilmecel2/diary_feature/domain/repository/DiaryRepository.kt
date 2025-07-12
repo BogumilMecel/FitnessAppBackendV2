@@ -4,6 +4,8 @@ import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductDiaryHistoryItem
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.HistoryProductDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.HistoryProductDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.Recipe
@@ -33,6 +35,7 @@ interface DiaryRepository {
     suspend fun editProductDiaryEntry(productDiaryEntry: ProductDiaryEntryDto): Resource<Unit>
     suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntryDto): Resource<Unit>
     suspend fun insertProduct(product: ProductDto): Resource<Product>
+    suspend fun insertHistoryProductDiaryEntry(historyProductDiaryEntry: HistoryProductDiaryEntryDto): HistoryProductDiaryEntry
     suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Unit>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun insertRecipe(recipe: RecipeDto): Resource<Recipe>

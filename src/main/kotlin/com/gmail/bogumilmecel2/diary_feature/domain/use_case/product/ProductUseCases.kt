@@ -9,5 +9,6 @@ data class ProductUseCases(
     val insertProductUseCase: InsertProductUseCase,
     val searchForProductWithBarcode: SearchForProductWithBarcode,
     val addNewPriceUseCase: AddNewPriceUseCase,
-    val getProductPriceUseCase: GetProductPriceUseCase
+    val getProductPriceUseCase: GetProductPriceUseCase,
+    val postHistoryProductDiaryEntryUseCase: PostHistoryProductDiaryEntryUseCase
 )

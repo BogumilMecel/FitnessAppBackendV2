@@ -1,24 +1,25 @@
 package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 
-import com.github.aymanizz.ktori18n.R
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
-import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toProductDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.HistoryProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.IsDateInValidRangeUseCaseUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.product.PostHistoryProductDiaryEntryUseCase
 import org.bson.types.ObjectId
 
 class InsertProductDiaryEntryUseCase(
     private val diaryRepository: DiaryRepository,
-    private val isDateInValidRangeUseCaseUseCase: IsDateInValidRangeUseCaseUseCase
+    private val isDateInValidRangeUseCaseUseCase: IsDateInValidRangeUseCaseUseCase,
+    private val postHistoryProductDiaryEntryUseCase: PostHistoryProductDiaryEntryUseCase
 ) {
     suspend operator fun invoke(
         productDiaryEntry: ProductDiaryEntry,
         userId: String
-    ): Resource<ProductDiaryEntry> = with(productDiaryEntry) {
+    ): Resource<HistoryProductDiaryEntry?> = with(productDiaryEntry) {
         if (weight <= 0) return Resource.Error(InvalidWeightException)
         val product = diaryRepository.getProduct(productId = productId).data ?: return Resource.Error(ProductNotFoundException)
         if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error(InvalidDateException)
@@ -44,11 +45,13 @@ class InsertProductDiaryEntryUseCase(
 
         return when(insertResource) {
             is Resource.Error -> Resource.Error()
-            is Resource.Success -> Resource.Success(insertResource.data.toProductDiaryEntry())
+            is Resource.Success -> {
+                Resource.Success(
+                    data = runCatching {
+                        postHistoryProductDiaryEntryUseCase(productDiaryEntry = insertResource.data)
+                    }.getOrNull()
+                )
+            }
         }
     }
-}
-
-data object ProductNotFoundException: NotFoundException(R("product_not_found")) {
-    private fun readResolve(): Any = ProductNotFoundException
 }

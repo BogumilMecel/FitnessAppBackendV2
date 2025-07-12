@@ -49,7 +49,8 @@ fun Application.module() {
         recipeCol = databaseManager.getRecipeCollection(),
         productCol = databaseManager.getProductCollection(),
         productDiaryCol = databaseManager.getProductDiaryCollection(),
-        recipeDiaryCol = databaseManager.getRecipeDiaryCollection()
+        recipeDiaryCol = databaseManager.getRecipeDiaryCollection(),
+        historyProductDiaryEntryCol = databaseManager.getHistoryProductDiaryEntryCollection()
     )
 
     val userRepository = UserRepositoryImp(
@@ -77,6 +78,8 @@ fun Application.module() {
         calculateNutritionValuesUseCase = calculateNutritionValuesUseCase
     )
 
+    val postHistoryProductDiaryEntryUseCase = PostHistoryProductDiaryEntryUseCase(diaryRepository = diaryRepository)
+
     val productUseCases = ProductUseCases(
         insertProductUseCase = insertProductUseCase,
         getProductsUseCase = GetProductsUseCase(
@@ -92,7 +95,8 @@ fun Application.module() {
             priceRepository = priceRepository,
             getProductUseCase = getProductUseCase,
         ),
-        getProductUseCase = getProductUseCase
+        getProductUseCase = getProductUseCase,
+        postHistoryProductDiaryEntryUseCase = postHistoryProductDiaryEntryUseCase
     )
 
     val insertLogEntryUseCase = InsertLogEntryUseCase(userRepository)
@@ -113,7 +117,8 @@ fun Application.module() {
         getDiaryEntriesUseCase = GetDiaryEntriesUseCase(diaryRepository),
         insertProductDiaryEntryUseCase = InsertProductDiaryEntryUseCase(
             diaryRepository = diaryRepository,
-            isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase
+            isDateInValidRangeUseCaseUseCase = isDateInValidRangeUseCaseUseCase,
+            postHistoryProductDiaryEntryUseCase = postHistoryProductDiaryEntryUseCase,
         ),
         deleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(
             diaryRepository = diaryRepository,

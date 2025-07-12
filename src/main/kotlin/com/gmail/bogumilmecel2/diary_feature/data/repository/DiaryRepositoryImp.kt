@@ -9,8 +9,11 @@ import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDia
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.toProductDiarySearchItem
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.HistoryProductDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.HistoryProductDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toHistoryProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.toProduct
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.*
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
@@ -29,7 +32,8 @@ class DiaryRepositoryImp(
     private val productDiaryCol: CoroutineCollection<ProductDiaryEntryDto>,
     private val recipeDiaryCol: CoroutineCollection<RecipeDiaryEntryDto>,
     private val productCol: CoroutineCollection<ProductDto>,
-    private val recipeCol: CoroutineCollection<RecipeDto>
+    private val recipeCol: CoroutineCollection<RecipeDto>,
+    private val historyProductDiaryEntryCol: CoroutineCollection<HistoryProductDiaryEntryDto>
 ) : DiaryRepository, BaseRepository() {
 
     override suspend fun insertProductDiaryEntry(productDiaryEntry: ProductDiaryEntryDto): Resource<ProductDiaryEntryDto> {
@@ -148,6 +152,10 @@ class DiaryRepositoryImp(
         return handleRequest {
             product.apply { productCol.insertOne(this) }.toProduct()
         }
+    }
+
+    override suspend fun insertHistoryProductDiaryEntry(historyProductDiaryEntry: HistoryProductDiaryEntryDto): HistoryProductDiaryEntry {
+        return historyProductDiaryEntry.apply { historyProductDiaryEntryCol.insertOne(this) }.toHistoryProductDiaryEntry()
     }
 
     override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Unit> {

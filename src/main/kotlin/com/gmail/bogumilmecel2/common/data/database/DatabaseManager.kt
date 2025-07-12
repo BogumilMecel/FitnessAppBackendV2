@@ -3,6 +3,7 @@ package com.gmail.bogumilmecel2.common.data.database
 import com.gmail.bogumilmecel2.authentication.domain.model.user.UserDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.Device
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
+import com.gmail.bogumilmecel2.diary_feature.domain.model.product.HistoryProductDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.ProductDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.recipe.RecipeDto
@@ -30,6 +31,7 @@ class DatabaseManager {
     fun getRecipeDiaryCollection(): CoroutineCollection<RecipeDiaryEntryDto> = client.getCollection("recipe_diary_collection")
     fun getRecipeCollection(): CoroutineCollection<RecipeDto> = client.getCollection("recipe_collection")
     fun getProductCollection(): CoroutineCollection<ProductDto> = client.getCollection("product_collection")
+    fun getHistoryProductDiaryEntryCollection(): CoroutineCollection<HistoryProductDiaryEntryDto> = client.getCollection("history_product_diary_entry_collection")
     fun getUserCollection(): CoroutineCollection<UserDto> = client.getCollection("user_collection")
     fun getWeightCollection(): CoroutineCollection<WeightEntryDto> = client.getCollection("weight_collection")
     fun getLogEntryCollection(): CoroutineCollection<LogEntryDto> = client.getCollection("log_entry_collection")

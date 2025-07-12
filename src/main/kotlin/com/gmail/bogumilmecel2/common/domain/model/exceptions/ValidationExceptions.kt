@@ -23,3 +23,4 @@ data object InvalidWeightValueException : BadRequestException(resource = R("inva
 data object UserNotFoundException : NotFoundException(resource = R("could_not_find_username"))
 data object DiaryEntryNotFoundException: NotFoundException(resource = R("diary_entry_not_found"))
 data object RecipeNotFoundException: NotFoundException(resource = R("recipe_not_found"))
+data object ProductNotFoundException: NotFoundException(resource = R("product_not_found"))
