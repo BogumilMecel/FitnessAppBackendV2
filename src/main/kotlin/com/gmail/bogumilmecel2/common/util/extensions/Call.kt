@@ -6,6 +6,7 @@ import com.gmail.bogumilmecel2.common.domain.constants.Constants.Api.DATE
 import com.gmail.bogumilmecel2.common.domain.constants.Constants.Api.LATEST_DATE_TIME
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.Currency
+import com.gmail.bogumilmecel2.common.domain.model.exceptions.BaseException
 import com.gmail.bogumilmecel2.common.util.Resource
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -128,3 +129,25 @@ suspend inline fun ApplicationCall.getDeviceIdHeader(): String? {
 suspend fun respondBadRequest(call: ApplicationCall) {
     call.respond(HttpStatusCode.BadRequest)
 }
+
+suspend inline fun <reified T> ApplicationCall.handleRequest(block: () -> T) = runCatching(block)
+    .onSuccess {
+        this.respondNullable(
+            status = HttpStatusCode.OK,
+            message = it
+        )
+    }
+    .onFailure {
+        this.respondNullable(
+            status = if (it is BaseException) {
+                it.httpStatusCode
+            } else {
+                HttpStatusCode.InternalServerError
+            },
+            message = if (it is BaseException) {
+                t(it.resource)
+            } else {
+                "Server error"
+            }
+        )
+    }
