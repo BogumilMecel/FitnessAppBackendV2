@@ -158,6 +158,17 @@ class DiaryRepositoryImp(
         return historyProductDiaryEntry.apply { historyProductDiaryEntryCol.insertOne(this) }.toHistoryProductDiaryEntry()
     }
 
+    override suspend fun getHistoryProductDiaryEntries(userId: String, latestDateTime: LocalDateTime?): Resource<List<HistoryProductDiaryEntry>> {
+        return handleRequest {
+            historyProductDiaryEntryCol
+                .find(HistoryProductDiaryEntryDto::userId eq userId)
+                .optionalFilter(optionalParameter = latestDateTime) { filter(HistoryProductDiaryEntryDto::latestDateTime gt it) }
+                .descendingSort(HistoryProductDiaryEntryDto::latestDateTime)
+                .toList()
+                .map { it.toHistoryProductDiaryEntry() }
+        }
+    }
+
     override suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Unit> {
         return handleRequest {
             productDiaryCol.deleteOne(

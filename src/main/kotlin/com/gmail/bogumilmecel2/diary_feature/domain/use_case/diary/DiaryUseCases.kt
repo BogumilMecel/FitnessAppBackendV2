@@ -9,4 +9,5 @@ data class DiaryUseCases(
     val editProductDiaryEntryUseCase: EditProductDiaryEntryUseCase,
     val editRecipeDiaryEntryUseCase: EditRecipeDiaryEntryUseCase,
     val getProductDiaryHistoryUseCase: GetProductDiaryHistoryUseCase,
+    val getHistoryProductDiaryEntriesUseCase: GetHistoryProductDiaryEntriesUseCase,
 )

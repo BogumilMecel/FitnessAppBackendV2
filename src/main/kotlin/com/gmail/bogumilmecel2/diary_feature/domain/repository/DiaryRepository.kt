@@ -36,6 +36,7 @@ interface DiaryRepository {
     suspend fun editRecipeDiaryEntry(recipeDiaryEntry: RecipeDiaryEntryDto): Resource<Unit>
     suspend fun insertProduct(product: ProductDto): Resource<Product>
     suspend fun insertHistoryProductDiaryEntry(historyProductDiaryEntry: HistoryProductDiaryEntryDto): HistoryProductDiaryEntry
+    suspend fun getHistoryProductDiaryEntries(userId: String, latestDateTime: LocalDateTime?): Resource<List<HistoryProductDiaryEntry>>
     suspend fun deleteProductDiaryEntry(productDiaryEntryId: String, userId: String): Resource<Unit>
     suspend fun searchForProductWithBarcode(barcode: String): Resource<Product?>
     suspend fun insertRecipe(recipe: RecipeDto): Resource<Recipe>
