@@ -4,7 +4,8 @@ import com.gmail.bogumilmecel2.common.domain.constants.Constants.DEFAULT_PAGE_SI
 import com.gmail.bogumilmecel2.common.domain.model.Country
 import com.gmail.bogumilmecel2.common.domain.model.Currency
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.diary_feature.domain.model.product.Product
+import com.gmail.bogumilmecel2.common.util.copyType
+import com.gmail.bogumilmecel2.diary_feature.domain.model.ProductsResponse
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
 import com.gmail.bogumilmecel2.diary_feature.domain.use_case.CalculateSkipUseCase
 
@@ -18,7 +19,7 @@ class GetProductsUseCase(
         currency: Currency,
         country: Country,
         page: Int
-    ): Resource<List<Product>> {
+    ): Resource<ProductsResponse> {
         val resource = repository.getProducts(
             text = searchText,
             skip = calculateSkipUseCase(
@@ -29,11 +30,17 @@ class GetProductsUseCase(
 
         return when (resource) {
             is Resource.Success -> {
-                Resource.Success(resource.data)
+                Resource.Success(
+                    data = ProductsResponse(
+                        results = resource.data,
+                        page = page,
+                        hasNextPage = resource.data.size % DEFAULT_PAGE_SIZE == 0
+                    )
+                )
             }
 
             is Resource.Error -> {
-                resource
+                resource.copyType()
             }
         }
     }
