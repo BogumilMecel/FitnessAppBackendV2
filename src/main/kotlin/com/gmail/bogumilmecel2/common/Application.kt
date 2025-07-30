@@ -64,7 +64,7 @@ fun Application.module() {
 
     val getUsernameUseCase = GetUsernameUseCase(userRepository = userRepository)
     val isDiaryNameValidUseCase = IsDiaryNameValidUseCase()
-    val getProductUseCase = GetProductUseCase(diaryRepository = diaryRepository)
+    val getProductDtoUseCase = GetProductDtoUseCase(diaryRepository = diaryRepository)
     val priceRepository = PriceRepositoryImp(
         priceCol = databaseManager.getPriceCollection()
     )
@@ -86,17 +86,17 @@ fun Application.module() {
             repository = diaryRepository,
             calculateSkipUseCase = CalculateSkipUseCase()
         ),
-        searchForProductWithBarcode = SearchForProductWithBarcode(diaryRepository),
         addNewPriceUseCase = AddNewPriceUseCase(
             priceRepository = priceRepository,
-            getProductUseCase = getProductUseCase,
+            getProductDtoUseCase = getProductDtoUseCase,
         ),
         getProductPriceUseCase = GetProductPriceUseCase(
             priceRepository = priceRepository,
-            getProductUseCase = getProductUseCase,
+            getProductDtoUseCase = getProductDtoUseCase,
         ),
-        getProductUseCase = getProductUseCase,
-        postHistoryProductDiaryEntryUseCase = postHistoryProductDiaryEntryUseCase
+        getProductDtoUseCase = getProductDtoUseCase,
+        postHistoryProductDiaryEntryUseCase = postHistoryProductDiaryEntryUseCase,
+        getProductUseCase = GetProductUseCase(diaryRepository)
     )
 
     val insertLogEntryUseCase = InsertLogEntryUseCase(userRepository)

@@ -11,37 +11,65 @@ import com.gmail.bogumilmecel2.diary_feature.domain.use_case.CalculateSkipUseCas
 
 class GetProductsUseCase(
     private val repository: DiaryRepository,
-    private val calculateSkipUseCase: CalculateSkipUseCase
+    private val calculateSkipUseCase: CalculateSkipUseCase,
 ) {
 
     suspend operator fun invoke(
-        searchText: String,
+        searchText: String? = null,
+        barcode: String? = null,
         currency: Currency,
         country: Country,
         page: Int
     ): Resource<ProductsResponse> {
-        val resource = repository.getProducts(
-            text = searchText,
-            skip = calculateSkipUseCase(
-                page = page,
-                sizePerPage = DEFAULT_PAGE_SIZE
-            )
-        )
-
-        return when (resource) {
-            is Resource.Success -> {
-                Resource.Success(
-                    data = ProductsResponse(
-                        results = resource.data,
+        when {
+            searchText != null -> {
+                val resource = repository.getProducts(
+                    text = searchText,
+                    skip = calculateSkipUseCase(
                         page = page,
-                        hasNextPage = resource.data.size % DEFAULT_PAGE_SIZE == 0
+                        sizePerPage = DEFAULT_PAGE_SIZE
                     )
                 )
+
+                return when (resource) {
+                    is Resource.Success -> {
+                        Resource.Success(
+                            data = ProductsResponse(
+                                results = resource.data,
+                                page = page,
+                                hasNextPage = resource.data.size % DEFAULT_PAGE_SIZE == 0
+                            )
+                        )
+                    }
+
+                    is Resource.Error -> {
+                        resource.copyType()
+                    }
+                }
             }
 
-            is Resource.Error -> {
-                resource.copyType()
+            barcode != null -> {
+                val resource = repository.searchForProductWithBarcode(barcode = barcode)
+
+                return when (resource) {
+                    is Resource.Success -> {
+                        if (resource.data == null) return Resource.Error()
+
+                        Resource.Success(
+                            data = ProductsResponse(
+                                results = listOf(resource.data),
+                                page = 1,
+                                hasNextPage = false
+                            )
+                        )
+                    }
+
+                    is Resource.Error -> {
+                        resource.copyType()
+                    }
+                }
             }
+            else -> return Resource.Error()
         }
     }
 }

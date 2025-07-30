@@ -6,7 +6,7 @@ import com.gmail.bogumilmecel2.common.domain.model.convertToDefaultCurrency
 import com.gmail.bogumilmecel2.common.util.Resource
 import com.gmail.bogumilmecel2.common.util.extensions.round
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.NewPriceRequest
-import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductUseCase
+import com.gmail.bogumilmecel2.diary_feature.domain.use_case.common.GetProductDtoUseCase
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.PriceDto
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.ProductPrice
 import com.gmail.bogumilmecel2.diary_feature.price_feature.domain.model.toProductPrice
@@ -15,7 +15,7 @@ import org.bson.types.ObjectId
 
 class AddNewPriceUseCase(
     private val priceRepository: PriceRepository,
-    private val getProductUseCase: GetProductUseCase
+    private val getProductDtoUseCase: GetProductDtoUseCase
 ) {
 
     suspend operator fun invoke(
@@ -27,7 +27,7 @@ class AddNewPriceUseCase(
         if (paidHowMuch <= 0 || paidForWeight <= 0) {
             return Resource.Error()
         } else {
-            getProductUseCase(productId = productId).data?.let { product ->
+            getProductDtoUseCase(productId = productId).data?.let { product ->
                 val priceResource = priceRepository.getPrice(
                     productId = productId,
                     country = country
