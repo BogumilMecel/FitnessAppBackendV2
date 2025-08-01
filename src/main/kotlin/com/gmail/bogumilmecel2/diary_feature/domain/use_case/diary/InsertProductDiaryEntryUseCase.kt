@@ -3,7 +3,7 @@ package com.gmail.bogumilmecel2.diary_feature.domain.use_case.diary
 import com.gmail.bogumilmecel2.common.domain.model.exceptions.*
 import com.gmail.bogumilmecel2.common.util.CustomDateUtils
 import com.gmail.bogumilmecel2.common.util.Resource
-import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntry
+import com.gmail.bogumilmecel2.diary_feature.domain.model.NewProductDiaryEntryRequest
 import com.gmail.bogumilmecel2.diary_feature.domain.model.diary_entry.ProductDiaryEntryDto
 import com.gmail.bogumilmecel2.diary_feature.domain.model.product.HistoryProductDiaryEntry
 import com.gmail.bogumilmecel2.diary_feature.domain.repository.DiaryRepository
@@ -17,9 +17,9 @@ class InsertProductDiaryEntryUseCase(
     private val postHistoryProductDiaryEntryUseCase: PostHistoryProductDiaryEntryUseCase
 ) {
     suspend operator fun invoke(
-        productDiaryEntry: ProductDiaryEntry,
+        newProductDiaryEntryRequest: NewProductDiaryEntryRequest,
         userId: String
-    ): Resource<HistoryProductDiaryEntry?> = with(productDiaryEntry) {
+    ): Resource<HistoryProductDiaryEntry?> = with(newProductDiaryEntryRequest) {
         if (weight <= 0) return Resource.Error(InvalidWeightException)
         val product = diaryRepository.getProduct(productId = productId).data ?: return Resource.Error(ProductNotFoundException)
         if (!isDateInValidRangeUseCaseUseCase(date)) return Resource.Error(InvalidDateException)
